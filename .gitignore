@@ -3,3 +3,4 @@ venv
 yarn.lock
 *.log
 public
+hseqweb/static/yarn

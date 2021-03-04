@@ -11,7 +11,7 @@
     <meta name="author" content="">
 
     <title> Uploader </title>
-    <link rel="stylesheet" href="{% static "assets/css/style.css" %}">
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
     <link rel="icon" href="{% static "assets/images/favico.png" %}">
     <!-- CSS -->
     <link href="{% static "yarn/bootstrap/dist/css/bootstrap.min.css" %}" rel="stylesheet">
@@ -41,23 +41,49 @@
     {% endblock %}
     </div>
     {% block footer %}
-    <footer class="footer">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="footer-about">
-
-            <img class="footer-logo" alt="Weqaya" src="{% static "assets/images/footer-logo.png" %}">
-
-            <p class="text">
-              <br />
-              70 SCDC Building, Al Aarid, King Abdulaziz Rd, Riyadh 13354, Saudi Arabia <br />
-              <a href="tel:+966 11 2528357"> +966 11 2528357 </a> <br />
-              <a href="mailto:NCDC-Media@moh.gov.sa"> NCDC-Media@moh.gov.sa </a> <br />
-              2021 © All Rights Reserved <br />
-            </p>
-
+     <footer class="footer bg-light">
+      <div class="container">
+	<div class="row">
+          <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
+            <ul class="list-inline mb-2">
+              <li class="list-inline-item">
+		<a href="#">About</a>
+              </li>
+              <li class="list-inline-item">⋅</li>
+              <li class="list-inline-item">
+		<a href="#">Contact</a>
+              </li>
+              <li class="list-inline-item">⋅</li>
+              <li class="list-inline-item">
+		<a href="#">Terms of Use</a>
+              </li>
+              <li class="list-inline-item">⋅</li>
+              <li class="list-inline-item">
+		<a href="#">Privacy Policy</a>
+              </li>
+            </ul>
+            <p class="text-muted small mb-4 mb-lg-0">© BORG 2020. All Rights Reserved.</p>
           </div>
-        </div>
+          <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
+            <ul class="list-inline mb-0">
+              <li class="list-inline-item mr-3">
+		<a href="#">
+                  <i class="fab fa-facebook fa-2x fa-fw"></i>
+		</a>
+              </li>
+              <li class="list-inline-item mr-3">
+		<a href="#">
+                  <i class="fab fa-twitter-square fa-2x fa-fw"></i>
+		</a>
+              </li>
+              <li class="list-inline-item">
+		<a href="#">
+                  <i class="fab fa-instagram fa-2x fa-fw"></i>
+		</a>
+              </li>
+            </ul>
+          </div>
+	</div>
       </div>
     </footer>
     {% endblock %}

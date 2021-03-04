@@ -67,7 +67,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.keycloak',
+    # 'allauth.socialaccount.providers.keycloak',
     'widget_tweaks',
     'rest_framework',
     'corsheaders',
@@ -304,4 +304,6 @@ GALAXY_API_KEY=config['galaxy']['api.key']
 GALAXY_PANGENOME_RESULT_DIR=config['galaxy']['pangenome_result_dir']
 LIBRARY_ID= config['galaxy']['api.library.id']
 
-UPLOADER_PROJECT_UUID = 'cborg-j7d0g-nyah4ques5ww7pk'
+UPLOADER_PROJECT_UUID = 'cborg-j7d0g-20hfcsh2q2269gf'
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
