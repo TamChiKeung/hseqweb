@@ -1,0 +1,26 @@
+{% extends 'uploader/base.html' %}
+
+{% block content %}
+<div class="container">
+<div class="row">
+  <div class="col-12">
+    <h2>Sequences</h2>
+    <table class="table table-striped">
+      <thead>
+      </thead>
+      <tbody>
+	{% for object in object_list %}
+        {% if object.collection %}
+	<tr>
+	  <td>{{ forloop.counter }}</td>
+	  <td>{{ object.name }}</td>
+	  <td><a href="{% url "uploader-view" object.pk %}">view</a></td>
+	</tr>
+        {% endif %}
+	{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+{% endblock %}

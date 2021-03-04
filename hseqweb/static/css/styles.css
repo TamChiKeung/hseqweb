@@ -1,0 +1,326 @@
+body {
+    padding-top: 60px;
+  }
+.container-fluid {
+  background-color:white;
+}
+.bigger {
+	font-size:1.2em;
+}
+
+.smaller {
+	font-size:0.8em;
+}
+
+.center {
+	margin:auto;
+}
+
+/* navbar
+-------------------------------------------------- */
+.nav-link {
+  font-size:1.3rem;
+}
+
+.active-menu {
+  border-radius:6px;
+  color:black!important;
+  background:#eee!important;
+}
+
+.dropdownButton:focus{
+  background-color: #eee!important;
+  border:1px solid white!important;
+}
+
+/* Sticky footer
+-------------------------------------------------- */
+.footer {
+/*  position: absolute;
+  bottom: 0;
+  height: 80px;
+*/
+  width: 100%;
+  border-top:1px solid #ccc;
+  background-color:#e9ecef;
+}
+
+/* Various formating
+-------------------------------------------------- */
+.line-pattern {
+	height: 75vh;
+	width: 75wh;
+	background-image:   radial-gradient(1px 1px at center, #888 .5px, transparent 1px);
+	background-size: 40px 60px, 120px 40px, 6px 60px, 6px 60px;
+	background-position: 0px 0px, 0px 0px, 0px -10px, 0px 10px;
+  }
+
+.twoColumns{
+    -webkit-column-gap: 20px;
+       -moz-column-gap: 20px;
+            column-gap: 20px;
+    -webkit-column-count: 2;
+       -moz-column-count: 2;
+            column-count: 2;
+}
+/* Main tabs
+-------------------------------------------------- */
+section {
+    /*padding: 60px 0;*/
+}
+
+section .section-title {
+    text-align: center;
+    color: #000;
+	font-size:1.2rem;
+	margin:0.5rem 0rem 0rem 0rem;
+	box-shadow: none;
+	box-shadow: 0 5px 0 -4px #ccc;
+}
+#tabs{
+	background: #fff;
+    color: #000;
+}
+#tabs h6.section-title{
+    color: #000;
+}
+
+#tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: #000;
+    background-color: transparent;
+    border-color: transparent transparent #000;
+    border-bottom: 4px solid !important;
+    font-size: 20px;
+    font-weight: bold;
+
+}
+#tabs .nav-tabs .nav-link {
+    border: 1px solid transparent;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+    color: #000;
+    font-size: 20px;
+}
+
+/* Dictionaries
+-------------------------------------------------- */
+#pubmedAbstract {
+	text-align: justify;
+  }
+  
+.d1, .did-1
+{
+	background-color:#845ec2;
+	color:white;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+}
+.d2, .did-2
+{
+	background-color: #d65db1;
+	color:white;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+
+}
+.d3, .did-3
+{
+	background-color: #e4f0f5;
+	color:black; 
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+}
+.d4, .did-4
+{
+	background-color: #ff9671;
+	color:black;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+
+}
+.d5, .did-5
+{
+	background-color: #ffc75f;
+	color:black;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+}
+.d6, .did-6
+{
+	background-color: #1b4f72;
+	color:white;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+}
+.d7, .did-7
+{
+	background-color: #f9f871;
+	color:black;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+
+}
+.d8, .did-8
+{
+	background-color: #0081cf;
+	color:white;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+
+}
+.d9, .did-9
+{
+	background-color: #66095d;
+	color:white;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+}
+.d10, .did-10
+{
+	background-color: #00c9a7;
+	color:black;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+}
+.d11, .did-11
+{
+	background-color: #fbeaff;
+	color:black;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+}
+.d12, .did-12
+{
+	background-color: #ff8066;
+	color:black;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+}
+.d13, .did-13
+{
+	background-color: #d5cabd;
+	color:black;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+}
+.d14, .did-14
+{
+	background-color: #666;
+	color:white;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+}
+.d15, .did-15
+{
+	background-color: #33AAFF;
+	color:black;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+}
+.d16, .did-16
+{
+	background-color: #EFDAF2;
+	color:black;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+}
+.d17, .did-17
+{
+	background-color: #C7FF00;
+	color:black;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+}
+.d18, .did-18
+{
+	background-color: #99AA88;
+	color:black;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+}
+.d19, .did-19
+{
+	background-color: #F279A1;
+	color:black;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+}
+.d20, .did-20
+{
+	background-color: #99EDFF;
+	color:black;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	cursor:pointer;
+	padding: 0px 2px 0 2px;
+}
+
+.pagination .active .item {
+	position: relative;
+	display: block;
+	padding: .5rem .75rem;
+	margin-left: -1px;
+	line-height: 1.25;
+	color: #78797b;
+	background-color: #fff;
+	border: 1px solid #dee2e6;
+	
+  }

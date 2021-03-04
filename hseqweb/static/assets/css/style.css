@@ -1,0 +1,89 @@
+.logo {
+  width: auto;
+  height: 50px;
+  padding-left: 40px;
+}
+
+.vision-logo {
+  width: auto;
+  height: 50px;
+  padding-right: 40px;
+}
+
+.main-menu {
+  background-color: #004D71;
+}
+
+a.nav-link {
+  background-color: #004D71;
+  color: #FFF;
+  font-family: 'Diodrum-Arabic-Medium';
+  padding: 12px 30px;
+}
+
+a.nav-link:hover {
+  color: #00A98F;
+}
+
+a.nav-link.active {
+  background-color: #00A98F;
+  color: #FFF;
+  font-family: 'Diodrum-Arabic-Semibold';
+}
+
+.content-container {
+  max-width: none;
+  height: 300px;
+  background-color: #f5f5f5;
+}
+
+.footer {
+  background-color: #004D71;
+  padding: 60px 40px;
+  color: white;
+}
+
+.footer-logo {
+  width: auto;
+  height: 85px;
+}
+
+p.text {
+  font-family: diodrum-arabic-regular;
+  font-size: 14px;
+}
+
+p.text a {
+  font-family: diodrum-arabic-medium;
+  color: #FFF;
+}
+
+p.text a:hover {
+  font-family: diodrum-arabic-medium;
+  color: #00A98F;
+  text-decoration: none;
+}
+
+@font-face {
+  font-family: Diodrum-Arabic-Regular;
+  src: url("../fonts/diodrum/diodrum-arabic.woff") format("woff");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: Diodrum-Arabic-Semibold;
+  src: url("../fonts/diodrum/diodrum-arabic-semibold.woff") format("woff");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: Diodrum-Arabic-Medium;
+  src: url("../fonts/diodrum/diodrum-arabic-medium.woff") format("woff");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: Diodrum-Arabic-Bold;
+  src: url("../fonts/diodrum/diodrum-arabic-bold.woff") format("woff");
+  font-weight: normal;
+}

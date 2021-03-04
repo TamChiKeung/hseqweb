@@ -1,0 +1,35 @@
+{% load static %}
+
+<nav class="navbar">
+  <a class="navbar-brand" href="#">
+    <img class="logo" alt="Weqaya" src="{% static "assets/images/full-logo.png" %}">
+  </a>
+  <div class="pull-right">
+    <img class="vision-logo" alt="2030 Vision" src="{% static "assets/images/2030-logo.png" %}">
+  </div>
+</nav>
+
+<div class="main-menu">
+  <ul class="nav justify-content-center">
+    <li class="nav-item">
+      <a class="nav-link" href="https://gid.cdc.gov.sa">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="{% url "home" %}">Uploader</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"
+      href="https://gid-track.cdc.gov.sa">Mutation Tracker</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url "documentation" %}">Documentation</a>
+    </li>
+    {% if not user.is_authenticated %}
+    <li class="nav-item"><a class="nav-link" href="{% url "account_login" %}">Sign In</a></li>
+    {% else %}
+    <li class="nav-item"><a class="nav-link" href="{% url "uploader-list" %}">My submissions</a></li>
+    <li class="nav-item"><a class="nav-link" href="{% url "profile" %}">Profile</a></li>
+    <li class="nav-item"><a class="nav-link" href="{% url  "account_logout" %}">Logout</a></li>
+    {% endif %}
+  </ul>
+</div>

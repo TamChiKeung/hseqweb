@@ -1,0 +1,68 @@
+{% extends 'uploader/base.html' %}
+
+{% block content %}
+<div class="container">
+<div class="row">
+  <div class="col-6">
+    {% if object.status == "submitted" %}
+    <p>
+      Your sequence have been successfully submitted.
+    </p>
+    {% elif object.status == "validated" %}
+    {{ object.status }}
+    {% elif object.status == "error" %}
+    <p class="text-danger">
+      Something went wrong!
+    </p>
+    <p>
+      {{ object.error_message }}
+    </p>
+    {% elif object.status == "uploaded" %}
+    <h3>Sample ID: {{ object.name }}</h3>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <form method="post" action="{% url "uploader-view" object.pk %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="download_metadata"/>
+          <button class="btn btn-primary" type="submit">Download Metadata</button>
+        </form>
+      </li>
+      {% if object.is_fasta %}
+      <li class="list-group-item">
+        <form method="post" action="{% url "uploader-view" object.pk %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="download_fasta"/>
+          <button class="btn btn-primary" type="submit">Download FASTA</button>
+        </form>
+      </li>
+      {% else %}
+      <li class="list-group-item">
+        <form method="post" action="{% url "uploader-view" object.pk %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="download_fastq1"/>
+          <button class="btn btn-primary" type="submit">Download Read 1</button>
+        </form>
+      </li>
+      {% if object.is_paired %}
+      <li class="list-group-item">
+        <form method="post" action="{% url "uploader-view" object.pk %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="download_fastq2"/>
+          <button class="btn btn-primary" type="submit">Download Read 2</button>
+        </form>
+      </li>
+      {% endif %}
+      {% endif %}
+      <li class="list-group-item">
+        <form method="post" action="{% url "uploader-view" object.pk %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="delete"/>
+          <button class="btn btn-warning" onclick="return confirm('Are you sure you want to delete the upload?')" type="submit">Delete</button>
+        </form>
+      </li>
+    </ul>
+    {% endif %}
+  </div>
+</div>
+</div>
+{% endblock %}
