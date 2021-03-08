@@ -307,4 +307,6 @@ LIBRARY_ID= config['galaxy']['api.library.id']
 
 UPLOADER_PROJECT_UUID = 'cborg-j7d0g-20hfcsh2q2269gf'
 
+# TUS_UPLOAD_DIR = os.path.join(BASE_DIR, 'tus_media')
+# TUS_DESTINATION_DIR = os.path.join(BASE_DIR, 'media', 'uploads')
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
