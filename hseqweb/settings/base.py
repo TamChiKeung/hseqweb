@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'snowpenguin.django.recaptcha2',
+    'django_tus',
     'uploader',
     'sparql'
 ]

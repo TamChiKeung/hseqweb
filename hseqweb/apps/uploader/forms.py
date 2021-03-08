@@ -6,6 +6,7 @@ from uploader.qc_metadata import qc_metadata
 from uploader.qc_fasta import qc_fasta
 from django.forms import ValidationError
 from uploader.tasks import upload_to_arvados
+from .tusfile import TusFile
 import tempfile
 import json
 import datetime
@@ -22,19 +23,23 @@ def add_clean_field(cls, field_name):
         if metadata_file is not None:
             return value
         if not value:
-            raise ValidationError("This field is required!")
+            raise ValidationError("This field is required.")
         return value
+
     required_field.__doc__ = "Required field validator for %s" % field_name
     required_field.__name__ = "clean_%s" % field_name
     setattr(cls, required_field.__name__, required_field)
 
 class UploadForm(forms.ModelForm):
-    sequence_file = forms.FileField(
-        required=True,
+    sequence_file = forms.FileField(required=False,
         help_text='Sequence file in FASTA/FASTQ format. Max file size is 512Mb.')
+    sequence_file_location = forms.CharField(required=False)
+    sequence_file_filename = forms.CharField(required=False)
     sequence_file2 = forms.FileField(
         required=False,
         help_text='Optional FASTQ format file for paired reads. Max file size is 512Mb.')
+    sequence_file2_location = forms.CharField(required=False)
+    sequence_file2_filename = forms.CharField(required=False)
     metadata_file = forms.FileField(
         required=False,
         help_text='Metadata file in JSON/YAML format. Metadata fields are not required if this file is provided.')
@@ -46,7 +51,7 @@ class UploadForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(UploadForm, self).__init__(*args, **kwargs)
-        for item in FORM_ITEMS:
+        for item in FORM_ITEMS: 
             if 'id' not in item:
                 continue
             help_text = item.get('docstring', '')
@@ -94,12 +99,14 @@ class UploadForm(forms.ModelForm):
                         label=label, help_text=help_text, required=False)
             if item['required']:
                 add_clean_field(UploadForm, item['id'])
+            
+            self.is_paired = False
 
     def metadata_id(self):
         return self['metadata.id']
     
     def file_fields(self):
-        return [self['sequence_file'], self['sequence_file2'], self['metadata_file']]
+        return [self['metadata_file']]
 
     def host_fields(self):
         for name in self.fields:
@@ -133,31 +140,66 @@ class UploadForm(forms.ModelForm):
                 raise ValidationError("Invalid metadata format")    
         return metadata_file
 
-    def clean_sequence_file(self):
-        sequence_file = self.cleaned_data['sequence_file']
+    # def clean_sequence_file(self):
+    #     sequence_file = self.cleaned_data['sequence_file']
+    #     try:
+    #         sf = open(sequence_file.temporary_file_path(), 'r')
+    #         filename = qc_fasta(sf)
+    #         self.is_fasta = filename == 'sequence.fasta'
+    #     except ValueError:
+    #         raise ValidationError("Invalid file format")
+    #     return sequence_file
+
+
+    def clean_sequence_file_location(self):
+        sequence_file_location = self.cleaned_data['sequence_file_location']
+        if not sequence_file_location:
+            raise ValidationError("This field is required.")
+
         try:
-            sf = open(sequence_file.temporary_file_path(), 'r')
-            filename = qc_fasta(sf)
-            self.is_fasta = filename == 'sequence.fasta'
+            sf = open(os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_location), 'r')
+            qc_fasta(sf)
         except ValueError:
             raise ValidationError("Invalid file format")
-        return sequence_file
+        return sequence_file_location
 
-    def clean_sequence_file2(self):
-        sequence_file2 = self.cleaned_data['sequence_file2']
+    def clean_sequence_file_filename(self):
+        sequence_file_filename = self.cleaned_data['sequence_file_filename']
+        self.is_fasta = sequence_file_filename == 'sequence.fasta'
+        return sequence_file_filename
+
+    # def clean_sequence_file2(self):
+    #     sequence_file2 = self.cleaned_data['sequence_file2']
+    #     self.is_paired = False
+    #     if sequence_file2:
+    #         try:
+    #             sf = open(sequence_file2.temporary_file_path(), 'r')
+    #             filename = qc_fasta(sf)
+    #             if filename != 'reads.fastq':
+    #                 raise ValidationError('Invalid file format')
+    #             self.is_paired = True
+    #         except ValueError:
+    #             raise ValidationError("Invalid file format")
+
+    def clean_sequence_file2_location(self):
+        sequence_file2_location = self.cleaned_data['sequence_file2_location']
         self.is_paired = False
-        if sequence_file2:
+        if sequence_file2_location:
             try:
-                sf = open(sequence_file2.temporary_file_path(), 'r')
-                filename = qc_fasta(sf)
-                if filename != 'reads.fastq':
-                    raise ValidationError('Invalid file format')
-                self.is_paired = True
+                sf = open(os.path.join(settings.TUS_UPLOAD_DIR, sequence_file2_location), 'r')
+                qc_fasta(sf)
             except ValueError:
                 raise ValidationError("Invalid file format")
-            
-        return sequence_file2
 
+        return sequence_file2_location
+
+    
+    def clean_sequence_file2_filename(self):
+        sequence_file2_filename = self.cleaned_data['sequence_file2_filename']
+        # if sequence_file2_filename != 'reads.fastq':
+        #     raise ValidationError('Invalid file format')
+        # self.is_paired = True
+        return sequence_file2_filename
 
     def clean(self):
         if not self.cleaned_data['metadata_file']:
@@ -203,10 +245,28 @@ class UploadForm(forms.ModelForm):
             self.instance.user = self.request.user
         if not self.instance.id:
             self.instance.save()
-        sequence_file = self.save_file(self.cleaned_data['sequence_file'])
-        sequence_file2 = self.cleaned_data['sequence_file2']
-        if sequence_file2:
-            sequence_file2 = self.save_file(sequence_file2)
+        # sequence_file = self.save_file(self.cleaned_data['sequence_file'])
+        # sequence_file2 = self.cleaned_data['sequence_file2']
+        # if sequence_file2:
+        #     sequence_file2 = self.save_file(sequence_file2)
+
+        sequence_file_loc = self.cleaned_data['sequence_file_location']
+        sequence_filename = self.cleaned_data['sequence_file_filename']
+
+        sequence_tus_file = TusFile(str(sequence_file_loc))
+        sequence_tus_file.clean()
+        os.renames(os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_loc), os.path.join(settings.TUS_UPLOAD_DIR, sequence_filename))
+        sequence_file = os.path.join(settings.TUS_UPLOAD_DIR, sequence_filename)
+
+        sequence_file_loc2 = self.cleaned_data['sequence_file2_location']
+        sequence_filename2 = self.cleaned_data['sequence_file2_filename']
+        sequence_file2 = None
+        if sequence_file_loc2 and sequence_filename2:
+            sequence_tus_file2 = TusFile(str(sequence_file_loc2))
+            sequence_tus_file2.clean()
+            os.renames(os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_loc2), os.path.join(settings.TUS_UPLOAD_DIR, sequence_filename2))
+            sequence_file2 = os.path.join(settings.TUS_UPLOAD_DIR, sequence_filename2)
+
         metadata_file = self.cleaned_data['metadata_file']
         if metadata_file:
             metadata_file = self.save_file(metadata_file)
