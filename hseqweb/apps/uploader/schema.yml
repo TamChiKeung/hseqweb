@@ -1,4 +1,4 @@
-$base: http://biohackathon.org/bh20-seq-schema
+$base: http://borg.kaust.edu.sa/hg-schema
 $namespaces:
   sch: https://schema.org/
   efo: http://www.ebi.ac.uk/efo/
@@ -9,53 +9,46 @@ $namespaces:
 
 $graph:
 
-- name: hostSchema
+- name: patientSchema
   type: record
   fields:
-    host_species:
-        doc: Host species as defined in NCBITaxon, e.g. http://purl.obolibrary.org/obo/NCBITaxon_9606 for Homo sapiens
-        type: string
-        jsonldPredicate:
-          _id: http://www.ebi.ac.uk/efo/EFO_0000532
-          _type: "@id"
-          noLinkCheck: true
-    host_id:
-        doc: Identifer for the host. If you submit multiple samples from the same host, use the same host_id for those samples
+    patient_id:
+        doc: Identifer for the patient. If you submit multiple samples from the same patient, use the same id for those samples
         type: string?
         jsonldPredicate:
           _id: http://semanticscience.org/resource/SIO_000115
-    host_sex:
+    sex:
         doc: Sex of the host as defined in PATO, expect Male (http://purl.obolibrary.org/obo/PATO_0000384) or Female (http://purl.obolibrary.org/obo/PATO_0000383) or in Intersex (http://purl.obolibrary.org/obo/PATO_0001340)
         type: string?
         jsonldPredicate:
           _id: http://purl.obolibrary.org/obo/PATO_0000047
           _type: "@id"
           noLinkCheck: true
-    host_age:
+    age:
         doc: Age of the host as number (e.g. 50)
         type: int?
         jsonldPredicate:
           _id: http://purl.obolibrary.org/obo/PATO_0000011
-    host_age_unit:
+    age_unit:
         doc: Unit of host age e.g. http://purl.obolibrary.org/obo/UO_0000036
         type: string?
         jsonldPredicate:
           _id: http://purl.obolibrary.org/obo/NCIT_C42574
           _type: "@id"
           noLinkCheck: true
-    host_health_status:
+    health_status:
         doc: A condition or state at a particular time, must be one of the following (obo:NCIT_C115935 obo:NCIT_C3833 obo:NCIT_C25269 obo:GENEPIO_0002020 obo:GENEPIO_0001849 obo:NCIT_C28554 obo:NCIT_C37987)
         type: string?
         jsonldPredicate:
           _id: http://purl.obolibrary.org/obo/NCIT_C25688
           _type: "@id"
           noLinkCheck: true
-    host_treatment:
+    treatment:
       doc: Process in which the act is intended to modify or alter host status
       type: string?
       jsonldPredicate:
           _id: http://www.ebi.ac.uk/efo/EFO_0000727
-    host_vaccination:
+    vaccination:
       doc: List of vaccines given to the host
       type: string[]?
       jsonldPredicate:
@@ -67,7 +60,7 @@ $graph:
           _id: http://semanticscience.org/resource/SIO_001014
           _type: "@id"
           noLinkCheck: true
-    additional_host_information:
+    additional_information:
       doc: Field for additional host information
       type: string?
       jsonldPredicate:
@@ -127,22 +120,6 @@ $graph:
           _id: http://edamontology.org/data_2091
           _type: "@id"
           noLinkCheck: true
-
-- name: virusSchema
-  type: record
-  fields:
-    virus_species:
-      doc: The name of virus species from the NCBI taxonomy database, e.g. http://purl.obolibrary.org/obo/NCBITaxon_2697049 for Severe acute respiratory syndrome coronavirus 2
-      type: string
-      jsonldPredicate:
-          _id: http://edamontology.org/data_1875
-          _type: "@id"
-          noLinkCheck: true
-    virus_strain:
-      doc: Name of the virus strain
-      type: string?
-      jsonldPredicate:
-          _id: http://semanticscience.org/resource/SIO_010055
 
 - name: technologySchema
   type: record
@@ -228,9 +205,8 @@ $graph:
   type: record
   documentRoot: true
   fields:
-    host: hostSchema
+    patient: patientSchema
     sample: sampleSchema
-    virus: virusSchema
     technology: technologySchema
     submitter: submitterSchema
     id:

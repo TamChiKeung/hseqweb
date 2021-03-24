@@ -1,4 +1,4 @@
-PREFIX : <https://raw.githubusercontent.com/bio-ontology-research-group/bh20-seq-resource/master/bh20sequploader/bh20seq-shex.rdf#>
+PREFIX : <https://raw.githubusercontent.com/bio-ontology-research-group/hguploader/master/hguploader/shex.rdf#>
 PREFIX MainSchema: <http://biohackathon.org/bh20-seq-schema#MainSchema/>
 PREFIX hostSchema: <http://biohackathon.org/bh20-seq-schema#hostSchema/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -17,7 +17,7 @@ PREFIX wikidata: <http://www.wikidata.org/entity/>
   MainSchema:virus @:virusShape;
 }
 
-:hostShape  {
+:patientShape  {
   	efo:EFO_0000532 [ obo:NCBITaxon_~ ] ;
     sio:SIO_000115 xsd:string ?;
     obo:PATO_0000047 [ obo:PATO_0000384 obo:PATO_0000383 obo:PATO_0001340] ?;
@@ -60,9 +60,4 @@ PREFIX wikidata: <http://www.wikidata.org/entity/>
     efo:EFO_0002699 xsd:string ?;
     obo:FLU_0000848 xsd:double OR xsd:integer {0,3};
     sio:SIO_001167 xsd:string ?;
-}
-
-:virusShape{
-	edam:data_1875 [ obo:NCBITaxon_~ ] ;
-  	sio:SIO_010055 xsd:string ?;
 }
