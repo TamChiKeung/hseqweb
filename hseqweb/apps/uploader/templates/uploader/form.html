@@ -12,26 +12,6 @@
         <h3>CBRC/BORG Human Sequence Database</h3>
 	<h4>Database for collecting Human sequence data from Saudi
 	  Arabia.</h4>
-	<p>
-	  Upload your SARS-CoV-2 sequence (FASTA or FASTQ formats)
-	  with metadata (in JSON-LD) to the CBRC/BORG Human
-	  Sequence Database.  Each upload will be processed using a
-	  set
-	  of <a href="https://github.com/bio-ontology-research-group/borg-workflows">standardized
-	  workflows</a> which generates a pangenome with associated
-	  metadata available for
-	  <a href="https://workbench.cborg.cbrc.kaust.edu.sa/collections/cborg-4zz18-7hurjl2943atdoz">download</a>. The
-	  pangenome and metadata can be loaded in a graph database and
-	  we make them available to
-	  be <a href="{% url "sparql-isparql" %}">queried</a>.
-
-	  We provide a
-	  free <a href="https://github.com/bio-ontology-research-group/cborguploader">command
-	  line tool</a> to support bulk uploads to the CBRC/BORG
-	  Human Sequence Database and other CBRC/BORG
-	  projects. <a href="mailto:borg.databases@kaust.edu.sa">Contact
-	  us</a> to obtain a token for direct uploads.
-	</p>
     </div>
     <div class="col-12">
 		<div class="form-group" id="sequenceFileChooser">
@@ -111,8 +91,8 @@
     </div>
     <div class="col-9"></div>
     <div class="col-3">
-      <h3>Host</h3>
-      {% for field in form.host_fields %}
+      <h3>Patient</h3>
+      {% for field in form.patient_fields %}
       <div class="form-group">
 	<label for="{{ field.auto_id }}">{{ field.label }}
 	  <a href="javascript:alert('{{ field.help_text }}')">?</a>
@@ -146,22 +126,6 @@
       <h3>Technology</h3>
       
       {% for field in form.technology_fields %}
-      <div class="form-group">
-	<label for="{{ field.auto_id }}">{{ field.label }}
-	  {% if field.field.required %}
-	  <span class="required">*</span>
-	  {% endif %}
-	  <a href="javascript:alert('{{ field.help_text }}')">?</a>
-	</label>
-        {{ field | add_class:"form-control" }}
-	<small class="text-danger">
-	  {{ field.errors.0 }}
-	</small>
-      </div>
-      {% endfor %}
-      
-      <h3>Virus</h3>
-      {% for field in form.virus_fields %}
       <div class="form-group">
 	<label for="{{ field.auto_id }}">{{ field.label }}
 	  {% if field.field.required %}

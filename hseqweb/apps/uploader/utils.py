@@ -186,8 +186,8 @@ def generate_form(schema, options):
     return list(walk_fields(root_name))
 
 
-METADATA_SCHEMA = yaml.safe_load(pkg_resources.resource_stream("uploader", "bh20seq-schema.yml"))
-METADATA_OPTION_DEFINITIONS = yaml.safe_load(pkg_resources.resource_stream("uploader", "bh20seq-options.yml"))
+METADATA_SCHEMA = yaml.safe_load(pkg_resources.resource_stream("uploader", "schema.yml"))
+METADATA_OPTION_DEFINITIONS = yaml.safe_load(pkg_resources.resource_stream("uploader", "options.yml"))
 FORM_ITEMS = generate_form(METADATA_SCHEMA, METADATA_OPTION_DEFINITIONS)
 ONT_TO_URI_PATTERN_MAP = {
     'NCBITAXON': 'http://purl.obolibrary.org/obo/NCBITaxon_',

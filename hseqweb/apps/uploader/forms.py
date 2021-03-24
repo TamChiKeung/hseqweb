@@ -108,9 +108,9 @@ class UploadForm(forms.ModelForm):
     def file_fields(self):
         return [self['metadata_file']]
 
-    def host_fields(self):
+    def patient_fields(self):
         for name in self.fields:
-            if name.startswith('metadata.host'):
+            if name.startswith('metadata.patient'):
                 yield self[name]
 
     def sample_fields(self):
@@ -126,11 +126,6 @@ class UploadForm(forms.ModelForm):
     def submitter_fields(self):
         for name in self.fields:
             if name.startswith('metadata.submitter'):
-                yield self[name]
-
-    def virus_fields(self):
-        for name in self.fields:
-            if name.startswith('metadata.virus'):
                 yield self[name]
 
     def clean_metadata_file(self):
