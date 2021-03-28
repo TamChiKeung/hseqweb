@@ -25,3 +25,9 @@ LOGGING = {
         }
     },
 }
+
+
+TUS_UPLOAD_DIR = os.path.join('/upload', 'tmp')
+TUS_DESTINATION_DIR = os.path.join('/upload', 'hguploads')
+TUS_FILE_NAME_FORMAT = 'random-suffix'
+
