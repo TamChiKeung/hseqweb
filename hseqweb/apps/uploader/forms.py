@@ -197,7 +197,7 @@ class UploadForm(forms.ModelForm):
         return sequence_file2_filename
 
     def clean(self):
-        if not self.cleaned_data['metadata_file']:
+        if not self.cleaned_data.get('metadata_file', None):
             metadata = {}
             for key, val in self.cleaned_data.items():
                 if not key.startswith('metadata') or not val:
