@@ -102,30 +102,12 @@ class UploadForm(forms.ModelForm):
             
             self.is_paired = False
 
-    def metadata_id(self):
-        return self['metadata.id']
-    
     def file_fields(self):
         return [self['metadata_file']]
 
-    def patient_fields(self):
+    def all_fields(self):
         for name in self.fields:
-            if name.startswith('metadata.patient'):
-                yield self[name]
-
-    def sample_fields(self):
-        for name in self.fields:
-            if name.startswith('metadata.sample'):
-                yield self[name]
-    
-    def technology_fields(self):
-        for name in self.fields:
-            if name.startswith('metadata.technology'):
-                yield self[name]
-
-    def submitter_fields(self):
-        for name in self.fields:
-            if name.startswith('metadata.submitter'):
+            if name.startswith('metadata.'):
                 yield self[name]
 
     def clean_metadata_file(self):
@@ -150,9 +132,11 @@ class UploadForm(forms.ModelForm):
         sequence_file_location = self.cleaned_data['sequence_file_location']
         if not sequence_file_location:
             raise ValidationError("This field is required.")
-
+        filepath = os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_location)
+        if not os.path.exists(filepath):
+            raise ValidationError("Something went wrong! Make sure reads are different!")
         try:
-            sf = open(os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_location), 'r')
+            sf = open(filepath, 'r')
             qc_fasta(sf)
         except ValueError:
             raise ValidationError("Invalid file format")
@@ -180,8 +164,11 @@ class UploadForm(forms.ModelForm):
         sequence_file2_location = self.cleaned_data['sequence_file2_location']
         self.is_paired = False
         if sequence_file2_location:
+            filepath = os.path.join(settings.TUS_UPLOAD_DIR, sequence_file2_location)
+            if not os.path.exists(filepath):
+                raise ValidationError("Something went wrong! Make sure reads are different!")
             try:
-                sf = open(os.path.join(settings.TUS_UPLOAD_DIR, sequence_file2_location), 'r')
+                sf = open(filepath, 'r')
                 qc_fasta(sf)
                 self.is_paired = True
             except ValueError:
@@ -257,12 +244,12 @@ class UploadForm(forms.ModelForm):
         sequence_file_loc2 = self.cleaned_data['sequence_file2_location']
         sequence_filename2 = self.cleaned_data['sequence_file2_filename']
         sequence_file2 = None
-        if sequence_file_loc2 and sequence_filename2:
+        if sequence_file_loc != sequence_file_loc2 and sequence_file_loc2 and sequence_filename2:
             sequence_tus_file2 = TusFile(str(sequence_file_loc2))
             sequence_tus_file2.clean()
             # os.renames(os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_loc2), os.path.join(settings.TUS_UPLOAD_DIR, sequence_filename2))
             sequence_file2 = os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_loc2)
-
+        
         metadata_file = self.cleaned_data['metadata_file']
         if metadata_file:
             metadata_file = self.save_file(metadata_file)

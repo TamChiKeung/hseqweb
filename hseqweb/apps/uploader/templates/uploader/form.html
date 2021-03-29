@@ -8,154 +8,87 @@
       enctype="multipart/form-data">
   {% csrf_token %}
   <div class="row">
-    <div class="col-6">
-        <h3>CBRC/BORG Human Sequence Database</h3>
-	<h4>Database for collecting Human sequence data from Saudi
-	  Arabia.</h4>
-    </div>
     <div class="col-12">
-		<div class="form-group" id="sequenceFileChooser">
-			<label for="id_sequence_file"> Sequence read<span class="required">*</span></label>
-			{{ form.sequence_file | add_class:"form-control" }}
-			{{ form.sequence_file_location.as_hidden}}
-			{{ form.sequence_file_filename.as_hidden}}
-			<small class="form-text text-muted">{{form.sequence_file.help_text}}</small>
-      	</div>
-		<div class="row round-border p-2" id="seqProgress">
-			<div class="col-10" >
-				<div class="progress mt-1">
-					<div class="progress-bar" id="progressBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-				</div>
-			</div>
-			<div class="col-2">
-          		<a class="btn btn-primary" role="button" id="toggle-btn">Pause upload</a>
-			</div>
-		</div>
-		<div class="row">
-			<div id="upload-success" class="ml-3 round-border pt-2 pl-4 col-12"></div>
-			<small class="text-danger">{{ form.sequence_file_location.errors }}</small>
-		</div>
-		<div class="form-group mt-2" id="sequenceFileChooser2">
-			<label for="id_sequence_file2"> Sequence read 2</label>
-			{{ form.sequence_file2 | add_class:"form-control" }}
-			{{ form.sequence_file2_location.as_hidden}}
-			{{ form.sequence_file2_filename.as_hidden}}
-			<small class="form-text text-muted">{{form.sequence_file2.help_text}}</small>
-      	</div>
-		<div class="row round-border p-2 mt-2" id="seqProgress2">
-			<div class="col-10" >
-				<div class="progress mt-1">
-					<div class="progress-bar" id="progressBar2" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-				</div>
-			</div>
-			<div class="col-2">
-          		<a class="btn btn-primary" role="button" id="toggle-btn2">Pause upload</a>
-			</div>
-		</div>
-		<div class="row mt-2">
-			<div id="upload-success2" class="ml-3 round-border pt-2 pl-4 col-12"></div>
-			<small class="text-danger">{{ form.sequence_file2_location.errors }}</small>
-		</div>
-    
-		<div class="form-group">
-			<label for="id_metadata_file">Metadata file</label>
-			{{ form.metadata_file | add_class:"form-control" }}
-			<small class="form-text text-muted">{{form.metadata_file.help_text}}</small>
-			<small class="text-danger">{{ form.metadata_file.errors }}</small>
-		</div>
+      <h3>CBRC/BORG Human Sequence Database</h3>
+      <h4>Database for collecting Human sequence data from Saudi
+	Arabia.</h4>
+    </div>
+    <div class="col-6">
+      <h3>Patient</h3>
+      {% for field in form.all_fields %}
+      <div class="form-group">
+	<label for="{{ field.auto_id }}">{{ field.label }}
+	  <a href="javascript:alert('{{ field.help_text }}')">?</a>
+	</label>
+        {{ field | add_class:"form-control" }}
+	<small class="text-danger">
+	  {{ field.errors }}
+	</small>
       </div>
+      {% endfor %}
+    </div>
+    
+    <div class="col-6">
+      <h3>Sequence Files</h3>
+      
+      <div class="form-group" id="sequenceFileChooser">
+	<label for="id_sequence_file"> Sequence read<span class="required">*</span></label>
+	{{ form.sequence_file | add_class:"form-control" }}
+	{{ form.sequence_file_location.as_hidden}}
+	{{ form.sequence_file_filename.as_hidden}}
+	<small class="form-text text-muted">{{form.sequence_file.help_text}}</small>
+      </div>
+      <div class="row round-border p-2" id="seqProgress">
+	<div class="col-10" >
+	  <div class="progress mt-1">
+	    <div class="progress-bar" id="progressBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+	  </div>
+	</div>
+	<div class="col-2">
+          <a class="btn btn-primary" role="button" id="toggle-btn">Pause</a>
+	</div>
+      </div>
+      <div class="row">
+	<div id="upload-success" class="ml-3 round-border pt-2 pl-4 col-12"></div>
+	<small class="text-danger">{{ form.sequence_file_location.errors }}</small>
+      </div>
+      <div class="form-group mt-2" id="sequenceFileChooser2">
+	<label for="id_sequence_file2"> Sequence read 2</label>
+	{{ form.sequence_file2 | add_class:"form-control" }}
+	{{ form.sequence_file2_location.as_hidden}}
+	{{ form.sequence_file2_filename.as_hidden}}
+	<small class="form-text text-muted">{{form.sequence_file2.help_text}}</small>
+      </div>
+      <div class="row round-border p-2 mt-2" id="seqProgress2">
+	<div class="col-10" >
+	  <div class="progress mt-1">
+	    <div class="progress-bar" id="progressBar2" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+	  </div>
+	</div>
+	<div class="col-2">
+          <a class="btn btn-primary" role="button" id="toggle-btn2">Pause</a>
+	</div>
+      </div>
+      <div class="row mt-2">
+	<div id="upload-success2" class="ml-3 round-border pt-2 pl-4 col-12"></div>
+	<small class="text-danger">{{ form.sequence_file2_location.errors }}</small>
+      </div>
+      
+      <div class="form-group">
+	<label for="id_metadata_file">Metadata file</label>
+	{{ form.metadata_file | add_class:"form-control" }}
+	<small class="form-text text-muted">{{form.metadata_file.help_text}}</small>
+	<small class="text-danger">{{ form.metadata_file.errors }}</small>
+      </div>
+    </div>
     <div class="col-12"><button class="btn btn-primary float-right" type="submit">Submit</button></div>
       <p>
 	<ul>
-	  <li><a href="{% static "sequence.fasta" %}">Example Sequence</a></li>
+	  <li><a href="{% static "read.fastq" %}">Example Sequence File</a></li>
 	  <li><a href="{% static "metadata.yaml" %}">Example
 	      Metadata</a></li>
 	</ul>
       </p>
-    </div>
-  </div>
-  <div class="row" id="metadata_fields">
-    <div class="col-3">
-      {% with form.metadata_id as field %}
-      <div class="form-group">
-	<label for="{{ field.auto_id }}">{{ field.label }}
-	  <a href="javascript:alert('{{ field.help_text }}')">?</a>
-	</label>
-        {{ field | add_class:"form-control" }}
-	<small class="text-danger">
-	  {{ field.errors }}
-	</small>
-      </div>
-      {% endwith %}
-    </div>
-    <div class="col-9"></div>
-    <div class="col-3">
-      <h3>Patient</h3>
-      {% for field in form.patient_fields %}
-      <div class="form-group">
-	<label for="{{ field.auto_id }}">{{ field.label }}
-	  <a href="javascript:alert('{{ field.help_text }}')">?</a>
-	</label>
-        {{ field | add_class:"form-control" }}
-	<small class="text-danger">
-	  {{ field.errors }}
-	</small>
-      </div>
-      {% endfor %}
-    </div>
-    <div class="col-3">
-      <h3>Sample</h3>
-      
-      {% for field in form.sample_fields %}
-      <div class="form-group">
-	<label for="{{ field.auto_id }}">{{ field.label }}
-	  {% if field.field.required %}
-	  <span class="required">*</span>
-	  {% endif %}
-	  <a href="javascript:alert('{{ field.help_text }}')">?</a>
-	</label>
-        {{ field | add_class:"form-control" }}
-	<small class="text-danger">
-	  {{ field.errors }}
-	</small>
-      </div>
-      {% endfor %}
-    </div>
-    <div class="col-3">
-      <h3>Technology</h3>
-      
-      {% for field in form.technology_fields %}
-      <div class="form-group">
-	<label for="{{ field.auto_id }}">{{ field.label }}
-	  {% if field.field.required %}
-	  <span class="required">*</span>
-	  {% endif %}
-	  <a href="javascript:alert('{{ field.help_text }}')">?</a>
-	</label>
-        {{ field | add_class:"form-control" }}
-	<small class="text-danger">
-	  {{ field.errors }}
-	</small>
-      </div>
-      {% endfor %}
-    </div>
-    <div class="col-3">
-      <h3>Submitter</h3>
-      
-      {% for field in form.submitter_fields %}
-      <div class="form-group">
-	<label for="{{ field.auto_id }}">{{ field.label }}
-	  {% if field.field.required %}
-	  <span class="required">*</span>
-	  {% endif %}
-	  <a href="javascript:alert('{{ field.help_text }}')">?</a>
-	</label>
-        {{ field | add_class:"form-control" }}
-	<small class="text-danger">
-	  {{ field.errors }}
-	</small>
-      </div>
-      {% endfor %}
     </div>
   </div>
 </form>
