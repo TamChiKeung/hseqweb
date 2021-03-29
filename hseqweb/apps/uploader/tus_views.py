@@ -124,7 +124,6 @@ class TusUpload(View):
         return TusResponse(status=204, extra_headers={'Upload-Offset': tus_file.offset})
 
     def send_signal(self, tus_file):
-        print(tus_file.metadata,tus_file.filename, tus_file.get_path(), tus_file.file_size)
         tus_upload_finished_signal.send(
             sender=self.__class__,
             metadata=tus_file.metadata,

@@ -183,6 +183,7 @@ class UploadForm(forms.ModelForm):
             try:
                 sf = open(os.path.join(settings.TUS_UPLOAD_DIR, sequence_file2_location), 'r')
                 qc_fasta(sf)
+                self.is_paired = True
             except ValueError:
                 raise ValidationError("Invalid file format")
 
@@ -250,8 +251,8 @@ class UploadForm(forms.ModelForm):
 
         sequence_tus_file = TusFile(str(sequence_file_loc))
         sequence_tus_file.clean()
-        os.renames(os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_loc), os.path.join(settings.TUS_UPLOAD_DIR, sequence_filename))
-        sequence_file = os.path.join(settings.TUS_UPLOAD_DIR, sequence_filename)
+        # os.renames(os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_loc), os.path.join(settings.TUS_UPLOAD_DIR, sequence_filename))
+        sequence_file = os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_loc)
 
         sequence_file_loc2 = self.cleaned_data['sequence_file2_location']
         sequence_filename2 = self.cleaned_data['sequence_file2_filename']
@@ -259,8 +260,8 @@ class UploadForm(forms.ModelForm):
         if sequence_file_loc2 and sequence_filename2:
             sequence_tus_file2 = TusFile(str(sequence_file_loc2))
             sequence_tus_file2.clean()
-            os.renames(os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_loc2), os.path.join(settings.TUS_UPLOAD_DIR, sequence_filename2))
-            sequence_file2 = os.path.join(settings.TUS_UPLOAD_DIR, sequence_filename2)
+            # os.renames(os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_loc2), os.path.join(settings.TUS_UPLOAD_DIR, sequence_filename2))
+            sequence_file2 = os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_loc2)
 
         metadata_file = self.cleaned_data['metadata_file']
         if metadata_file:
