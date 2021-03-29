@@ -1,6 +1,5 @@
 PREFIX : <https://raw.githubusercontent.com/bio-ontology-research-group/hguploader/master/hguploader/shex.rdf#>
-PREFIX MainSchema: <http://biohackathon.org/bh20-seq-schema#MainSchema/>
-PREFIX hostSchema: <http://biohackathon.org/bh20-seq-schema#hostSchema/>
+PREFIX MainSchema: <http://borg.kaust.edu.sa/hg-schema#MainSchema/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX obo: <http://purl.obolibrary.org/obo/>
 PREFIX sio: <http://semanticscience.org/resource/>
@@ -10,20 +9,18 @@ PREFIX edam: <http://edamontology.org/>
 PREFIX wikidata: <http://www.wikidata.org/entity/>
 
 :submissionShape {
-  MainSchema:host   @:hostShape ;
+  MainSchema:patient   @:patientShape ;
   MainSchema:sample @:sampleShape ;
   MainSchema:submitter @:submitterShape ;
   MainSchema:technology @:technologyShape ;
-  MainSchema:virus @:virusShape;
 }
 
 :patientShape  {
-  	efo:EFO_0000532 [ obo:NCBITaxon_~ ] ;
     sio:SIO_000115 xsd:string ?;
     obo:PATO_0000047 [ obo:PATO_0000384 obo:PATO_0000383 obo:PATO_0001340] ?;
     obo:PATO_0000011 xsd:integer ?;
     obo:NCIT_C42574 [ obo:UO_~ ] ?;
-	obo:NCIT_C25688 [obo:NCIT_C115935 obo:NCIT_C3833 obo:NCIT_C25269 obo:GENEPIO_0002020 obo:GENEPIO_0001849 obo:NCIT_C28554 obo:NCIT_C37987 ] ? ;
+    obo:NCIT_C25688 [obo:NCIT_C115935 obo:NCIT_C3833 obo:NCIT_C25269 obo:GENEPIO_0002020 obo:GENEPIO_0001849 obo:NCIT_C28554 obo:NCIT_C37987 ] ? ;
     efo:EFO_0000727 xsd:string ?;
     obo:VO_0000002 xsd:string {0,10};
     sio:SIO_001167 xsd:string ?;

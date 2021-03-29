@@ -1,19 +1,18 @@
-id: placeholder
+id: ID0000001
 
-host:
-    host_id: XX1
-    host_species: http://purl.obolibrary.org/obo/NCBITaxon_9606
-    host_sex: http://purl.obolibrary.org/obo/PATO_0000384
-    host_age: 20
-    host_age_unit: http://purl.obolibrary.org/obo/UO_0000036
-    host_health_status: http://purl.obolibrary.org/obo/NCIT_C25269
-    host_treatment: Process in which the act is intended to modify or alter host status (Compounds)
-    host_vaccination: [vaccines1,vaccine2]
+patient:
+    patient_id: PT001
+    sex: http://purl.obolibrary.org/obo/PATO_0000384
+    age: 20
+    age_unit: http://purl.obolibrary.org/obo/UO_0000036
+    health_status: http://purl.obolibrary.org/obo/NCIT_C25269
+    treatment: Process in which the act is intended to modify or alter host status (Compounds)
+    vaccination: [vaccines1,vaccine2]
     ethnicity: http://purl.obolibrary.org/obo/HANCESTRO_0010
-    additional_host_information: Optional free text field for addtional information
+    additional_information: Optional free text field for addtional information
 
 sample:
-    sample_id: Id of the sample as defined by the submitter 
+    sample_id: SAMPLE01 
     collector_name: Name of the person that took the sample
     collecting_institution: Institute that was responsible of sampling  
     specimen_source: [http://purl.obolibrary.org/obo/NCIT_C155831,http://purl.obolibrary.org/obo/NCIT_C155835]
@@ -22,10 +21,6 @@ sample:
     sample_storage_conditions: frozen specimen
     source_database_accession: [http://identifiers.org/insdc/LC522350.1#sequence]
     additional_collection_information: Optional free text field for addtional information
-
-virus:
-    virus_species: http://purl.obolibrary.org/obo/NCBITaxon_2697049
-    virus_strain: SARS-CoV-2/human/CHN/HS_8/2020
 
 technology:
     sample_sequencing_technology: [http://www.ebi.ac.uk/efo/EFO_0009173,http://www.ebi.ac.uk/efo/EFO_0009173]
