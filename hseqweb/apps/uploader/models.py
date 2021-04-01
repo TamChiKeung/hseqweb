@@ -45,7 +45,7 @@ class Upload(models.Model):
     def name(self):
         if not self.collection:
             return None
-        return self.collection['properties']['sequence_label']
+        return self.collection['properties']['id']
 
     @property
     def sequence_filename(self):
