@@ -152,8 +152,18 @@ class ValidationRunsView(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         wg_col_uuid = 'cborg-4zz18-0l7m048bpsivyzb'
+        ex_col_uuid = 'cborg-4zz18-szhgxdetn190fug'
+        tr_col_uuid = 'cborg-4zz18-pv7ev6qeu3d23oj'
         context['wg_col_uuid'] = wg_col_uuid
+        context['ex_col_uuid'] = ex_col_uuid
+        context['tr_col_uuid'] = tr_col_uuid
         col = api.collections().get(uuid=wg_col_uuid).execute()
-        files = parse_manifest_text(col['manifest_text'])
-        context['files'] = files
+        wg_files = parse_manifest_text(col['manifest_text'])
+        context['wg_files'] = wg_files
+        col = api.collections().get(uuid=ex_col_uuid).execute()
+        ex_files = parse_manifest_text(col['manifest_text'])
+        context['ex_files'] = ex_files
+        col = api.collections().get(uuid=tr_col_uuid).execute()
+        tr_files = parse_manifest_text(col['manifest_text'])
+        context['tr_files'] = tr_files
         return context

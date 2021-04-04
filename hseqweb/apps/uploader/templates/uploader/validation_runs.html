@@ -3,11 +3,12 @@
 
 {% block content %}
 <div class="container">
-  <div class="row">
+  <div class="row small">
     <div class="col-12">
-      <p>Validation run for whole genome workflow</p>
+      <h2>Validation runs</h2>
     </div>
-    <div class="col-12">
+    <div class="col-4">
+      <h3>Whole Genome</h3>
       <table class="table table-striped">
         <thead>
           <th> Filename </th>
@@ -15,7 +16,56 @@
           <th> Download </th>
         </thead>
         <tbody>
-          {% for fl in files %}
+          {% for fl in wg_files %}
+          <tr>
+            <td> {{ fl.name }} </td>
+            <td> {{ fl.size|filesizeformat }} </td>
+            <td>
+              <form method="post" action="{% url "uploader-download" wg_col_uuid fl.name %}">
+                {% csrf_token %}
+                <button class="btn btn-primary"
+                type="submit"><i class="fa fa-download"></i></button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h3>Whole Exome</h3>
+      <table class="table table-striped">
+        <thead>
+          <th> Filename </th>
+          <th> Size </th>
+          <th> Download </th>
+        </thead>
+        <tbody>
+          {% for fl in ex_files %}
+          <tr>
+            <td> {{ fl.name }} </td>
+            <td> {{ fl.size|filesizeformat }} </td>
+            <td>
+              <form method="post" action="{% url "uploader-download" wg_col_uuid fl.name %}">
+                {% csrf_token %}
+                <button class="btn btn-primary"
+                type="submit"><i class="fa fa-download"></i></button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div><div class="col-4">
+      <h3>Trio</h3>
+      <table class="table table-striped">
+        <thead>
+          <th> Filename </th>
+          <th> Size </th>
+          <th> Download </th>
+        </thead>
+        <tbody>
+          {% for fl in tr_files %}
           <tr>
             <td> {{ fl.name }} </td>
             <td> {{ fl.size|filesizeformat }} </td>
