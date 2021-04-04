@@ -46,7 +46,7 @@
             <td> {{ fl.name }} </td>
             <td> {{ fl.size|filesizeformat }} </td>
             <td>
-              <form method="post" action="{% url "uploader-download" wg_col_uuid fl.name %}">
+              <form method="post" action="{% url "uploader-download" ex_col_uuid fl.name %}">
                 {% csrf_token %}
                 <button class="btn btn-primary"
                 type="submit"><i class="fa fa-download"></i></button>
@@ -70,7 +70,7 @@
             <td> {{ fl.name }} </td>
             <td> {{ fl.size|filesizeformat }} </td>
             <td>
-              <form method="post" action="{% url "uploader-download" wg_col_uuid fl.name %}">
+              <form method="post" action="{% url "uploader-download" tr_col_uuid fl.name %}">
                 {% csrf_token %}
                 <button class="btn btn-primary"
                 type="submit"><i class="fa fa-download"></i></button>
