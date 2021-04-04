@@ -11,6 +11,10 @@ urlpatterns = [
     path('view/<int:pk>', login_required(UploadDetailView.as_view()), name='uploader-view'),
     path('list', login_required(UploadListView.as_view()), name='uploader-list'),
 
-    path('submission', submission_list_view , name='uploader-submission_list'),
-    path('submission/<path:iri>', submission_details_view , name='uploader-submission_details')
+    path('download/<path:col_uuid>/<path:filename>',
+         DownloadView.as_view() ,
+         name='uploader-download'),
+    path('validations',
+         ValidationRunsView.as_view() ,
+         name='uploader-validations')
 ]

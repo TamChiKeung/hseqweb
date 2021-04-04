@@ -21,33 +21,29 @@
     <h3>Sample ID: {{ object.name }}</h3>
     <ul class="list-group">
       <li class="list-group-item">
-        <form method="post" action="{% url "uploader-view" object.pk %}">
+        <form method="post" action="{% url "uploader-download" object.col_uuid "metadata.yaml" %}">
           {% csrf_token %}
-          <input type="hidden" name="action" value="download_metadata"/>
           <button class="btn btn-primary" type="submit">Download Metadata</button>
         </form>
       </li>
       {% if object.is_fasta %}
       <li class="list-group-item">
-        <form method="post" action="{% url "uploader-view" object.pk %}">
+        <form method="post" action="{% url "uploader-download" object.col_uuid "sequence.fasta" %}">
           {% csrf_token %}
-          <input type="hidden" name="action" value="download_fasta"/>
           <button class="btn btn-primary" type="submit">Download FASTA</button>
         </form>
       </li>
       {% else %}
       <li class="list-group-item">
-        <form method="post" action="{% url "uploader-view" object.pk %}">
+        <form method="post" action="{% url "uploader-download" object.col_uuid "reads1.fastq" %}">
           {% csrf_token %}
-          <input type="hidden" name="action" value="download_fastq1"/>
           <button class="btn btn-primary" type="submit">Download Read 1</button>
         </form>
       </li>
       {% if object.is_paired %}
       <li class="list-group-item">
-        <form method="post" action="{% url "uploader-view" object.pk %}">
+        <form method="post" action="{% url "uploader-download" object.col_uuid "reads2.fastq" %}">
           {% csrf_token %}
-          <input type="hidden" name="action" value="download_fastq2"/>
           <button class="btn btn-primary" type="submit">Download Read 2</button>
         </form>
       </li>

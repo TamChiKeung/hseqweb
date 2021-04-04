@@ -4,16 +4,17 @@ import logging
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import InvalidPage, Paginator
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect, StreamingHttpResponse
 from django.conf import settings
 
 from uploader.submissions import Submissions
 from django.views.generic import CreateView, DetailView, ListView
+from django.views.generic.base import View, TemplateView
 from uploader.forms import UploadForm
 from hseqweb.mixins import FormRequestMixin, ActionMixin
 from hseqweb.virtuoso import insert
 from uploader.models import Upload
-from uploader.utils import api
+from uploader.utils import api, parse_manifest_text
 from uploader.utils import fix_iri_path_param
 import arvados
 import arvados.collection
@@ -51,67 +52,6 @@ class UploadDetailView(ActionMixin, DetailView):
             raise Http404
         return super(UploadDetailView, self).dispatch(request, *args, **kwargs)
     
-    def on_download_fasta(self, request, action):
-        upload = self.get_object()
-        if upload.status != Upload.UPLOADED:
-            raise Http404
-        response = HttpResponse(content_type='text/fasta')
-        response['Content-Disposition'] = \
-            'attachment; filename="sequence.fasta"'
-        c = arvados.collection.CollectionReader(upload.col_uuid)
-        with c.open('sequence.fasta', "rb") as reader:
-            content = reader.read(128*1024)
-            while content:
-                response.write(content)
-                content = reader.read(128*1024)
-        return response
-
-    def on_download_fastq1(self, request, action):
-        upload = self.get_object()
-        if upload.status != Upload.UPLOADED:
-            raise Http404
-        response = HttpResponse(content_type='text/fastq')
-        response['Content-Disposition'] = \
-            'attachment; filename="reads1.fastq"'
-        c = arvados.collection.CollectionReader(upload.col_uuid)
-        with c.open('reads1.fastq', "rb") as reader:
-            content = reader.read(128*1024)
-            while content:
-                response.write(content)
-                content = reader.read(128*1024)
-        return response
-
-    def on_download_fastq2(self, request, action):
-        upload = self.get_object()
-        if upload.status != Upload.UPLOADED:
-            raise Http404
-        response = HttpResponse(content_type='text/fastq')
-        response['Content-Disposition'] = \
-            'attachment; filename="reads2.fastq"'
-        c = arvados.collection.CollectionReader(upload.col_uuid)
-        with c.open('reads2.fastq', "rb") as reader:
-            content = reader.read(128*1024)
-            while content:
-                response.write(content)
-                content = reader.read(128*1024)
-        return response
-
-
-    def on_download_metadata(self, request, action):
-        upload = self.get_object()
-        if upload.status != Upload.UPLOADED:
-            raise Http404
-        response = HttpResponse(content_type='application/json')
-        response['Content-Disposition'] = \
-            'attachment; filename="metadata.yaml"'
-        c = arvados.collection.CollectionReader(upload.col_uuid)
-        with c.open('metadata.yaml', "rb") as reader:
-            content = reader.read(128*1024)
-            while content:
-                response.write(content)
-                content = reader.read(128*1024)
-        return response
-
     def on_delete(self, request, action):
         upload = self.get_object()
         if upload.status != Upload.UPLOADED:
@@ -185,3 +125,35 @@ def submission_details_view(request, iri):
     context = { 'submission': submission }
 
     return render(request, 'uploader/view-submission.html', context)
+
+
+def collection_content(col_uuid, filename):
+    c = arvados.collection.CollectionReader(col_uuid)
+    with c.open(filename, "rb") as reader:
+        content = reader.read(128*1024)
+        while content:
+            yield content
+            content = reader.read(128*1024)
+        
+class DownloadView(View):
+
+    def post(self, request, *args, **kwargs):
+        col_uuid = self.kwargs.get('col_uuid')
+        filename = self.kwargs.get('filename')
+        response = StreamingHttpResponse(collection_content(col_uuid, filename))
+        response['Content-Disposition'] = \
+            f'attachment; filename="{filename}"'
+        return response
+
+
+class ValidationRunsView(TemplateView):
+    template_name = 'uploader/validation_runs.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        wg_col_uuid = 'cborg-4zz18-0l7m048bpsivyzb'
+        context['wg_col_uuid'] = wg_col_uuid
+        col = api.collections().get(uuid=wg_col_uuid).execute()
+        files = parse_manifest_text(col['manifest_text'])
+        context['files'] = files
+        return context
