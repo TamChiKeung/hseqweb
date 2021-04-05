@@ -101,228 +101,20 @@
 					
 					<section class="docs-section" id="item-1-3">
 						<h2 class="section-heading">Metadata File Format</h2>
-						<p>The structure of the metadata file is described in <a class="theme-link" href="https://yaml.org/" target="_blank">YAML</a> 
-                        language. The schema file is available <a class="theme-link" href="https://github.com/bio-ontology-research-group/cborguploader/blob/master/cborguploader/bh20seq-schema.yml" target="_blank">here</a>.</p>
-                        <h5>Metadata file fields description:</h5>
-						<div class="table-responsive my-4">
-							<table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                    <th class="theme-bg-light">Field Name</th>
-                                    <th class="theme-bg-light">Required</th>
-                                    <th class="theme-bg-light">Description</th>
-                                    </tr>
-                                </thead>
-								<tbody>
-								    <tr>
-									    <td>id </td>
-									    <td>required </td>
-									    <td>The subject (eg the fasta/fastq file) that the metadata describes</td>
-									</tr>
-								    <tr>
-									    <td>host.host_species</td>
-									    <td>required </td>
-									    <td>Host species as defined in NCBITaxon, e.g. http://purl.obolibrary.org/obo/NCBITaxon_9606 for Homo sapiens</td>
-									</tr>
-								    <tr>
-									    <td>host.host_id </td>
-									    <td>optional </td>
-									    <td>Identifer for the host. If you submit multiple samples from the same host, use the same host_id for those samples</td>
-									</tr>
-								    <tr>
-									    <td>host.host_sex </td>
-									    <td>optional </td>
-									    <td>Sex of the host as defined in PATO, expect male () or female ()</td>
-									</tr>
-								    <tr>
-									    <td>host.host_age </td>
-									    <td>optional </td>
-									    <td>Age of the host as number (e.g. 50)</td>
-									</tr>
-								    <tr>
-									    <td>host.host_age_unit </td>
-									    <td>optional </td>
-									    <td>Unit of host age e.g. http://purl.obolibrary.org/obo/UO_0000036</td>
-									</tr>
-								    <tr>
-									    <td>host.host_health_status </td>
-									    <td>optional </td>
-									    <td>A condition or state at a particular time, must be one of the following (obo:NCIT_C115935 obo:NCIT_C3833 obo:NCIT_C25269 obo:GENEPIO_0002020 obo:GENEPIO_0001849 obo:NCIT_C28554 obo:NCIT_C37987)</td>
-									</tr>
-								    <tr>
-									    <td>host.host_treatment </td>
-									    <td>optional </td>
-									    <td>Process in which the act is intended to modify or alter host status</td>
-									</tr>
-								    <tr>
-									    <td>host.host_vaccination </td>
-									    <td>optional </td>
-									    <td>List of vaccines given to the host</td>
-									</tr>
-								    <tr>
-									    <td>host.ethnicity </td>
-									    <td>optional </td>
-									    <td>Ethinicity of the host e.g. http://purl.obolibrary.org/obo/HANCESTRO_0010</td>
-									</tr>
-								    <tr>
-									    <td>host.additional_host_information </td>
-									    <td>optional </td>
-									    <td> Field for additional host information</td>
-									</tr> 
-								    <tr>
-									    <td>sample.sample_id </td>
-									    <td>required </td>
-									    <td>Id of the sample as defined by the submitter</td>
-									</tr>
-								    <tr>
-									    <td>sample.collection_date </td>
-									    <td>required </td>
-									    <td>Date when the sample was taken</td>
-									</tr>
-								    <tr>
-									    <td>sample.collection_location </td>
-									    <td>required </td>
-									    <td>Geographical location where the sample was collected as wikidata reference, e.g. http://www.wikidata.org/entity/Q148 (China)</td>
-									</tr>
-								    <tr>
-									    <td>sample.collector_name </td>
-									    <td>optional </td>
-									    <td>Name of the person that took the sample</td>
-									</tr>
-								    <tr>
-									    <td>sample.collecting_institution </td>
-									    <td>optional </td>
-									    <td>Institute that was responsible for sampeling</td>
-									</tr>
-								    <tr>
-									    <td>sample.specimen_source </td>
-									    <td>optional </td>
-									    <td>There can be more than one source of specimen. Method how the specimen was derived as NCIT IRI, e.g. http://purl.obolibrary.org/obo/NCIT_C155831 (=nasopharyngeal swab)</td>
-									</tr>
-								    <tr>
-									    <td>sample.sample_storage_conditions </td>
-									    <td>optional </td>
-									    <td>Information about storage of a specified type, e.g.  frozen specimen, paraffin, fresh ....</td>
-									</tr>
-								    <tr>
-									    <td>sample.additional_collection_information </td>
-									    <td>optional </td>
-									    <td>Add additional comment about the circumstances that a sample was taken</td>
-									</tr>
-								    <tr>
-									    <td>sample.source_database_accession </td>
-									    <td>optional </td>
-									    <td>If data is deposit at a public resource (e.g. Genbank, ENA) enter the Accession Id here. Please use a resolveable URL (e.g. http://identifiers.org/insdc/LC522350.1#sequence)</td>
-									</tr>
-								    <tr>
-									    <td>virus.virus_species </td>
-									    <td>required </td>
-									    <td>The name of virus species from the NCBI taxonomy database, e.g. http://purl.obolibrary.org/obo/NCBITaxon_2697049 for Severe acute respiratory syndrome coronavirus 2</td>
-									</tr>
-								    <tr>
-									    <td>virus.virus_strain </td>
-									    <td>optional </td>
-									    <td>Name of the virus strain</td>
-									</tr>
-								    <tr>
-									    <td>technology.sample_sequencing_technology </td>
-									    <td>optional </td>
-									    <td>Technology that was used to sequence this sample (e.g Sanger, Nanopor MiniION)</td>
-									</tr>
-								    <tr>
-									    <td>technology.sequence_assembly_method </td>
-									    <td>optional </td>
-									    <td>Protocol which provides instructions on the alignment of sequencing reads to reference genome</td>
-									</tr>
-								    <tr>
-									    <td>technology.sequencing_coverage </td>
-									    <td>optional </td>
-									    <td>Sequence coverage defined as the average number of reads representing a given nucleotide (e.g. [100]) - if multiple technologies were used multiple float values can be submitted e.g. [100, 20]</td>
-									</tr>
-								    <tr>
-									    <td>technology.additional_technology_information </td>
-									    <td>optional </td>
-									    <td>Field for additional technology information</td>
-									</tr>
-								    <tr>
-									    <td>submitter.authors </td>
-									    <td>required </td>
-									    <td>Name(s) of the author(s)</td>
-									</tr>
-								    <tr>
-									    <td>submitter.submitter_name </td>
-									    <td>optional </td>
-									    <td>Name of the submitter(s)</td>
-									</tr>
-								    <tr>
-									    <td>submitter.submitter_address </td>
-									    <td>optional </td>
-									    <td>Address of the submitter</td>
-									</tr>
-								    <tr>
-									    <td>submitter.originating_lab </td>
-									    <td>optional </td>
-									    <td>Name of the laboratory that took the sample</td>
-									</tr>
-								    <tr>
-									    <td>submitter.lab_address </td>
-									    <td>optional </td>
-									    <td>Address of the laboratory where the sample was taken</td>
-									</tr>
-								    <tr>
-									    <td>submitter.provider_sample_id </td>
-									    <td>optional </td>
-									    <td></td>
-									</tr>
-								    <tr>
-									    <td>submitter.submitter_sample_id </td>
-									    <td>optional </td>
-									    <td></td>
-									</tr>
-								    <tr>
-									    <td>submitter.publication </td>
-									    <td>optional </td>
-									    <td>Reference to publication of this sample (e.g. DOI, pubmed ID, ...)</td>
-									</tr>
-								    <tr>
-									    <td>submitter.submitter_orcid </td>
-									    <td>optional </td>
-									    <td>ORCID of the submitter as a full URI, e.g. https://orcid.org/0000-0002-1825-0097</td>
-									</tr>
-								    <tr>
-									    <td>submitter.additional_submitter_information </td>
-									    <td>optional </td>
-									    <td>Field for additional submitter information</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
+						<p>The structure of
+                        the metadata file is described in the <a class="theme-link" href="https://yaml.org/" target="_blank">YAML</a> 
+                        language.</p>
 					</section>
 					<section class="docs-section" id="item-1-4">
 						<h2 class="section-heading">Sequence File Format</h2>
-						<p>The sequence read files should be in FASTA or FASTQ File file format. The maximum size of the file size allowed to be uploaded is 512 MB.</p>
+						<p>The sequence read
+						files should be in
+						FASTQ file file
+						format. We support
+						Illumina reads only at
+						the moment.</p>
 					</section><!--//section-->
 					
-					<section class="docs-section" id="item-1-5">
-						<h2 class="section-heading">SPARQL</h2>
-						<p>To be able to make metadata available through SPARQL endpoint for querying, the uploader at time of upload converts the metadata into RDF.
-                         Single RDF resource is compiled that is linked against external resources such as NCBITaxon, PATO, CHEBI and Wikidata. The generated RDF
-                        file is hosted in any triple store and can be queried using SPARQL.</p>
-                        <p>RDF resource structure is described in <a class="theme-link" href="https://www.w3.org/TR/shacl/" target="_blank">SHACL</a> 
-                        language and the schema file is available <a class="theme-link" href="https://github.com/bio-ontology-research-group/cborguploader/blob/master/cborguploader/bh20seq-shex.rdf" target="_blank">here</a>.</p>
-                        <p>The uploader web interface provides an interactive SPARQL query editor and the example queries for querying submitted data such as query for listing 
-                        all the submissions, listing submissions for SARS-COV-2 virus and details of a specific submission.</p>
-					</section><!--//section-->
-
-					<section class="docs-section" id="item-1-6">
-						<h2 class="section-heading">Accessing Human Pangenome Analysis Results</h2>
-						<p>Our Pangenome analysis service runs the analysis over all the uploaded sequences twice a day. It then sync the latest results to 
-						<a class="theme-link" href="https://galaxy.cbrc.kaust.edu.sa/" target="_blank">BORG/CBRC's public galaxy server.</a></p>
-						The CBRC's galaxy instance provides a user friendly interface for analysis of bioscience and biomedical data, using a wide 
-						variety of tools and algorithms developed by an international team of experts and researchers.</p>
-                        <p>There is a shared data library for Human pangenome analysis on our galaxy instance. Here is the <a class="theme-link" href="https://galaxy.cbrc.kaust.edu.sa/library/list#folders/Ff09437b8822035f7" target="_blank">link</a> 
-						to latest pangenome analysis results.<p>
-					</section><!--//section-->
 			    </article>
 			    <article class="docs-article" id="section-2">
 				    <header class="docs-header">
@@ -367,7 +159,7 @@
 					</section><!--//section-->
                     <section class="docs-section" id="item-2-2">
                         <h2 class="section-heading">Usage</h2>
-                        <p>Run the uploader with a FASTA or FASTQ file and accompanying metadata file in JSON or YAML:</p>
+                        <p>Run the uploader with a FASTQ file and accompanying metadata file in JSON or YAML:</p>
                         <div class="docs-code-block">
 							<code class="shell">cborguploader example/sequence.fasta example/metadata.yaml</code>
                         </div>
@@ -376,18 +168,6 @@
                             <li>Example <a class="theme-link" href="https://upload.cborg.cbrc.kaust.edu.sa/static/sequence.fasta" target="_blank">Sequence file</a></li>
                             <li>Example <a class="theme-link" href="https://upload.cborg.cbrc.kaust.edu.sa/static/metadata.yaml" target="_blank">Metadata file</a></li>
                         </ul>
-                        <h5 class="pt-5">Workflow for Generating a Pangenome</h5>
-						<p>All these uploaded sequences are being fed into a workflow to generate a <a class="theme-link" href="https://academic.oup.com/bib/article/19/1/118/2566735" target="_blank">pangenome</a>
-						 for the virus. You can replicate this workflow yourself.</p>
-						<p>An example is to get your SARS-CoV-2 sequences from GenBank in `seqs.fa`, and then run a series of commands</p>
-						<div class="docs-code-block">
-							<code class="shell">minimap2 -cx asm20 -X seqs.fa seqs.fa >seqs.paf</code><br />
-							<code class="shell">seqwish -s seqs.fa -p seqs.paf -g seqs.gfa</code><br />
-							<code class="shell">odgi build -g seqs.gfa -s -o seqs.odgi</code><br />
-							<code class="shell">odgi viz -i seqs.odgi -o seqs.png -x 4000 -y 500 -R -P 5</code>
-                        </div>
-						<p>Here we convert such a pipeline into the Common Workflow Language (CWL) and
-						sources can be found <a class="theme-link" href="https://github.com/hpobio-lab/viral-analysis/tree/master/cwl/pangenome-generate" target="_blank">here</a>.
                     </section>
 			    </article><!--//docs-article-->
 		    </div> 
