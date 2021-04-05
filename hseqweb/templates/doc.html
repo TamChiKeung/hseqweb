@@ -51,34 +51,45 @@
                         and sharing genomic and other large scientific
                         and biomedical data. Data will be encrypted
                         during and after upload and during processing.
-                        Our cloud is deployed on BORG/CBRC servers for testing and development.</p>
-                        <p>In order to use the BORG/CBRC cloud
-                        platform for managing your data, user can
-                        create an account and sign in to arvados
-                        platform.</p>
+                        Our cloud is deployed on BORG/CBRC servers for
+						  testing and development.</p>
+						<p>In order to use the BORG/CBRC cloud
+						  platform for managing your data, user can
+                        create an account and sign in.</p>
                         <h5 class="pt-2">Getting an API token</h5>
                         <p>The API token is a secret key that enables users to authenticate themselves in order to use the command line tools 
                         for cloud platform to manage data .</p>    
                         <p><strong>Human Sequence uploader</strong> also requires the API token to be set as environment variable before running it.</p>
                         <h5 class="pt-2">Setting API token as environment variables</h5>
-                        <p>The current token page, accessed using the
-                        dropdown menu icon in the upper right corner
-                        of the top navigation menu
-                        on <a class="theme-link"
-                        href="https://workbench.cborg.cbrc.kaust.edu.sa/"
-                        target="_blank">arvados web inteface</a>, includes a command you may copy and paste directly into the shell. It will look something as the following.</p>
-                        <div class="docs-code-block">
-							<code class="shell">export ARVADOS_API_TOKEN=2jv9346o396exampledonotuseexampledonotuseexes7j1ld</code><br />
-                            <code class="shell">export ARVADOS_API_HOST=cborg.cbrc.kaust.edu.sa</code>
+						<p>To upload data, you
+						  need an API
+						  token. To obtain the
+						  token, <a href="mailto:maxat.kulmanov@kaust.edu.sa">contact us</a>.
                         </div>
 					</section><!--//section-->
 				    <section class="docs-section" id="item-1-2">
 						<h2 class="section-heading">Using Human Web portal for uploading</h2>
-						<p>For uploading the sequence data, You can follow the following steps: </p>
+						<p>For uploading the
+						sequence data on the web, you can follow the following steps: </p>
 						<ol>
 						    <li>You will need to sign in if you have already registered. You can sign in using your ORCID account too by clicking on <strong class="mr-1">Orcid.org</strong> link on sign in page.</li>
 						    <li>Once you are logged in, click on the <strong class="mr-1">Upload</strong> menu from top menu bar.</li>
-						    <li>Choose the sequence files to be uploaded and metadata file (or fill the input fields in the form) from the file system and submit the form. It will take few minutes to upload and process sequence file.</li>
+						    <li>Choose the
+						    sequence files to
+						    be uploaded and
+						    metadata file (or
+						    fill the input
+						    fields in the
+						    form) from the
+						    file system and
+						    submit the
+						    form. It will take
+						    few minutes to
+						    hours (depending
+						    on your connection
+						    and the file size)
+						    to upload and
+						    process the sequence file.</li>
 						    <li> Once the data is processed, click on the <strong class="mr-1">Submissions</strong> menu from the menu bar to see your submission.</li>
 						    <li>Click on the view link to see the details.</li>
 						    <li>The ID of the submission is the URL to the sequence data directory in the cloud. Click on the URL to see the submitted data.</li>
