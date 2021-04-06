@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from uploader.utils import api
+from uploader.utils import api, parse_manifest_text
 COLLECTIONS_URL = 'https://collections.cborg.cbrc.kaust.edu.sa'
 
 
@@ -19,6 +19,7 @@ class Upload(models.Model):
     ]
     is_fasta = models.BooleanField(default=True)
     is_paired = models.BooleanField(default=False)
+    is_exome = models.BooleanField(default=False)
     user = models.ForeignKey(
         User, blank=True, null=True, on_delete=models.SET_NULL,
         related_name="uploads")
@@ -46,6 +47,12 @@ class Upload(models.Model):
         if not self.collection:
             return None
         return self.collection['properties']['id']
+
+    @property
+    def files(self):
+        if not self.collection:
+            return []
+        return parse_manifest_text(self.collection['manifest_text'])
 
     @property
     def sequence_filename(self):

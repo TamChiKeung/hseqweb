@@ -74,14 +74,19 @@ jQuery(function($) {
     var chunkSize = 5242880;
     var seqFileDiv1 = $('#sequenceFileChooser');
     var seqFileDiv2 = $('#sequenceFileChooser2');
+    var bedFileDiv = $('#bedFileChooser');
     var progressDiv1 = $('#seqProgress');
     var progressDiv2 = $('#seqProgress2');
+    var progressDiv3 = $('#bedProgress');
     var progress1 = $('#progressBar');
     var progress2 = $('#progressBar2');
+    var progress3 = $('#progressBarBed');
     var toggleBtn1 = $('#toggle-btn');
     var toggleBtn2 = $('#toggle-btn2');
+    var toggleBtn3 = $('#toggle-btnbed');
     var uploadSuccess = $('#upload-success');
     var uploadSuccess2 = $('#upload-success2');
+    var uploadSuccess3 = $('#upload-successbed');
 
     var sequenceFile = $("#id_sequence_file");
     var sequenceFileLocation = $("#id_sequence_file_location");
@@ -89,6 +94,10 @@ jQuery(function($) {
     var sequenceFile2 = $("#id_sequence_file2");
     var sequenceFileLocation2 = $("#id_sequence_file2_location");
     var sequenceFilename2 = $("#id_sequence_file2_filename");
+
+    var bedFile = $("#id_bed_file");
+    var bedFileLocation = $("#id_bed_file_location");
+    var bedFilename = $("#id_bed_file_filename");
 
     if (!tus.isSupported) {
         alertBox.classList.remove("hidden");
@@ -125,6 +134,23 @@ jQuery(function($) {
             }
         }
     });
+
+    progressDiv3.hide();
+    uploadSuccess3.hide();
+    toggleBtn3.on('click', function () {
+        if (upload) {
+            if (uploadIsRunning) {
+                upload.abort();
+                toggleBtn3.html("Resume upload");
+                uploadIsRunning = false;
+            } else {
+                upload.start();
+                toggleBtn3.html( "Pause upload");
+                uploadIsRunning = true;
+            }
+        }
+    });
+    
     if (sequenceFilename.val()) {
         var changeFileId = sequenceFile.attr('id') + "_changeBtn";
         var successMsg = $("<p><strong>" + sequenceFilename.val() + " </strong> is uploaded. <br /> <a class='btn btn-secondary' id='" + changeFileId +"'>Change file</a></p>");
@@ -158,12 +184,33 @@ jQuery(function($) {
         });
     }
 
+    if (bedFilename.val()) {
+        var changeFileId3 = bedFile.attr('id') + "_changeBtn";
+        var successMsg = $("<p><strong>" + bedFilename.val() + " </strong> is uploaded. <br /> <a class='btn btn-secondary' id='" + changeFileId3 +"'>Change file</a></p>");
+        bedFileDiv.hide();
+        uploadSuccess3.show();
+        uploadSuccess3.html(successMsg);
+        jQuery(function($) {
+            $('#' + changeFileId3).on('click', function(){ 
+                uploadSuccess3.hide();
+                bedFileDiv.show();
+                bedFileLocation.val(null)
+                bedFilename.val(null)
+            })
+        });
+    }
+
+
     sequenceFile.on("change", function () {
         startUpload(sequenceFile, sequenceFileLocation, sequenceFilename, seqFileDiv1, progressDiv1, progress1, toggleBtn1, uploadSuccess);
     });
     
     sequenceFile2.on("change", function () { 
         startUpload(sequenceFile2, sequenceFileLocation2, sequenceFilename2, seqFileDiv2, progressDiv2, progress2, toggleBtn2, uploadSuccess2);
+    });
+    
+    bedFile.on("change", function () { 
+        startUpload(bedFile, bedFileLocation, bedFilename, bedFileDiv, progressDiv3, progress3, toggleBtn3, uploadSuccess3);
     });
 
     function startUpload(sequenceFile, sequenceFileLocation, sequenceFilename, seqFileDiv, progressDiv, progress, toggleBtn, uploadSuccess) {

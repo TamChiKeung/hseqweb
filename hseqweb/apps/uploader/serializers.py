@@ -7,7 +7,7 @@ class UploadSerializer(serializers.ModelSerializer):
     token = serializers.CharField(max_length=127)
     class Meta:
         model = Upload
-        fields = ['token', 'is_fasta', 'is_paired', 'col_uuid', 'status']
+        fields = ['token', 'is_exome', 'is_paired', 'col_uuid', 'status']
         extra_kwargs = {
             'token': {'write_only': True}
         }

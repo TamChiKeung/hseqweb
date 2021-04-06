@@ -32,14 +32,19 @@ def add_clean_field(cls, field_name):
 
 class UploadForm(forms.ModelForm):
     sequence_file = forms.FileField(required=False,
-        help_text='Sequence file in FASTA/FASTQ format. Max file size is 512Mb.')
+        help_text='Sequence file in FASTQ format.')
     sequence_file_location = forms.CharField(required=False)
     sequence_file_filename = forms.CharField(required=False)
     sequence_file2 = forms.FileField(
         required=False,
-        help_text='Optional FASTQ format file for paired reads. Max file size is 512Mb.')
+        help_text='Optional FASTQ format file for paired reads.')
     sequence_file2_location = forms.CharField(required=False)
     sequence_file2_filename = forms.CharField(required=False)
+    bed_file = forms.FileField(
+        required=False,
+        help_text='Optional BED format file for exome uploads.')
+    bed_file_location = forms.CharField(required=False)
+    bed_file_filename = forms.CharField(required=False)
     metadata_file = forms.FileField(
         required=False,
         help_text='Metadata file in JSON/YAML format. Metadata fields are not required if this file is provided.')
@@ -184,6 +189,31 @@ class UploadForm(forms.ModelForm):
         # self.is_paired = True
         return sequence_file2_filename
 
+    def clean_bed_file_location(self):
+        bed_file_location = self.cleaned_data['bed_file_location']
+        self.is_exome = False
+        if bed_file_location:
+            filepath = os.path.join(settings.TUS_UPLOAD_DIR, bed_file_location)
+            if not os.path.exists(filepath):
+                raise ValidationError("Something went wrong! Make sure reads are different!")
+            try:
+                bf = open(filepath, 'r')
+                # TODO: check file format
+                bf.close()
+                self.is_exome = True
+            except ValueError:
+                raise ValidationError("Invalid file format")
+
+        return bed_file_location
+
+    
+    def clean_bed_file_filename(self):
+        bed_file_filename = self.cleaned_data['bed_file_filename']
+        # if sequence_file2_filename != 'reads.fastq':
+        #     raise ValidationError('Invalid file format')
+        # self.is_paired = True
+        return bed_file_filename
+
     def clean(self):
         if not self.cleaned_data.get('metadata_file', None):
             metadata = {}
@@ -224,6 +254,7 @@ class UploadForm(forms.ModelForm):
         self.instance = super(UploadForm, self).save(commit=False)
         self.instance.is_fasta = self.is_fasta
         self.instance.is_paired = self.is_paired
+        self.instance.is_paired = self.is_exome
         if self.request.user.is_authenticated:
             self.instance.user = self.request.user
         if not self.instance.id:
@@ -249,6 +280,15 @@ class UploadForm(forms.ModelForm):
             sequence_tus_file2.clean()
             # os.renames(os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_loc2), os.path.join(settings.TUS_UPLOAD_DIR, sequence_filename2))
             sequence_file2 = os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_loc2)
+
+        bed_file_loc = self.cleaned_data['bed_file_location']
+        bed_filename = self.cleaned_data['bed_file_filename']
+        bed_file = None
+        if bed_file_loc and bed_filename:
+            bed_tus_file = TusFile(str(bed_file_loc))
+            bed_tus_file.clean()
+            # os.renames(os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_loc2), os.path.join(settings.TUS_UPLOAD_DIR, sequence_filename2))
+            bed_file = os.path.join(settings.TUS_UPLOAD_DIR, bed_file_loc)
         
         metadata_file = self.cleaned_data['metadata_file']
         if metadata_file:
@@ -263,5 +303,6 @@ class UploadForm(forms.ModelForm):
             self.instance.id,
             sequence_file,
             sequence_file2,
+            bed_file,
             metadata_file)
         return self.instance

@@ -3,8 +3,8 @@
 {% block content %}
 <div class="container">
 <div class="row">
-  <div class="col-6">
-    {% if object.status == "submitted" %}
+  {% if object.status == "submitted" %}
+  <div class="col-4">
     <p>
       Your sequence have been successfully submitted.
     </p>
@@ -17,48 +17,39 @@
     <p>
       {{ object.error_message }}
     </p>
-    {% elif object.status == "uploaded" %}
-    <h3>Sample ID: {{ object.name }}</h3>
-    <ul class="list-group">
-      <li class="list-group-item">
-        <form method="post" action="{% url "uploader-download" object.col_uuid "metadata.yaml" %}">
-          {% csrf_token %}
-          <button class="btn btn-primary" type="submit">Download Metadata</button>
-        </form>
-      </li>
-      {% if object.is_fasta %}
-      <li class="list-group-item">
-        <form method="post" action="{% url "uploader-download" object.col_uuid "sequence.fasta" %}">
-          {% csrf_token %}
-          <button class="btn btn-primary" type="submit">Download FASTA</button>
-        </form>
-      </li>
-      {% else %}
-      <li class="list-group-item">
-        <form method="post" action="{% url "uploader-download" object.col_uuid "reads1.fastq" %}">
-          {% csrf_token %}
-          <button class="btn btn-primary" type="submit">Download Read 1</button>
-        </form>
-      </li>
-      {% if object.is_paired %}
-      <li class="list-group-item">
-        <form method="post" action="{% url "uploader-download" object.col_uuid "reads2.fastq" %}">
-          {% csrf_token %}
-          <button class="btn btn-primary" type="submit">Download Read 2</button>
-        </form>
-      </li>
-      {% endif %}
-      {% endif %}
-      <li class="list-group-item">
-        <form method="post" action="{% url "uploader-view" object.pk %}">
-          {% csrf_token %}
-          <input type="hidden" name="action" value="delete"/>
-          <button class="btn btn-warning" onclick="return confirm('Are you sure you want to delete the upload?')" type="submit">Delete</button>
-        </form>
-      </li>
-    </ul>
-    {% endif %}
   </div>
+  {% elif object.status == "uploaded" %}
+  <div class="col-4">
+    <h3>Sample ID: {{ object.name }}</h3>
+    <table class="table table-striped">
+      <thead>
+        <th> Filename </th>
+        <th> Size </th>
+        <th> Download </th>
+      </thead>
+      <tbody>
+        {% for fl in object.files %}
+        <tr>
+          <td> {{ fl.name }} </td>
+          <td> {{ fl.size|filesizeformat }} </td>
+          <td>
+            <form method="post" action="{% url "uploader-download" object.col_uuid fl.name %}">
+              {% csrf_token %}
+              <button class="btn btn-primary"
+                      type="submit"><i class="fa fa-download"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <form method="post" action="{% url "uploader-view" object.pk %}">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="delete"/>
+      <button class="btn btn-warning" onclick="return confirm('Are you sure you want to delete the upload?')" type="submit">Delete</button>
+    </form>
+  </div>
+  {% endif %}
 </div>
 </div>
 {% endblock %}
