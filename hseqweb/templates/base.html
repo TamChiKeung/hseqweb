@@ -11,7 +11,6 @@
     <meta name="author" content="">
 
     <title>Human sequence variant calling</title>
-    <link rel="stylesheet" href="{% static "css/styles.css" %}">
     <link rel="icon" href="{% static "assets/images/favico.png" %}">
     <!-- CSS -->
     <link href="{% static "yarn/bootstrap/dist/css/bootstrap.min.css" %}" rel="stylesheet">
@@ -19,7 +18,8 @@
     <link href="{% static "yarn/@fortawesome/fontawesome-free/css/all.min.css" %}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-    
+    <link rel="stylesheet" href="{% static "yarn/highlight.js/styles/atom-one-dark.css" %}">
+    <link rel="stylesheet" href="{% static "css/app.css" %}">
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 
@@ -47,11 +47,11 @@
           <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
             <ul class="list-inline mb-2">
               <li class="list-inline-item">
-		<a href="#">About</a>
+		<a href="{% url "documentation" %}">Documentation</a>
               </li>
               <li class="list-inline-item">⋅</li>
               <li class="list-inline-item">
-		<a href="#">Contact</a>
+		<a href="{% url "contacts" %}">Contacts</a>
               </li>
             </ul>
             <p class="text-muted small mb-4 mb-lg-0">© BORG 2021. All Rights Reserved.</p>
