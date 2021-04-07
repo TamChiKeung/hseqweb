@@ -30,5 +30,6 @@ urlpatterns = [
     path('api/', include('hseqweb.api_urls')),
     path('about/', TemplateView.as_view(template_name='about.html'), name='about'),
     path('doc/', TemplateView.as_view(template_name='doc.html'), name='documentation'),
+    path('contacts/', TemplateView.as_view(template_name='contacts.html'), name='contacts'),
     path('healthcheck', TemplateView.as_view(template_name='health.html')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
