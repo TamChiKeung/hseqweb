@@ -12,9 +12,17 @@ import json
 import datetime
 import os
 from django.conf import settings
+import gzip
 
 UPLOADER_PROJECT_UUID = getattr(settings, 'UPLOADER_PROJECT_UUID', 'cborg-j7d0g-nyah4ques5ww7pk')
 
+def is_gzip_file(filepath):
+    with gzip.open(filepath) as f:
+        try:
+            f.read(1)
+            return True
+        except Exception:
+            return False
 
 def add_clean_field(cls, field_name):
     def required_field(self):
@@ -141,7 +149,10 @@ class UploadForm(forms.ModelForm):
         if not os.path.exists(filepath):
             raise ValidationError("Something went wrong! Make sure reads are different!")
         try:
-            sf = open(filepath, 'r')
+            if is_gzip_file(filepath):
+                sf = gzip.open(filepath, 'r')
+            else:
+                sf = open(filepath, 'r')
             qc_fasta(sf)
         except ValueError:
             raise ValidationError("Invalid file format")
@@ -173,7 +184,10 @@ class UploadForm(forms.ModelForm):
             if not os.path.exists(filepath):
                 raise ValidationError("Something went wrong! Make sure reads are different!")
             try:
-                sf = open(filepath, 'r')
+                if is_gzip_file(filepath):
+                    sf = gzip.open(filepath, 'r')
+                else:
+                    sf = open(filepath, 'r')
                 qc_fasta(sf)
                 self.is_paired = True
             except ValueError:
