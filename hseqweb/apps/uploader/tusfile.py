@@ -65,10 +65,10 @@ class TusFile:
     @staticmethod
     def create_initial_file(metadata, file_size):
         resource_id = str(uuid.uuid4())
-        cache.add("tus-uploads/{}/filename".format(resource_id), "{}".format(metadata.get("filename")), settings.TUS_TIMEOUT)
-        cache.add("tus-uploads/{}/file_size".format(resource_id), file_size, settings.TUS_TIMEOUT)
-        cache.add("tus-uploads/{}/offset".format(resource_id), 0, settings.TUS_TIMEOUT)
-        cache.add("tus-uploads/{}/metadata".format(resource_id), metadata, settings.TUS_TIMEOUT)
+        cache.add("tus-uploads/{}/filename".format(resource_id), "{}".format(metadata.get("filename")), None)
+        cache.add("tus-uploads/{}/file_size".format(resource_id), file_size, None)
+        cache.add("tus-uploads/{}/offset".format(resource_id), 0, None)
+        cache.add("tus-uploads/{}/metadata".format(resource_id), metadata, None)
 
         tus_file = TusFile(resource_id)
         tus_file.write_init_file()
