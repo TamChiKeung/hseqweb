@@ -17,7 +17,7 @@ class Upload(models.Model):
         (ERROR, ERROR),
         (UPLOADED, UPLOADED)
     ]
-    is_fasta = models.BooleanField(default=True)
+    is_trio = models.BooleanField(default=False)
     is_paired = models.BooleanField(default=False)
     is_exome = models.BooleanField(default=False)
     user = models.ForeignKey(
@@ -27,7 +27,7 @@ class Upload(models.Model):
     col_uuid = models.CharField(max_length=31, blank=True, null=True)
     status = models.CharField(
         max_length=15, default=SUBMITTED, choices=STATUSES)
-    error_message = models.CharField(max_length=255, blank=True, null=True)
+    error_message = models.TextField(blank=True, null=True)
 
     @property
     def collection(self):
