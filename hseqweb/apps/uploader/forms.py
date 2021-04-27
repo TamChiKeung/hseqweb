@@ -152,7 +152,7 @@ class UploadForm(forms.ModelForm):
             if is_gzip_file(filepath):
                 sf = gzip.open(filepath, 'r')
             else:
-                sf = open(filepath, 'r')
+                raise ValidationError("Files should be compressed with gzip!")
             qc_fasta(sf)
         except ValueError:
             raise ValidationError("Invalid file format")
@@ -187,7 +187,7 @@ class UploadForm(forms.ModelForm):
                 if is_gzip_file(filepath):
                     sf = gzip.open(filepath, 'r')
                 else:
-                    sf = open(filepath, 'r')
+                    raise ValidationError("Files should be compressed with gzip!")
                 qc_fasta(sf)
                 self.is_paired = True
             except ValueError:
