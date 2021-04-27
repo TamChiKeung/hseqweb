@@ -266,9 +266,8 @@ class UploadForm(forms.ModelForm):
 
     def save(self):
         self.instance = super(UploadForm, self).save(commit=False)
-        self.instance.is_fasta = self.is_fasta
         self.instance.is_paired = self.is_paired
-        self.instance.is_paired = self.is_exome
+        self.instance.is_exome = self.is_exome
         if self.request.user.is_authenticated:
             self.instance.user = self.request.user
         if not self.instance.id:
