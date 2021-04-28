@@ -15,7 +15,7 @@ def upload_to_arvados(project_uuid, upload_pk, sequence_file, sequence_file2, be
     cmd = [
         'hguploader',
         '--uploader-project', project_uuid,
-        '--metadata-file', metadata_file
+        '--metadata-file', metadata_file,
         '--upload-id', upload_pk]
     upload = Upload.objects.get(pk=upload_pk)
     cmd += ['--sequence-read1', sequence_file]
