@@ -43,6 +43,39 @@ class Upload(models.Model):
         return None
 
     @property
+    def output_status(self):
+        if 'analysis_complete' in self.collection['properties']:
+            return 'complete'
+        return 'in progress'
+
+    @property
+    def output_collection(self):
+        if self.output_status != 'complete':
+            return None
+        if hasattr(self, '_out_col'):
+            return self._out_col
+        try:
+            self._out_col = api.collections().get(
+                uuid=self.out_col_uuid).execute()
+            return self._out_col
+        except Exception:
+            pass
+        return None
+
+    @property
+    def out_col_uuid(self):
+        if 'output_collection' in self.collection['properties']:
+            return self.collection['properties']['output_collection']
+        return None
+        
+    @property
+    def output_files(self):
+        if not self.output_collection:
+            return []
+        return parse_manifest_text(self.output_collection['manifest_text'])
+
+
+    @property
     def name(self):
         if not self.collection:
             return None
