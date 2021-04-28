@@ -16,7 +16,7 @@ def upload_to_arvados(project_uuid, upload_pk, sequence_file, sequence_file2, be
         'hguploader',
         '--uploader-project', project_uuid,
         '--metadata-file', metadata_file,
-        '--upload-id', upload_pk]
+        '--upload-id', str(upload_pk)]
     upload = Upload.objects.get(pk=upload_pk)
     cmd += ['--sequence-read1', sequence_file]
     if sequence_file2 and upload.is_paired:
