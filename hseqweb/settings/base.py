@@ -160,6 +160,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 25
+EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'noreply@borg.kaust.edu.sa'
 
 # Internationalization
