@@ -49,11 +49,11 @@ jQuery(function($) {
         if (uploadSeqFile.upload) {
             if (uploadSeqFile.isRunning) {
                 uploadSeqFile.upload.abort();
-                toggleBtn1.html("Resume upload");
+                toggleBtn1.html("Resume");
                 uploadSeqFile.isRunning = false;
             } else {
                 uploadSeqFile.upload.start();
-                toggleBtn1.html( "Pause upload");
+                toggleBtn1.html( "Pause");
                 uploadSeqFile.isRunning = true;
             }
         }
@@ -65,11 +65,11 @@ jQuery(function($) {
         if (uploadSeqFile2.upload) {
             if (uploadSeqFile2.isRunning ) {
                 uploadSeqFile2.upload.abort();
-                toggleBtn2.html("Resume upload");
+                toggleBtn2.html("Resume");
                 uploadSeqFile2.isRunning = false;
             } else {
                 uploadSeqFile2.upload.start();
-                toggleBtn2.html( "Pause upload");
+                toggleBtn2.html( "Pause");
                 uploadSeqFile2.isRunning = true;
             }
         }
@@ -81,11 +81,11 @@ jQuery(function($) {
         if (uploadBedFile.upload) {
             if (uploadBedFile.isRunning) {
                 uploadBedFile.upload.abort();
-                toggleBtn3.html("Resume upload");
+                toggleBtn3.html("Resume");
                 uploadBedFile.isRunning = false;
             } else {
                 uploadBedFile.upload.start();
-                toggleBtn3.html( "Pause upload");
+                toggleBtn3.html( "Pause");
                 uploadBedFile.isRunning = true;
             }
         }
@@ -178,9 +178,9 @@ jQuery(function($) {
             onError : function (error) {
                 if (error.originalRequest) {
                     if (window.confirm("Failed because: " + error + "\nDo you want to retry?")) {
-                    upload.upload.start();
-                    upload.isRunning = true;
-                    return;
+                        upload.upload.start();
+                        upload.isRunning = true;
+                        return;
                     }
                 } else {
                     window.alert("Failed because: " + error);
@@ -228,7 +228,7 @@ jQuery(function($) {
     
     function reset(sequenceFile, toggleBtn, upload) {
         sequenceFile.val(null)
-        toggleBtn.html( "Pause upload")
+        toggleBtn.html( "Pause")
         upload.upload = null;
         upload.isRunning = false;
     }
