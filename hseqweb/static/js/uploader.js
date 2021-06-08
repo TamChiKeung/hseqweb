@@ -1,35 +1,43 @@
 jQuery(function($) {
-    "use strict"; // Start of use strict     
-    var upload = null;
-    var uploadIsRunning = false;
+    "use strict"; // Start of use strict 
     var endpoint = '/upload/tus_upload/';
     var chunkSize = 5242880;
+
+    //seq file chooser 1
     var seqFileDiv1 = $('#sequenceFileChooser');
-    var seqFileDiv2 = $('#sequenceFileChooser2');
-    var bedFileDiv = $('#bedFileChooser');
     var progressDiv1 = $('#seqProgress');
-    var progressDiv2 = $('#seqProgress2');
-    var progressDiv3 = $('#bedProgress');
     var progress1 = $('#progressBar');
-    var progress2 = $('#progressBar2');
-    var progress3 = $('#progressBarBed');
     var toggleBtn1 = $('#toggle-btn');
-    var toggleBtn2 = $('#toggle-btn2');
-    var toggleBtn3 = $('#toggle-btnbed');
     var uploadSuccess = $('#upload-success');
-    var uploadSuccess2 = $('#upload-success2');
-    var uploadSuccess3 = $('#upload-successbed');
 
     var sequenceFile = $("#id_sequence_file");
     var sequenceFileLocation = $("#id_sequence_file_location");
-    var sequenceFilename = $("#id_sequence_file_filename");
+    var sequenceFilename = $("#id_sequence_file_filename");    
+    var uploadSeqFile = {upload: null, isRunning: false}
+
+    //seq file chooser 2
+    var seqFileDiv2 = $('#sequenceFileChooser2');
+    var progressDiv2 = $('#seqProgress2');
+    var progress2 = $('#progressBar2');
+    var toggleBtn2 = $('#toggle-btn2');
+    var uploadSuccess2 = $('#upload-success2');
+
     var sequenceFile2 = $("#id_sequence_file2");
     var sequenceFileLocation2 = $("#id_sequence_file2_location");
     var sequenceFilename2 = $("#id_sequence_file2_filename");
+    var uploadSeqFile2 = {upload: null, isRunning: false}
+
+    //variant region file chooser
+    var bedFileDiv = $('#bedFileChooser');
+    var progressDiv3 = $('#bedProgress');
+    var progress3 = $('#progressBarBed');
+    var toggleBtn3 = $('#toggle-btnbed');
+    var uploadSuccess3 = $('#upload-successbed');
 
     var bedFile = $("#id_bed_file");
     var bedFileLocation = $("#id_bed_file_location");
     var bedFilename = $("#id_bed_file_filename");
+    var uploadBedFile = {upload: null, isRunning: false}
 
     if (!tus.isSupported) {
         alertBox.classList.remove("hidden");
@@ -38,15 +46,15 @@ jQuery(function($) {
     progressDiv1.hide();
     uploadSuccess.hide();
     toggleBtn1.on('click', function () {
-        if (upload) {
-            if (uploadIsRunning) {
-                upload.abort();
+        if (uploadSeqFile.upload) {
+            if (uploadSeqFile.isRunning) {
+                uploadSeqFile.upload.abort();
                 toggleBtn1.html("Resume upload");
-                uploadIsRunning = false;
+                uploadSeqFile.isRunning = false;
             } else {
-                upload.start();
+                uploadSeqFile.upload.start();
                 toggleBtn1.html( "Pause upload");
-                uploadIsRunning = true;
+                uploadSeqFile.isRunning = true;
             }
         }
     });
@@ -54,15 +62,15 @@ jQuery(function($) {
     progressDiv2.hide();
     uploadSuccess2.hide();
     toggleBtn2.on('click', function () {
-        if (upload) {
-            if (uploadIsRunning) {
-                upload.abort();
+        if (uploadSeqFile2.upload) {
+            if (uploadSeqFile2.isRunning ) {
+                uploadSeqFile2.upload.abort();
                 toggleBtn2.html("Resume upload");
-                uploadIsRunning = false;
+                uploadSeqFile2.isRunning = false;
             } else {
-                upload.start();
+                uploadSeqFile2.upload.start();
                 toggleBtn2.html( "Pause upload");
-                uploadIsRunning = true;
+                uploadSeqFile2.isRunning = true;
             }
         }
     });
@@ -70,15 +78,15 @@ jQuery(function($) {
     progressDiv3.hide();
     uploadSuccess3.hide();
     toggleBtn3.on('click', function () {
-        if (upload) {
-            if (uploadIsRunning) {
-                upload.abort();
+        if (uploadBedFile.upload) {
+            if (uploadBedFile.isRunning) {
+                uploadBedFile.upload.abort();
                 toggleBtn3.html("Resume upload");
-                uploadIsRunning = false;
+                uploadBedFile.isRunning = false;
             } else {
-                upload.start();
+                uploadBedFile.upload.start();
                 toggleBtn3.html( "Pause upload");
-                uploadIsRunning = true;
+                uploadBedFile.isRunning = true;
             }
         }
     });
@@ -134,18 +142,18 @@ jQuery(function($) {
 
 
     sequenceFile.on("change", function () {
-        startUpload(sequenceFile, sequenceFileLocation, sequenceFilename, seqFileDiv1, progressDiv1, progress1, toggleBtn1, uploadSuccess);
+        startUpload(sequenceFile, sequenceFileLocation, sequenceFilename, seqFileDiv1, progressDiv1, progress1, toggleBtn1, uploadSuccess, uploadSeqFile);
     });
     
     sequenceFile2.on("change", function () { 
-        startUpload(sequenceFile2, sequenceFileLocation2, sequenceFilename2, seqFileDiv2, progressDiv2, progress2, toggleBtn2, uploadSuccess2);
+        startUpload(sequenceFile2, sequenceFileLocation2, sequenceFilename2, seqFileDiv2, progressDiv2, progress2, toggleBtn2, uploadSuccess2, uploadSeqFile2);
     });
     
     bedFile.on("change", function () { 
-        startUpload(bedFile, bedFileLocation, bedFilename, bedFileDiv, progressDiv3, progress3, toggleBtn3, uploadSuccess3);
+        startUpload(bedFile, bedFileLocation, bedFilename, bedFileDiv, progressDiv3, progress3, toggleBtn3, uploadSuccess3, uploadBedFile);
     });
 
-    function startUpload(sequenceFile, sequenceFileLocation, sequenceFilename, seqFileDiv, progressDiv, progress, toggleBtn, uploadSuccess) {
+    function startUpload(sequenceFile, sequenceFileLocation, sequenceFilename, seqFileDiv, progressDiv, progress, toggleBtn, uploadSuccess, upload) {
         seqFileDiv.hide();
         progressDiv.show();
         var file = sequenceFile[0].files[0];
@@ -170,8 +178,8 @@ jQuery(function($) {
             onError : function (error) {
                 if (error.originalRequest) {
                     if (window.confirm("Failed because: " + error + "\nDo you want to retry?")) {
-                    upload.start();
-                    uploadIsRunning = true;
+                    upload.upload.start();
+                    upload.isRunning = true;
                     return;
                     }
                 } else {
@@ -188,10 +196,10 @@ jQuery(function($) {
             },
             onSuccess: function () {
                 var changeFileId = sequenceFile.attr('id') + "_changeBtn";
-                console.log("hey hey", changeFileId)
-                var successMsg = $("<p><strong>" + upload.file.name + " (" + upload.file.size + " bytes) </strong> is uploaded. <br /> <a class='btn btn-secondary' id='" + changeFileId +"'>Change file</a></p>");
-                sequenceFileLocation.val(upload.url.split('/').pop()) 
-                sequenceFilename.val(upload.file.name)              
+                console.log("uploaded", changeFileId)
+                var successMsg = $("<p><strong>" + upload.upload.file.name + " (" + upload.upload.file.size + " bytes) </strong> is uploaded. <br /> <a class='btn btn-secondary' id='" + changeFileId +"'>Change file</a></p>");
+                sequenceFileLocation.val(upload.upload.url.split('/').pop()) 
+                sequenceFilename.val(upload.upload.file.name)              
                 sequenceFile.val(null).removeAttr("required");
                 console.log(sequenceFileLocation.val(), sequenceFilename.val())
                 setTimeout(function(){
@@ -207,28 +215,29 @@ jQuery(function($) {
                         })
                     });
                 }, 1000);    
-                reset(sequenceFile, toggleBtn);
+                reset(sequenceFile, toggleBtn, upload);
             }
         };
     
-        upload = new tus.Upload(file, options);
-        upload.findPreviousUploads().then((previousUploads) => {
+        upload.upload = new tus.Upload(file, options);
+        console.log("uplaod object:", upload);
+        upload.upload.findPreviousUploads().then((previousUploads) => {
             askToResumeUpload(previousUploads, upload, sequenceFile, progressDiv, uploadSuccess);
         });
     }
     
-    function reset(sequenceFile, toggleBtn) {
+    function reset(sequenceFile, toggleBtn, upload) {
         sequenceFile.val(null)
         toggleBtn.html( "Pause upload")
-        upload = null;
-        uploadIsRunning = false;
+        upload.upload = null;
+        upload.isRunning = false;
     }
 
     function askToResumeUpload(previousUploads, upload, sequenceFile, progressDiv, uploadSuccess) {
         console.log(previousUploads)
         if (previousUploads.length === 0) {
-            upload.start()
-            uploadIsRunning = true;
+            upload.upload.start()
+            upload.isRunning = true;
         }
 
         previousUploads.sort(function( a, b ) { 
@@ -237,26 +246,25 @@ jQuery(function($) {
         var sequenceFileStartNewBtn = sequenceFile.attr('id') + "_startNewBtn";
         var sequenceFileResumeBtn = sequenceFile.attr('id') + "_resumeBtn";
         
-        var alreadyExist = $("<p><strong>You already started uploading " + upload.file.name + " file at " + previousUploads[0].creationTime + ". Do you want to resume this upload?. <br />" +
+        var alreadyExist = $("<p><strong>You already started uploading " + upload.upload.file.name + " file at " + previousUploads[0].creationTime + ". Do you want to resume this upload?. <br />" +
          "<a class='btn btn-primary' id='" + sequenceFileResumeBtn + "'>Yes, Resume</a> <a class='btn btn-secondary ml-2' id='" + sequenceFileStartNewBtn + "'>No, Start over</a></p>");
         uploadSuccess.html(alreadyExist);
         uploadSuccess.show();
         progressDiv.hide();
 
         jQuery(function($) {
-            console.log(sequenceFileStartNewBtn, sequenceFileResumeBtn);
             $('#' + sequenceFileStartNewBtn).on('click', function(){ 
                 uploadSuccess.hide();
                 progressDiv.show();
-                upload.start()
-                uploadIsRunning = true;
+                upload.upload.start()
+                upload.isRunning = true;
             });
             $('#' + sequenceFileResumeBtn).on('click', function(){ 
                 uploadSuccess.hide();
                 progressDiv.show();
-                upload.resumeFromPreviousUpload(previousUploads[0]);
-                upload.start()
-                uploadIsRunning = true;
+                upload.upload.resumeFromPreviousUpload(previousUploads[0]);
+                upload.upload.start()
+                upload.isRunning = true;
             });
         });
     }
