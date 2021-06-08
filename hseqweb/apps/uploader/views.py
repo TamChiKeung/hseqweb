@@ -73,10 +73,7 @@ class UploadListView(ListView):
             queryset = queryset.filter(user=user)
         else:
             queryset = queryset.filter(user__isnull=True)
-        result = queryset.order_by('-date')
-        for r in result:
-            print(r.name, r.col_uuid)
-        return result
+        return queryset.order_by('-date')
 
 
     def get_context_data(self, *args, **kwargs):
