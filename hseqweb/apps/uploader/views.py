@@ -67,13 +67,17 @@ class UploadListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.filter(col_uuid__isnull=False)
+        # queryset = queryset.filter(col_uuid__isnull=False)
         user = self.request.user
         if user.is_authenticated:
             queryset = queryset.filter(user=user)
         else:
             queryset = queryset.filter(user__isnull=True)
-        return queryset.order_by('-pk')
+        result = queryset.order_by('-date')
+        for r in result:
+            print(r.name, r.col_uuid)
+        return result
+
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)

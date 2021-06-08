@@ -7,16 +7,32 @@
     <h2>Sequences</h2>
     <table class="table table-striped">
       <thead>
+        <th>Submission ID</th>
+        <th>Patient</th>
+        <th>Status</th>
+        <th>Created on</th>
+        <th>Action</th>
       </thead>
       <tbody>
 	{% for object in object_list %}
-        {% if object.collection %}
+        {% comment %} {% if object.collection %} {% endcomment %}
 	<tr>
-	  <td>{{ forloop.counter }}</td>
-	  <td>{{ object.name }}</td>
-	  <td><a href="{% url "uploader-view" object.pk %}">view</a></td>
+	  {% comment %} <td>{{ forloop.counter }}</td> {% endcomment %}
+	  <td>{{ object.pk }}</td>
+	  <td> {% if object.name %}{{ object.name }}{% endif %}</td>
+    {% if object.status == 'submitted' %}
+	    <td>processing</td>
+    {% endif %}
+    {% if object.status != 'submitted' %}
+      <td>{{ object.status }}</td>
+    {% endif %}
+    <td>{{ object.date }}</td>
+    <td>
+      {% if object.status != 'submitted' %}<a href="{% url "uploader-view" object.pk %}">view</a>
+      {% endif %}
+    </td>
 	</tr>
-        {% endif %}
+        {% comment %} {% endif %} {% endcomment %}
 	{% endfor %}
       </tbody>
     </table>
