@@ -1,5 +1,47 @@
+(function ($) {
+    $.fn.confirm = function (options) {
+      var settings = $.extend({}, $.fn.confirm.defaults, options);
+  
+      return this.each(function () {
+        var element = this;
+  
+        $('.modal-title', this).html(settings.title);
+        $('.message', this).html(settings.message);
+        $('.dismiss', this).html(settings.dismiss);
+  
+        if (settings.confirm) {
+            $('.confirm', this).html(settings.confirm);
+            $(this).on('click', '.confirm', function (event) {
+            $(element).data('confirm', true);
+            });
+        }
+  
+        $(this).on('hide.bs.modal', function (event) {
+          if ($(this).data('confirm')) {
+            $(this).trigger('confirm', event);
+            $(this).removeData('confirm');
+          } else {
+            $(this).trigger('dismiss', event);
+          }
+  
+          $(this).off('confirm dismiss');
+        });
+  
+        $(this).modal('show');
+      });
+    };
+  
+    $.fn.confirm.defaults = {
+      title: 'Modal title',
+      message: 'One fine body&hellip;',
+      confirm: 'OK',
+      dismiss: 'Cancel'
+    };
+  })(jQuery);
+
 jQuery(function($) {
     "use strict"; // Start of use strict 
+
     var endpoint = '/upload/tus_upload/';
     var chunkSize = 5242880;
 
@@ -177,15 +219,39 @@ jQuery(function($) {
             },
             onError : function (error) {
                 if (error.originalRequest) {
-                    if (window.confirm("Failed because: " + error + "\nDo you want to retry?")) {
-                        upload.upload.start();
-                        upload.isRunning = true;
-                        return;
+                    console.log("error:", error);
+                    console.log(upload)
+                    var status = error.originalResponse ? error.originalResponse.getStatus() : 0
+                    if (status == 403) {
+                        $('#errorMessage').confirm({
+                            title: 'Failed to upload file',
+                            message: "User authorization issue. Please login and try again.",
+                            dismiss: 'Ok'
+                          }).on({
+                            dismiss: function () {
+                            }
+                          });
+                        reset(sequenceFile, toggleBtn, upload);  
+                    } else {
+                        $('#confirm').confirm({
+                            title: 'Failed to upload file',
+                            message: "Error occured on server. Do you want retry?",
+                            confirm: 'Retry',
+                            dismiss: 'Cancel'
+                          }).on({
+                            confirm: function () {
+                                upload.upload.start();
+                                upload.isRunning = true;  
+                            },
+                            dismiss: function () {
+                            //   console.log('dismiss');
+                            }
+                          });
                     }
                 } else {
                     window.alert("Failed because: " + error);
-                }
-                reset(sequenceFile, toggleBtn);    
+                    reset(sequenceFile, toggleBtn, upload);  
+                }  
             },
             onProgress: function (bytesUploaded, bytesTotal) {
                 var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2);
@@ -226,7 +292,7 @@ jQuery(function($) {
         });
     }
     
-    function reset(sequenceFile, toggleBtn, upload) {
+    function reset(sequenceFile, toggleBtn, upload, uploadSuccess, seqFileDiv) {
         sequenceFile.val(null)
         toggleBtn.html( "Pause")
         upload.upload = null;
