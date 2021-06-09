@@ -65,7 +65,7 @@ class UploadListView(ListView):
     model = Upload
     template_name = 'uploader/list.html'
 
-    def get_queryset(self):
+    def get(self, request):
         queryset = super().get_queryset()
         # queryset = queryset.filter(col_uuid__isnull=False)
         user = self.request.user
@@ -73,7 +73,13 @@ class UploadListView(ListView):
             queryset = queryset.filter(user=user)
         else:
             queryset = queryset.filter(user__isnull=True)
-        return queryset.order_by('-date')
+        result = queryset.order_by('-date')
+
+        paginator = Paginator(result, 20)
+        page_number = request.GET.get('page')
+
+        page_obj = paginator.get_page(page_number)
+        return render(request, self.template_name, {'page_obj': page_obj, 'paginator': paginator})
 
 
     def get_context_data(self, *args, **kwargs):
