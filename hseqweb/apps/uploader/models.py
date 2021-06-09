@@ -28,6 +28,7 @@ class Upload(models.Model):
     status = models.CharField(
         max_length=15, default=SUBMITTED, choices=STATUSES)
     error_message = models.TextField(blank=True, null=True)
+    patient_id = models.CharField(max_length=255, blank=True, null=True)
 
     @property
     def collection(self):

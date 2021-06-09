@@ -21,7 +21,7 @@
 	<tr>
 	  {% comment %} <td>{{ forloop.counter }}</td> {% endcomment %}
 	  <td>{{ object.pk }}</td>
-	  <td> {% if object.name %}{{ object.name }}{% endif %}</td>
+	  <td>{% if object.patient_id %} {{ object.patient_id }} {% endif %}</td>
     {% if object.status == 'submitted' %}
 	    <td>processing</td>
     {% endif %}

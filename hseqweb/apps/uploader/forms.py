@@ -270,8 +270,6 @@ class UploadForm(forms.ModelForm):
         self.instance.is_exome = self.is_exome
         if self.request.user.is_authenticated:
             self.instance.user = self.request.user
-        if not self.instance.id:
-            self.instance.save()
         # sequence_file = self.save_file(self.cleaned_data['sequence_file'])
         # sequence_file2 = self.cleaned_data['sequence_file2']
         # if sequence_file2:
@@ -308,6 +306,15 @@ class UploadForm(forms.ModelForm):
             metadata_file = self.save_file(metadata_file)
         else:
             metadata_file = self.cleaned_data['fields_metadata_file']
+
+        with open(metadata_file, 'r') as file_obj:
+            # setting patient id
+            metadata_content = json.load(file_obj)
+            self.instance.patient_id = metadata_content['id']
+
+        if not self.instance.id:
+            self.instance.save()
+
         project_uuid = UPLOADER_PROJECT_UUID
         if self.request.user.userprofile.project_uuid:
             project_uuid = self.request.user.userprofile.project_uuid
