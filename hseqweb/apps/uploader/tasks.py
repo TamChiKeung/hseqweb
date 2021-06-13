@@ -39,6 +39,7 @@ def upload_to_arvados(project_uuid, upload_pk, sequence_file, sequence_file2, be
             status=Upload.UPLOADED, col_uuid=col['uuid'])
         os.remove(sequence_file)
         os.remove(metadata_file)
-        os.remove(bed_file)
+        if bed_file:
+            os.remove(bed_file)
         if sequence_file2:
             os.remove(sequence_file2)

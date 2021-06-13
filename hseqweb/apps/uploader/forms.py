@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.postgres.forms import SimpleArrayField
-from uploader.utils import FORM_ITEMS
+from uploader.utils import FORM_ITEMS, hg19_to_hg38
 from uploader.models import Upload
 from uploader.qc_metadata import qc_metadata
 from uploader.qc_fasta import qc_fasta
@@ -39,6 +39,8 @@ def add_clean_field(cls, field_name):
     setattr(cls, required_field.__name__, required_field)
 
 class UploadForm(forms.ModelForm):
+    ASSEMBLIES=[('GRCh38', 'GRCh38'), ('GRCh37', 'GRCh37')]
+
     sequence_file = forms.FileField(required=False,
         help_text='Sequence file in FASTQ format.')
     sequence_file_location = forms.CharField(required=False)
@@ -53,6 +55,12 @@ class UploadForm(forms.ModelForm):
         help_text='Optional BED format file for exome uploads.')
     bed_file_location = forms.CharField(required=False)
     bed_file_filename = forms.CharField(required=False)
+    assembly = forms.ChoiceField(
+        choices=ASSEMBLIES, 
+        widget=forms.RadioSelect, 
+        initial='GRCh38',
+        required=False,
+        help_text='Assembly version of Bed format file')
     metadata_file = forms.FileField(
         required=False,
         help_text='Metadata file in JSON/YAML format. Metadata fields are not required if this file is provided.')
@@ -300,7 +308,15 @@ class UploadForm(forms.ModelForm):
             bed_tus_file.clean()
             # os.renames(os.path.join(settings.TUS_UPLOAD_DIR, sequence_file_loc2), os.path.join(settings.TUS_UPLOAD_DIR, sequence_filename2))
             bed_file = os.path.join(settings.TUS_UPLOAD_DIR, bed_file_loc)
-        
+            print("Bed file assembly:", self.cleaned_data['assembly'])
+            if bed_file and self.cleaned_data['assembly'] == 'GRCh37':
+                bed_hg38_out_file = tempfile.NamedTemporaryFile('wt', delete=False)
+                hg19_to_hg38(bed_file, bed_hg38_out_file.name)
+                print("bed file conversion from hg19 to hg38 completed:", bed_file, bed_hg38_out_file.name)
+                if bed_file:
+                    os.remove(bed_file)
+                bed_file = bed_hg38_out_file.name
+
         metadata_file = self.cleaned_data['metadata_file']
         if metadata_file:
             metadata_file = self.save_file(metadata_file)

@@ -97,7 +97,15 @@
 	<div id="upload-successbed" class="ml-3 round-border pt-2 pl-4 col-12"></div>
 	<small class="text-danger">{{ form.bed_file_location.errors }}</small>
       </div>
-      
+
+      <div class="form-group">
+	      <label for="id_assembly"> Assembly: </label>
+        {% for choice in form.assembly %}
+          <span class="ml-2">{{ choice.choice_label }}</span>
+          <span class="ml-2">{{ choice.tag }}</span>
+        {% endfor %}
+	      <small class="form-text text-muted">{{form.assembly.help_text}}</small>
+      </div>
       <div class="form-group">
 	<label for="id_metadata_file">Metadata file</label>
 	{{ form.metadata_file | add_class:"form-control" }}
