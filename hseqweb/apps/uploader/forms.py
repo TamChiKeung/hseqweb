@@ -39,7 +39,7 @@ def add_clean_field(cls, field_name):
     setattr(cls, required_field.__name__, required_field)
 
 class UploadForm(forms.ModelForm):
-    ASSEMBLIES=[('GRCh38', 'GRCh38'), ('GRCh37', 'GRCh37')]
+    ASSEMBLIES=[('GRCh38', 'GRCh38 (hg38)'), ('GRCh37', 'GRCh37 (hg19)')]
 
     sequence_file = forms.FileField(required=False,
         help_text='Sequence file in FASTQ format.')

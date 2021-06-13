@@ -101,8 +101,10 @@
       <div class="form-group">
 	      <label for="id_assembly"> Assembly: </label>
         {% for choice in form.assembly %}
-          <span class="ml-2">{{ choice.choice_label }}</span>
+        <div>
           <span class="ml-2">{{ choice.tag }}</span>
+          <span class="ml-2">{{ choice.choice_label }}</span>
+        <div>
         {% endfor %}
 	      <small class="form-text text-muted">{{form.assembly.help_text}}</small>
       </div>
