@@ -303,6 +303,7 @@ class UploadForm(forms.ModelForm):
         bed_file_loc = self.cleaned_data['bed_file_location']
         bed_filename = self.cleaned_data['bed_file_filename']
         bed_file = None
+        original_bed_file_grch37 = None
         if bed_file_loc and bed_filename:
             bed_tus_file = TusFile(str(bed_file_loc))
             bed_tus_file.clean()
@@ -313,8 +314,9 @@ class UploadForm(forms.ModelForm):
                 bed_hg38_out_file = tempfile.NamedTemporaryFile('wt', delete=False)
                 hg19_to_hg38(bed_file, bed_hg38_out_file.name)
                 print("bed file conversion from hg19 to hg38 completed:", bed_file, bed_hg38_out_file.name)
-                if bed_file:
-                    os.remove(bed_file)
+                # if bed_file:
+                #     os.remove(bed_file)
+                original_bed_file_grch37 = bed_file
                 bed_file = bed_hg38_out_file.name
 
         metadata_file = self.cleaned_data['metadata_file']
@@ -340,5 +342,6 @@ class UploadForm(forms.ModelForm):
             sequence_file,
             sequence_file2,
             bed_file,
+            original_bed_file_grch37,
             metadata_file)
         return self.instance

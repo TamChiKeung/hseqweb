@@ -11,7 +11,7 @@ from .galaxy import create_folder, upload, clean_folder
 from django.conf import settings
 
 @task
-def upload_to_arvados(project_uuid, upload_pk, sequence_file, sequence_file2, bed_file, metadata_file):
+def upload_to_arvados(project_uuid, upload_pk, sequence_file, sequence_file2, bed_file, bed_file_grch37, metadata_file):
     cmd = [
         'hguploader',
         '--uploader-project', project_uuid,
@@ -23,6 +23,8 @@ def upload_to_arvados(project_uuid, upload_pk, sequence_file, sequence_file2, be
         cmd += ['--sequence-read2', sequence_file2]
     if bed_file and upload.is_exome:
         cmd += ['--bed-file', bed_file]
+    if bed_file_grch37 and upload.is_exome:
+        cmd += ['--bed-file-grch37', bed_file_grch37]
     cmd.append('--no-sync')
     print(" ".join(cmd))
     result = subprocess.run(
@@ -41,5 +43,7 @@ def upload_to_arvados(project_uuid, upload_pk, sequence_file, sequence_file2, be
         os.remove(metadata_file)
         if bed_file:
             os.remove(bed_file)
+        if bed_file_grch37:
+            os.remove(bed_file_grch37)
         if sequence_file2:
             os.remove(sequence_file2)
