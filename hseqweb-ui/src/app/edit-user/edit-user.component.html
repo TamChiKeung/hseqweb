@@ -1,0 +1,23 @@
+<div class="container">
+<div class="col-md-6 col-md-offset-3">
+    <h1>Edit Profile</h1>
+    <form class="form-signin" [formGroup]="editUserForm" (ngSubmit)="registerUser()">
+    <div class="form-group">
+        <label for="inputPassword">First name:</label>
+        <input type="text" id="first_name" class="form-control" placeholder="" formControlName="first_name">
+    </div>
+    <div class="form-group">
+        <label for="username">Last name:</label>
+        <input type="text" id="last_name" class="form-control" placeholder="" formControlName="last_name">
+    </div>
+    <div class="form-group">
+        <label for="username">Organization:</label>
+        <input type="text" id="organization" class="form-control" placeholder="" formControlName="organization">
+    </div>
+    <div class=" mt-2">
+        <button class="btn btn-primary" type="submit">Save</button>
+        <button class="btn btn-secondary ml-2" (click)="cancel()">Cancel</button>
+        </div>
+    </form>
+</div>
+</div>

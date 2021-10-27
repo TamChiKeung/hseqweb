@@ -1,0 +1,149 @@
+<div class="row mt-2">
+<div class="d-flex flex-column flex-shrink-0 p-3 bg-light col-3">
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item"><a class="nav-link" routerLink="doc#section-1"><span class="mr-2"><i class="fas fa-map-signs"></i></span>Human Sequence Uploader</a></li>
+        <li class="nav-item ml-2"><a class="nav-link" href="doc#item-1-1">BORG/CBRC Cloud Platform</a></li>
+        <li class="nav-item ml-2"><a class="nav-link" href="doc#item-1-2">Using Web portal for uploading</a></li>
+        <li class="nav-item ml-2"><a class="nav-link" href="doc#item-1-3">Metadata File Format</a></li>
+        <li class="nav-item ml-2"><a class="nav-link" href="doc#item-1-4">Sequence File Format</a></li>
+        <li class="nav-item"><a class="nav-link" href="doc#section-2"><span class="mr-2"><i class="fas fa-map-signs"></i></span>Commandline Tool</a></li>
+        <li class="nav-item ml-2"><a class="nav-link" href="doc#item-2-1">Installation</a></li>
+        <li class="nav-item ml-2"><a class="nav-link" href="doc#item-2-2">Usage</a></li>
+    </ul>
+  </div> 
+  <div class="col-9 p-3">
+    <div class="docs-article">
+        <h1 id="section-1">Human Sequence Uploader<!-- <span class="docs-time">Last updated: </span>--></h1>
+        <div class="docs-intro">
+            <p>Human Sequence Uploader is a platform that
+            allows researchers to upload sequence data of
+            humans and retrieve processed results. There
+            are two ways to upload the sequencing data,
+            one is through this website and the other on
+            the command line.  
+            You can use it to upload the genomes of human
+            samples to trigger variant calling and
+            analysis workflows.</p>
+        </div><!--//docs-intro-->
+        <div class="docs-section" id="item-1-1">
+            <h2 class="section-heading">BORG/CBRC Cloud Platform</h2>
+            <p>The uploader uses
+            our cloud platform for managing, processing,
+            and sharing genomic and other large scientific
+            and biomedical data. Data will be encrypted
+            during and after upload and during processing.
+            Our cloud is deployed on BORG/CBRC servers for
+                testing and development.</p>
+            <p>In order to use the BORG/CBRC cloud
+                platform for managing your data, user can
+            create an account and sign in.</p>
+            <h5 class="pt-2">Getting an API token</h5>
+            <p>The API token is a secret key that enables users to authenticate themselves in order to use the command line tools 
+            for cloud platform to manage data .</p>    
+            <p><strong>Human Sequence uploader</strong> also requires the API token to be set as environment variable before running it.</p>
+            <h5 class="pt-2">Setting API token as environment variables</h5>
+            <p>To upload data, you
+                need an API
+                token. To obtain the
+                token, <a routerLink="contacts">contact us</a>.
+            </p>
+        </div><!--//section-->
+        <div class="docs-section" id="item-1-2">
+            <h2 class="section-heading">Using Human Web portal for uploading</h2>
+            <p>For uploading the
+            sequence data on the web, you can follow the following steps: </p>
+            <ol>
+                <li>You will need to sign in if you have already registered. You can sign in using your ORCID account too by clicking on <strong class="mr-1">Orcid.org</strong> link on sign in page.</li>
+                <li>Once you are logged in, click on the <strong class="mr-1">Upload</strong> menu from top menu bar.</li>
+                <li>Choose the
+                sequence files to
+                be uploaded and
+                metadata file (or
+                fill the input
+                fields in the
+                form) from the
+                file system and
+                submit the
+                form. It will take
+                few minutes to
+                hours (depending
+                on your connection
+                and the file size)
+                to upload and
+                process the sequence file.</li>
+                <li> Once the data is processed, click on the <strong class="mr-1">Submissions</strong> menu from the menu bar to see your submission.</li>
+                <li>Click on the view link to see the details.</li>
+                <li>The ID of the submission is the URL to the sequence data directory in the cloud. Click on the URL to see the submitted data.</li>
+                <li>You can download and view uploaded
+                files on our web interface.</li>
+            </ol>
+        </div><!--//section-->	
+        <div class="docs-section" id="item-1-3">
+            <h2 class="section-heading">Metadata File Format</h2>
+            <p>The structure of
+            the metadata file is described in the <a class="theme-link" href="https://yaml.org/" target="_blank">YAML</a> 
+            language.</p>
+        </div>
+        <div class="docs-section" id="item-1-4">
+            <h2 class="section-heading">Sequence File Format</h2>
+            <p>The sequence read
+            files should be in
+            FASTQ file file
+            format. We support
+            Illumina reads only at
+            the moment.</p>
+        </div><!--//section-->
+    </div>
+    <div class="docs-article mt-5">
+        <h1 id="section-2">Commandline tool</h1>
+        <div class="docs-intro">
+            <p>To get started, first install the uploader, and use the hguploader command to upload your data.</p>
+        </div><!--//docs-intro-->
+        <div class="docs-section" id="item-2-1">
+            <h2 class="section-heading">Installation</h2>
+            <h5 class="pt-4">Prepare your system</h5>
+            <p>You need to make sure you have Python, and the ability to install modules such as `pycurl` and `pyopenssl`. On Ubuntu 18.04, you can run:</p>
+            <div class="docs-code-block">
+                <code class="shell">sudo apt update</code><br />
+                <code class="shell">sudo apt install -y virtualenv git libcurl4-openssl-dev build-essential python3-dev libssl-dev</code>
+            </div>
+            <h5 class="pt-5">Create and enter your virtualenv.</h5>
+            <p>Go to downloaded uploader directory and make and enter a virtualenv:</p>
+            <div class="docs-code-block">
+                <code class="shell">virtualenv --python python3 venv</code>
+                <code class="shell">. venv/bin/activate</code>
+            </div>
+            <p  class="pt-2">Note that you will need to repeat the <code class="shell">`. venv/bin/activate`</code> step from this directory to enter your virtualenv whenever you want to use the installed tool.</p>
+            <h5 class="pt-5">Install the tool</h5>
+            <p> Once in your virtualenv, install this project:</p>
+            <div class="docs-code-block">
+                <code class="shell">pip3 install git+https://github.com/bio-ontology-research-group/hguploader@master</code>
+            </div>
+            <p> It should print some instructions about how to use the uploader.</p>
+            <h5 class="pt-5">Test the tool</h5>
+            <p>Try running:</p>
+            <div class="docs-code-block">
+                <code class="shell">cborguploader --help</code>
+            </div>
+            <h5 class="pt-5">Set Arvados API Token</h5>
+            <p>Before uploading the sequence files, you need to set arvados api token value to environment variable ARVADOS_API_TOKEN. It will look something as the following:</p>
+            <div class="docs-code-block">
+                <code class="shell">export ARVADOS_API_TOKEN=2jv9346o396exampledonotuseexampledonotuseexes7j1ld</code>
+            </div>
+            <p class="pt-2 pb-2">You can find the arvados token at <a class="theme-link" href="https://workbench.cborg.cbrc.kaust.edu.sa/current_token" target="_blank">current token link</a>
+            in your user profile menu on <a class="theme-link" href="https://workbench.cborg.cbrc.kaust.edu.sa/" target="_blank">arvados web portal.</a></p>
+        </div><!--//section-->
+        <div class="docs-section" id="item-2-2">
+            <h2 class="section-heading">Usage</h2>
+            <p>Run the uploader with a FASTQ file and accompanying metadata file in JSON or YAML:</p>
+            <div class="docs-code-block">
+                <code class="shell">cborguploader example/sequence.fasta example/metadata.yaml</code>
+            </div>
+            <p class="pt-2 pb-2">You can find the example files on Human <a class="theme-link" href="https://hgupload.cbrc.kaust.edu.sa/upload/" target="_blank">web uploader</a>. Here are the links to example files:</p>
+            <ul>
+                <li>Example <a class="theme-link" href="https://hgupload.cbrc.kaust.edu.sa/static/metadata.yaml" target="_blank">Metadata file</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div>

@@ -1,0 +1,53 @@
+<div class="row">
+  <div class="col-12">
+    <h2>Sequences</h2>
+    <table class="table table-striped">
+      <thead>
+        <th>Submission ID</th>
+        <th>Patient</th>
+        <th>Status</th>
+        <th>Created on</th>
+        <th>Action</th>
+      </thead>
+      <tbody>
+      <tr *ngFor="let sub of submissions; let subIndex = index">
+	    <td>{{ sub.id }}</td>
+        <td>{{ sub?.patient_id }}</td>
+	    <td>
+            <span *ngIf="sub.status == 'submitted'">processing</span>
+            <span *ngIf="sub.status != 'submitted'">{{sub.status}}</span>
+        </td>
+        <td>{{ sub.date }}</td>
+        <td>
+            <a *ngIf="sub.status != 'submitted'" [routerLink]="sub.id">View</a>
+        </td>
+	   </tr>
+	<!--{% for object in page_obj %}
+        {% comment %} {% if object.collection %} {% endcomment %}
+	<tr>
+	  {% comment %} <td>{{ forloop.counter }}</td> {% endcomment %}
+	  <td>{{ sub.pk }}</td>
+	  <td>{% if object.patient_id %} {{ object.patient_id }} {% endif %}</td>
+    {% if object.status == 'submitted' %}
+	    <td>processing</td>
+    {% endif %}
+    {% if object.status != 'submitted' %}
+      <td>{{ object.status }}</td>
+    {% endif %}
+    <td>{{ object.date|timezone:"Asia/Riyadh" }}</td>
+    <td>
+      {% if object.status != 'submitted' %}<a href="{% url "uploader-view" object.pk %}">view</a>
+      {% endif %}
+    </td>
+	</tr>
+        {% comment %} {% endif %} {% endcomment %}
+	{% endfor %}-->
+      </tbody>
+      <div class="d-flex justify-content-between p-2">
+            <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" [rotate]="true" 
+                [maxSize]="5" (pageChange)="loadPage($event)">
+            </ngb-pagination>
+        </div>
+    </table>
+  </div>
+</div>

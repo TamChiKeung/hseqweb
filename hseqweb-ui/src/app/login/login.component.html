@@ -1,0 +1,57 @@
+<div class="container">
+<div class="col-md-6 col-md-offset-3">
+    <h1>Sign In</h1>
+    <p>If you have not created an account yet, then please <a routerLink="/signup">sign up</a> first.</p>
+    <form class="form-signin" [formGroup]="loginForm" (ngSubmit)="loginUser()">
+        <div class="form-group">
+            <label for="username">Login:</label>
+            <input type="text" id="inputEmail" class="form-control" placeholder="Username or e-mail" required="" autofocus=""
+                formControlName="username" />
+            <div class="invalid-field" *ngIf="f.username.invalid && (f.username.dirty || f.username.touched)">
+            <span *ngIf="f.username.errors.required">
+                {{requiredError}}
+            </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required=""
+                formControlName="password" />
+            <div class="invalid-field" *ngIf="f.password.invalid && (f.password.dirty || f.password.touched)">
+            <span *ngIf="f.password.errors.required">
+                {{requiredError}}
+            </span>
+            </div>
+        </div>
+        <div class="checkbox mb-3">
+            <label><input type="checkbox" formControlName="remember"><span class="ml-2">Remember me</span></label>
+        </div>
+        <div class="invalid-field" *ngIf="error">
+        {{error}}
+        </div>
+        <re-captcha (resolved)="resolved($event)" #captchaRef="reCaptcha"></re-captcha>
+        <div class="mt-2"> 
+            <a class="btn btn-default" routerLink="reset-password">Forgot Password?</a>
+            <button class="btn btn-primary" [disabled]="loginForm.invalid || !recaptcha">Sign In</button>
+        </div>
+    </form>
+</div>
+</div>
+  <!--{% csrf_token %}
+  {% for field in form %}
+  <div class="form-group">
+    {% if field.name != 'remember' %}
+    {{ field.label_tag }}
+    {{ field | add_class:"form-control" }}
+    {{ field.errors }}
+    {% else %}
+    <label for="{{ field.id_for_label }}">
+      {{ field }} {{ field.label }}
+    </label>
+    {% endif %}
+  </div>
+  {% endfor %}
+  {{ form.non_field_errors }}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}-->

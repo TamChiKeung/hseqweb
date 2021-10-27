@@ -1,0 +1,113 @@
+/* You can add global styles to this file, and also import other style files */
+.section-heading {
+    font-size: 1.875rem;
+    margin-bottom: 1rem;
+    color: #252930;
+}
+.docs-article h2 {
+    color: #464e5b;
+}  
+.logo {
+    width: auto;
+    height: 50px;
+    padding-left: 40px;
+  }
+  
+  .vision-logo {
+    width: auto;
+    height: 50px;
+    padding-right: 40px;
+  }
+  
+  a.nav-link:hover {
+    color: #00A98F;
+  }
+  
+  a.nav-link.active {
+    background-color: #00A98F;
+    color: #FFF;
+    font-family: 'Diodrum-Arabic-Semibold';
+  }
+  
+  .content-container {
+    max-width: none;
+    height: 300px;
+    background-color: #f5f5f5;
+  }
+  
+  .footer {
+    background-color: #004D71;
+    padding: 60px 40px;
+    color: white;
+  }
+  
+  .footer-logo {
+    width: auto;
+    height: 85px;
+  }
+  
+  p.text {
+    font-family: diodrum-arabic-regular;
+    font-size: 14px;
+  }
+  
+  p.text a {
+    font-family: diodrum-arabic-medium;
+    color: #FFF;
+  }
+  
+  p.text a:hover {
+    font-family: diodrum-arabic-medium;
+    color: #00A98F;
+    text-decoration: none;
+  }
+
+  .invalid-field {
+    width: 100%;
+    margin-top: .25rem;
+    font-size: 80%;
+    color: #dc3545;
+}
+
+.required:after {
+    content:"*";
+    color:red;
+}
+
+.page-item.active {
+  color: #fff;
+  background-color: #4285f4;
+  border-radius: .125rem;
+  -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
+  -webkit-transition: all .2s linear;
+  transition: all .2s linear;
+}
+.page-item {
+  border: 1px solid #dee2e6;
+}
+  /*
+  @font-face {
+    font-family: Diodrum-Arabic-Regular;
+    src: url("../fonts/diodrum/diodrum-arabic.woff") format("woff");
+    font-weight: normal;
+  }
+  
+  @font-face {
+    font-family: Diodrum-Arabic-Semibold;
+    src: url("../fonts/diodrum/diodrum-arabic-semibold.woff") format("woff");
+    font-weight: normal;
+  }
+  
+  @font-face {
+    font-family: Diodrum-Arabic-Medium;
+    src: url("../fonts/diodrum/diodrum-arabic-medium.woff") format("woff");
+    font-weight: normal;
+  }
+  
+  @font-face {
+    font-family: Diodrum-Arabic-Bold;
+    src: url("../fonts/diodrum/diodrum-arabic-bold.woff") format("woff");
+    font-weight: normal;
+  }*/
+  

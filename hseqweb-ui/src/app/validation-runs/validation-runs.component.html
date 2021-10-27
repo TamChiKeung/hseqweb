@@ -1,0 +1,62 @@
+
+<div class="row small">
+<div class="col-12">
+    <h2>Validation runs</h2>
+</div>
+<div class="col-4">
+    <h3>Whole Genome</h3>
+    <table class="table table-striped">
+    <thead>
+        <th> Filename </th>
+        <th> Size </th>
+        <th> Download </th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let fl of validations.wg_files; let flIndex = index">
+        <td> {{fl.name}} </td>
+        <td> {{fl.size | filesize}} </td>
+        <td>
+            <a [href]="'/api/download/' +  validations.wg_col_uuid + '/' + fl.name" target="_blank" class="btn btn-primary"><i class="fa fa-download"></i></a>
+        </td>
+        </tr>
+    </tbody>
+    </table>
+</div>
+<div class="col-4">
+    <h3>Whole Exome</h3>
+    <table class="table table-striped">
+    <thead>
+        <th> Filename </th>
+        <th> Size </th>
+        <th> Download </th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let fl of validations.ex_files; let flIndex = index">
+        <td> {{ fl.name }} </td>
+        <td> {{ fl.size | filesize}} </td>
+        <td>
+            <a [href]="'/api/download/' +  validations.ex_col_uuid + '/' + fl.name" target="_blank" class="btn btn-primary"><i class="fa fa-download"></i></a>
+        </td>
+        </tr>
+    </tbody>
+    </table>
+</div><div class="col-4">
+    <h3>Trio</h3>
+    <table class="table table-striped">
+    <thead>
+        <th> Filename </th>
+        <th> Size </th>
+        <th> Download </th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let fl of validations.tr_files; let flIndex = index">
+        <td> {{ fl.name }} </td>
+        <td> {{ fl.size | filesize}} </td>
+        <td>
+            <a [href]="'/api/download/' +  validations.tr_col_uuid + '/' + fl.name" target="_blank" class="btn btn-primary"><i class="fa fa-download"></i></a>
+        </td>
+        </tr>
+    </tbody>
+    </table>
+</div>
+</div>
