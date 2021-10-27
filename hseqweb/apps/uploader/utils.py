@@ -276,7 +276,6 @@ def download_file(url, path):
     with open(path, 'wb') as f:
         for chunk in r.iter_content(1600):
             f.write(chunk)
-   
 
 def get_chainfile_path(target, query, cache=None):
     ''' create a converter to map between genome builds
@@ -307,3 +306,13 @@ def get_chainfile_path(target, query, cache=None):
         download_file(url, chain_path)
 
     return chain_path
+
+
+   
+def collection_content(col_uuid, filename):
+    c = arvados.collection.CollectionReader(col_uuid)
+    with c.open(filename, "rb") as reader:
+        content = reader.read(128*1024)
+        while content:
+            yield content
+            content = reader.read(128*1024)

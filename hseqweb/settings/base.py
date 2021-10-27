@@ -70,8 +70,10 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.keycloak',
     'widget_tweaks',
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
     'snowpenguin.django.recaptcha2',
+    'rest_framework_recaptcha',
     'django_tus',
     'uploader',
     'sparql'
@@ -87,6 +89,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
 
 CORS_ORIGIN_ALLOW_ALL = True
 CSRF_COOKIE_HTTPONLY = True
@@ -239,6 +251,8 @@ FILE_UPLOAD_PERMISSIONS = 0o644
 
 RECAPTCHA_PRIVATE_KEY = '6LefajoUAAAAAEiswDUvk1quNKpTJCg49gwrLXpb'
 RECAPTCHA_PUBLIC_KEY = '6LefajoUAAAAAOAWkZnaz-M2lgJOIR9OF5sylXmm'
+DRF_RECAPTCHA_SECRET_KEY = "6LefajoUAAAAAEiswDUvk1quNKpTJCg49gwrLXpb"
+
 ACCOUNT_FORMS = {
     'login': 'accounts.forms.CaptchaLoginForm',
     'signup': 'accounts.forms.CaptchaSignupForm'}

@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from django.conf.urls.static import static
 from django.conf import settings
+from hseqweb.apps.accounts.api_views import Login, VerifyTokenAPI
 from hseqweb.views import HomePageView
 
 urlpatterns = [
