@@ -1,0 +1,10 @@
+version: "3.3"
+services:
+  hseqweb-ui:
+    build: ./hseqweb-ui
+    container_name: hseqweb-ui
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
+  
