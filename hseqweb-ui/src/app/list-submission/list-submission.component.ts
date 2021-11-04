@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbAlertConfig } from '@ng-bootstrap/ng-bootstrap';
 import { SubmissionsService } from 'src/submission.service';
 
@@ -15,6 +16,7 @@ export class ListSubmissionComponent implements OnInit {
   collectionSize = 0;
 
   constructor(public subService: SubmissionsService,
+    private router: Router,
     private alertConfig: NgbAlertConfig) { 
       alertConfig.type = 'secondary';
   }
@@ -44,6 +46,10 @@ export class ListSubmissionComponent implements OnInit {
       this.submissions = data.result;
       this.collectionSize = data.total;
     })
+  }
+
+  moveToForm() {
+    this.router.navigate(['/submission/new']);
   }
 
 }

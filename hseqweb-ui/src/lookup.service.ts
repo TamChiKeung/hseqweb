@@ -5,35 +5,18 @@ import { _ } from 'underscore';
 
 @Injectable()
 export class LookupService {
-
+  ABEROWL_API = "http://aber-owl.net/api"
   options = {
     headers:  new HttpHeaders({
       'Accept': 'application/json'
     })
   };
+  
+  constructor(private http: HttpClient) { }
 
-  GENE_VALUESETS = ['NCBIGene']
-
-  constructor(private http: HttpClient) { 
-  }
-
-  findValueset() {
-    return this.http.get(`/api/valueset`, this.options);
-  }
-
-  findEntityByLabelStartsWith(term: string, valueset: string[], pagesize:number) {
-    if (term === '' || valueset.length < 1) {
-      return of([]);
-    }
-
-    var queryStr = `term=${term}`;
-    valueset.forEach(function (value) {
-      queryStr += "&valueset=" + value;
-    });
-    if (pagesize) {
-      queryStr += "&pagesize=" + pagesize;
-    }
-    return this.http.get(`/api/entity/_startswith?${queryStr}`, this.options);
+  findEntityByLabelStartsWith(term: string) {
+    var queryStr = `query=${term}&ontology=hp`;
+    return this.http.get(`${this.ABEROWL_API}/class/_startwith?${queryStr}`, this.options);
   }
 
   findEntityByIris(iris:any[], valueset:string) {
@@ -43,7 +26,7 @@ export class LookupService {
     } else {
       req = {'iri': iris, valueset: valueset}
     }
-    return this.http.post(`/api/entity/_findbyiri`, req, this.options);
+    return this.http.post(`${this.ABEROWL_API}/class/_findbyiri`, req, this.options);
   }
 
 }

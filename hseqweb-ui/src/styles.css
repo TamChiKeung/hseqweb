@@ -26,7 +26,6 @@
   a.nav-link.active {
     background-color: #00A98F;
     color: #FFF;
-    font-family: 'Diodrum-Arabic-Semibold';
   }
   
   .content-container {
@@ -85,6 +84,54 @@
 }
 .page-item {
   border: 1px solid #dee2e6;
+}
+
+.subform .nav-link.active {
+  color: #1266f1;
+  border-color: #1266f1;
+}
+
+.subform .nav-link.active {
+  color: #616161;
+  background-color: #fff;
+  border-color: #e0e0e0 #e0e0e0 #fff;
+}
+
+.tab-content {
+  border: 1px solid;
+  border-color:  #616161;
+  border-radius: 5px;
+}
+
+.subform .nav-link {
+  line-height: 1;
+  font-weight: 500;
+  color: rgba(0,0,0,.6);
+  padding: 17px 29px 16px;
+  border: 0 !important;
+  border-radius: 0 !important;
+  text-transform: uppercase;
+  background-color: #999999;
+  color: #FFFFFF !important;
+  font-size: 12px;
+}
+
+.subform a.nav-link:hover {
+  background-color: #00A98F;
+}
+
+.subform a.nav-link.active {
+  background-color: #00A98F;
+}
+
+.subform .nav-link.disabled {
+  background-color: #999999;
+}
+
+.btn-green {
+  color: #fff;
+  background-color: #00A98F;
+  border-color: #00A98F;
 }
   /*
   @font-face {

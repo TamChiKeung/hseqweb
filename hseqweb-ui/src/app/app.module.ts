@@ -25,6 +25,13 @@ import { LookupService } from 'src/lookup.service';
 import { FileSizePipe } from 'src/filesize.pipe';
 import { ListSubmissionComponent } from './list-submission/list-submission.component';
 import { ViewSubmissionComponent } from './view-submission/view-submission.component';
+import { SubmissionFormComponent } from './submission-form/submission-form.component';
+import { PatientFormComponent } from './patient-form/patient-form.component';
+import { PatientPedigreeComponent } from './patient-pedigree/patient-pedigree.component';
+import { PatientSymtomsComponent } from './patient-symtoms/patient-symtoms.component';
+import { SubmissionSequenceComponent } from './submission-sequence/submission-sequence.component';
+import { PatientService } from 'src/patient.service';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [
@@ -39,7 +46,12 @@ import { ViewSubmissionComponent } from './view-submission/view-submission.compo
     ValidationRunsComponent,
     FileSizePipe,
     ListSubmissionComponent,
-    ViewSubmissionComponent
+    ViewSubmissionComponent,
+    SubmissionFormComponent,
+    PatientFormComponent,
+    PatientPedigreeComponent,
+    PatientSymtomsComponent,
+    SubmissionSequenceComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +60,7 @@ import { ViewSubmissionComponent } from './view-submission/view-submission.compo
     ReactiveFormsModule,
     HttpClientModule,
     NgbModule,
+    NgSelectModule,
     MDBBootstrapModule.forRoot(),
     AppRoutingModule
   ],
@@ -59,13 +72,14 @@ import { ViewSubmissionComponent } from './view-submission/view-submission.compo
     CookieService,
     AuthService,
     SubmissionsService,
+    PatientService,
     LookupService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
     },
-    AuthGuard, 
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })

@@ -1,9 +1,54 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from six import b
 from uploader.utils import api, parse_manifest_text
+from datetime import date
+
 COLLECTIONS_URL = 'https://collections.cborg.cbrc.kaust.edu.sa'
 
+class OntologyClass(models.Model):
+    uri = models.CharField(max_length=127, null=True)
+    label = models.CharField(max_length=127)
+class Pedigree(models.Model):
+    identifier = models.CharField(max_length=63),
+    father = models.ForeignKey('Patient', null=True, on_delete=models.SET_NULL, related_name='padigree_father')
+    mother = models.ForeignKey('Patient', null=True, on_delete=models.SET_NULL, related_name='padigree_mother')
+    sister = models.ForeignKey('Patient', null=True, on_delete=models.SET_NULL, related_name='padigree_sister')
+    brother = models.ForeignKey('Patient', null=True, on_delete=models.SET_NULL, related_name='padigree_brother')
+class PhenotypeFeature(models.Model):
+    phenotype = models.ForeignKey(OntologyClass, on_delete=models.CASCADE, related_name='ontology_class')
+    excluded = models.BooleanField(default=False)
+class Patient(models.Model):
+    MALE = 'male'
+    FEMALE = 'female'
+    UNKNOWN = 'unknown'
+  
+    GENDER_CHOICES = (
+        (MALE, MALE),
+        (FEMALE, FEMALE),
+        (UNKNOWN, UNKNOWN)
+    )
+    identifier = models.CharField(max_length=63, unique=True, null=True)
+    mrn = models.CharField(max_length=63, unique=True, null=True)
+    first_name = models.CharField(max_length=127, null=True)
+    last_name = models.CharField(max_length=127, blank=True, null=True)
+    full_name = models.CharField(max_length=255, null=True)
+    gender = models.CharField(max_length=31, choices=GENDER_CHOICES)
+    date_of_birth = models.DateField(null=True)
+
+    pedigree = models.ForeignKey(Pedigree, on_delete=models.CASCADE, related_name='pedigree', null=True)
+    phenotypes = models.ManyToManyField(PhenotypeFeature)
+
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_patients')
+    modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='modified_patients')
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    @property
+    def age(self):
+        today = date.today()
+        return today.year - self.date_of_birth.year - ((today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day))
 
 class Upload(models.Model):
     SUBMITTED = "submitted"
@@ -28,7 +73,10 @@ class Upload(models.Model):
     status = models.CharField(
         max_length=15, default=SUBMITTED, choices=STATUSES)
     error_message = models.TextField(blank=True, null=True)
-    patient_id = models.CharField(max_length=255, blank=True, null=True)
+
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='upload_patient', null=True)
+    created_at = models.DateTimeField(auto_now=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     @property
     def collection(self):

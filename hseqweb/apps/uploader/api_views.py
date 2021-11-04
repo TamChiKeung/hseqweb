@@ -1,9 +1,10 @@
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework import status
 from rest_framework.permissions import AllowAny
-from hseqweb.apps.uploader.serializers import UploadCreateSerializer, UploadDetailSerializer
+from hseqweb.apps.uploader.serializers import PatientSerializer, PatientShortSerializer, UploadCreateSerializer, UploadDetailSerializer
 from uploader.models import Upload
 from hseqweb.apps.uploader.utils import collection_content
 from uploader.serializers import UploadSerializer
@@ -14,7 +15,10 @@ from django.http import StreamingHttpResponse, Http404
 
 from uploader.utils import api, parse_manifest_text
 import arvados.collection
+import logging
 
+
+logger = logging.getLogger(__name__)
 
 class SyncUpload(CreateAPIView):
 
@@ -109,3 +113,30 @@ class SubmissionView(APIView):
 
     def get_object(self, id):
         return Upload.objects.get(id=id)
+
+class PatientView(APIView):
+    
+    serializer = PatientSerializer()
+
+    def post(self, request, format=None):
+        try:
+            patient = None
+            patient = self.serializer.add_or_update(request.data, request.user)
+
+            return Response(PatientShortSerializer(patient).data, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.exception("message")
+
+    def get(self, request):
+        result = self.serializer.find()
+        return Response(PatientShortSerializer(result, many=True).data, status=status.HTTP_200_OK)
+
+class PatientStartsWithView(APIView):
+    
+    serializer = PatientShortSerializer()
+
+    def get(self, request):
+        term = request.GET.get('term', '')
+        limit = int(request.GET.get('limit', 10))
+        result = self.serializer.find_by_identifier_startsWith(term, limit)
+        return Response(PatientShortSerializer(result, many=True).data, status=status.HTTP_200_OK)
