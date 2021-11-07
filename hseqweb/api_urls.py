@@ -1,7 +1,7 @@
 from django.urls import include, path
 from django.contrib.auth.decorators import login_required
 from hseqweb.apps.accounts.api_views import *
-from hseqweb.apps.uploader.api_views import GetValidationRunsView, DownloadView, ListSubmissionView, PatientStartsWithView, PatientView, SubmissionView, SyncMetadataRDF, SyncUpload
+from hseqweb.apps.uploader.api_views import GetValidationRunsView, DownloadView, ListSubmissionView, PatientInstanceView, PatientPedigreeView, PatientStartsWithView, PatientView, SubmissionView, SyncMetadataRDF, SyncUpload
 
 urlpatterns = [
     path('sync', SyncUpload.as_view()),
@@ -20,5 +20,7 @@ urlpatterns = [
     path('submission', ListSubmissionView.as_view()),
     path('submission/<int:id>', SubmissionView.as_view()),
     path('patient', PatientView.as_view()),
+    path('patient/<int:id>', PatientInstanceView.as_view()),
+    path('patient/<int:id>/pedigree', PatientPedigreeView.as_view()),
     path('patient/startswith', PatientStartsWithView.as_view()),
 ]

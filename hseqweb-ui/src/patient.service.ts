@@ -35,6 +35,10 @@ export class PatientService {
   addOrUpdate(data) {
     return this.http.post(this.URL, data);
   }
+
+  updatePedigree(id, data) {
+    return this.http.put(`${this.URL}/${id}/pedigree`, data);
+  }
   
   
 //   upload(formData){

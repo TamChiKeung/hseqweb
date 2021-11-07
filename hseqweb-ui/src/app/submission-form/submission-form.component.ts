@@ -47,8 +47,8 @@ export class SubmissionFormComponent implements OnInit {
         full_name: [],
         gender: ['unknown', Validators.required],
         date_of_birth: [null],
-        age:[],
-        phenotypes:[[], Validators.required]
+        phenotypes:[[], Validators.required],
+        pedigree: []
       })
     });
     this.loadPhenotype();
@@ -67,7 +67,9 @@ export class SubmissionFormComponent implements OnInit {
 
   next() {
     if (this.active == 1) {
-      this.savePatient()
+      this.savePatient();
+    } else if (this.active == 2) {
+      //pass
     }
 
     this.active += 1;
@@ -82,6 +84,7 @@ export class SubmissionFormComponent implements OnInit {
 
   get f() { return this.submissionForm.controls }
   get patientForm() { return this.submissionForm.get('patient') }
+  get pedigreeForm() { return this.f['patient']['controls']['pedigree'] }
 
   savePatient () {
     var patient = Object.assign({}, this.f['patient'].value);
@@ -101,6 +104,9 @@ export class SubmissionFormComponent implements OnInit {
     this.patientService.addOrUpdate(patient).subscribe(res => {
       this.patientForm.setValue(this.transformPatient(res));
     });
+  }
+
+  savePedigree () {
   }
 
 
@@ -164,6 +170,8 @@ export class SubmissionFormComponent implements OnInit {
     if (obj['date_of_birth']) {
       obj['date_of_birth'] = this.fromModel(obj['date_of_birth']);
     }
+    obj['pedigree'] = {}
+    delete obj['age']
     return obj;
   }
 }

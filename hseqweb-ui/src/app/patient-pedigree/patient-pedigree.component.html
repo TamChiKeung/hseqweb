@@ -1,1 +1,108 @@
-<p>patient-pedigree works!</p>
+<div class="container pl-4 pr-4">
+    <p class="mt-3"><strong>Pedigree</strong></p>
+    <hr />
+    <strong>Patient <i class="fas  ml-2" [ngClass]="{'fa-square': patient && patient.gender == 'male', 'fa-circle': patient && patient.gender == 'female'}"></i> </strong>
+    <div class="row">
+        <div class="col-2 pl-3">Name:</div>
+        <div class="col-9"><strong>{{patient?.full_name}}</strong></div>
+        <div class="col-2 pl-3">Gender:</div>
+        <div class="col-9"><strong>{{patient?.gender}}</strong></div>
+        <div class="col-2 pl-3">Age:</div>
+        <div class="col-9"><strong>{{patient?.age}}</strong></div>
+    </div>
+    <hr />
+    <div class="row">
+        <strong *ngIf="patient && patient.pedigree && patient.pedigree.father">Father<i class="far fa-square ml-2"></i></strong>
+        <div class="col-2 pl-3" *ngIf="!(patient && patient.pedigree && patient.pedigree.father)">
+            <button class="btn btn-green" (click)="open(fatherContent)"><i class="far fa-square mr-2"></i>Add Father</button>
+            <ng-template #fatherContent let-modal>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">Add Father</h4> 
+                </div>
+                <div class="modal-body">
+                    <div class="container p-4">
+                        <app-patient-form [patientForm]="f.father" (patientSelectEvent)='onFatherSelect($event)'></app-patient-form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
+                    <button type="button" class="btn btn-green" (click)="save();modal.close('deleted')">Save</button>
+                </div>
+            </ng-template>
+        </div>
+        <div  class="row" *ngIf="patient && patient.pedigree && patient.pedigree.father">
+            <div class="col-2 pl-3">Name:</div>
+            <div class="col-10"><strong>{{patient.pedigree.father?.full_name}}</strong></div>
+            <div class="col-2 pl-3">Gender:</div>
+            <div class="col-10"><strong>{{patient.pedigree.father?.gender}}</strong></div>
+            <div class="col-2 pl-3">Age:</div>
+            <div class="col-10"><strong>{{patient.pedigree.father?.age}}</strong></div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <strong *ngIf="patient && patient.pedigree && patient.pedigree.mother">Mother<i class="far fa-circle ml-2"></i></strong>
+        <div class="col-2 pl-3" *ngIf="! (patient && patient.pedigree && patient.pedigree.mother)">
+            <button class="btn btn-green" (click)="open(motherContent)"><i class="far fa-circle mr-2"></i>Add Mother</button>
+            <ng-template #motherContent let-modal>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">Add Mother</h4> 
+                </div>
+                <div class="modal-body">
+                    <div class="container p-4">
+                        <app-patient-form [patientForm]="f.mother" (patientSelectEvent)='onMotherSelect($event)'></app-patient-form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="modal.dismiss('cancel click')">Cancel</button>
+                    <button type="button" class="btn btn-green" (click)="save();modal.close('deleted')">Save</button>
+                </div>
+            </ng-template>
+        </div>
+        <div  class="row" *ngIf="patient && patient.pedigree && patient.pedigree.mother">
+            <div class="col-2 pl-3">Name:</div>
+            <div class="col-10"><strong>{{patient.pedigree.mother?.full_name}}</strong></div>
+            <div class="col-2 pl-3">Gender:</div>
+            <div class="col-10"><strong>{{patient.pedigree.mother?.gender}}</strong></div>
+            <div class="col-2 pl-3">Age:</div>
+            <div class="col-10"><strong>{{patient.pedigree.mother?.age}}</strong></div>
+        </div>
+    </div>
+    <hr />
+    <div class="row mt-2 mb-3">
+        <strong *ngIf="patient && patient.pedigree && (patient.pedigree.brother || patient.pedigree.sister)">Sibling<i class="far ml-2" [ngClass]="{'fa-square': patient && patient.pedigree && patient.pedigree.brother, 'fa-circle': patient && patient.pedigree && patient.pedigree.sister }"></i></strong>
+        <div class="col-2 pl-3" *ngIf="! (patient && patient.pedigree && (patient.pedigree.brother || patient.pedigree.sister))">
+            <button class="btn btn-green" (click)="open(sibblingContent)">Add Sibbling</button>
+            <ng-template #sibblingContent let-modal>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">Add Sibling</h4> 
+                </div>
+                <div class="modal-body">
+                    <div class="container p-4">
+                        <app-patient-form [patientForm]="f.sibling" (patientSelectEvent)='onSiblingSelect($event)'></app-patient-form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="cancelModal(modal)">Cancel</button>
+                    <button type="button" class="btn btn-green" (click)="save();modal.close('deleted')">Save</button>
+                </div>
+            </ng-template>
+        </div>
+        <div  class="row" *ngIf="patient && patient.pedigree && patient.pedigree.brother">
+            <div class="col-2 pl-3">Name:</div>
+            <div class="col-10"><strong>{{patient.pedigree.brother?.full_name}}</strong></div>
+            <div class="col-2 pl-3">Gender:</div>
+            <div class="col-10"><strong>{{patient.pedigree.brother?.gender}}</strong></div>
+            <div class="col-2 pl-3">Age:</div>
+            <div class="col-10"><strong>{{patient.pedigree.brother?.age}}</strong></div>
+        </div>
+        <div  class="row" *ngIf="patient && patient.pedigree && patient.pedigree.sister">
+            <div class="col-2 pl-3">Name:</div>
+            <div class="col-10"><strong>{{patient.pedigree.sister?.full_name}}</strong></div>
+            <div class="col-2 pl-3">Gender:</div>
+            <div class="col-10"><strong>{{patient.pedigree.sister?.gender}}</strong></div>
+            <div class="col-2 pl-3">Age:</div>
+            <div class="col-10"><strong>{{patient.pedigree.sister?.age}}</strong></div>
+        </div>
+    </div>
+</div>

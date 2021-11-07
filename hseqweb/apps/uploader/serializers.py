@@ -54,6 +54,9 @@ class PatientShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient 
         fields = ('id', 'identifier', 'mrn', 'first_name', 'last_name', 'full_name', 'gender', 'date_of_birth',  'age', 'phenotypes')
+
+    # def get_phenotypes(self, obj):
+    #     return getattr(obj, 'phenotypes', [])
 class PedigreeSerializer(serializers.ModelSerializer):
     father = PatientShortSerializer()
     mother = PatientShortSerializer()
@@ -63,13 +66,17 @@ class PedigreeSerializer(serializers.ModelSerializer):
         model = Pedigree
         fields = ('__all__')
 class PatientSerializer(serializers.ModelSerializer):
-    phentypes = PhenotypeFeatureSerializer(many=True)
+    phenotypes = PhenotypeFeatureSerializer(many=True)
     pedigree = PedigreeSerializer()
     age = serializers.ReadOnlyField()
 
     def add_or_update(self, validated_data, user):
         print(validated_data)
-        phenotypes = validated_data.pop('phenotypes')
+        
+        phenotypes = []
+        if 'phenotypes' in validated_data:
+            phenotypes = validated_data.pop('phenotypes')
+        
         patient = None
         if not ('id' in validated_data and validated_data['id']):
             patient = Patient(**validated_data)
@@ -83,7 +90,7 @@ class PatientSerializer(serializers.ModelSerializer):
             patient.modified_by = user
             
         patient.date_of_birth =  validated_data['date_of_birth'] if 'date_of_birth' in validated_data else None
-        patient.full_name = validated_data['first_name'] + ' ' + validated_data['last_name']
+        patient.full_name = validated_data['first_name'] + (' ' + validated_data['last_name'] if validated_data['last_name'] else '')
         patient.save()
         for phenotype in phenotypes:
             ontClass, c_created = OntologyClass.objects.get_or_create(**phenotype['phenotype'])
@@ -96,6 +103,29 @@ class PatientSerializer(serializers.ModelSerializer):
         
         patient.save()
         return patient
+
+    def update_pedigree(self, validated_data, user):
+        patient = Patient.objects.get(id=validated_data['id'])
+        if not patient.pedigree:
+            patient.pedigree = Pedigree()
+
+        if 'pedigree' not in validated_data:
+            return patient
+        
+        if 'father' in validated_data['pedigree'] and validated_data['pedigree']['father']:
+            patient.pedigree.father = self.add_or_update(validated_data['pedigree']['father'], user)
+        if 'mother' in validated_data['pedigree'] and validated_data['pedigree']['mother']:
+            patient.pedigree.mother = self.add_or_update(validated_data['pedigree']['mother'], user)
+        if 'sister' in validated_data['pedigree'] and validated_data['pedigree']['sister']:
+            patient.pedigree.sister = self.add_or_update(validated_data['pedigree']['sister'], user)
+        if 'brother' in validated_data['pedigree'] and validated_data['pedigree']['brother']:
+            patient.pedigree.brother = self.add_or_update(validated_data['pedigree']['brother'], user)
+
+        patient.pedigree.save()
+        patient.save()
+
+        return patient
+            
 
     def find():
         return Patient.objects.all().order_by('full_name')

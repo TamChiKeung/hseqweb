@@ -45,16 +45,10 @@
             <li [ngbNavItem]="2" [disabled]="patientForm.invalid">
                 <a ngbNavLink>Pedigree</a>
                 <ng-template ngbNavContent>
-                    <app-patient-pedigree></app-patient-pedigree>
+                    <app-patient-pedigree [indexPatient]="f.patient.value"></app-patient-pedigree>
                 </ng-template>
             </li>
             <li [ngbNavItem]="3" [disabled]="patientForm.invalid">
-                <a ngbNavLink>Clinical Symtoms</a>
-                <ng-template ngbNavContent>
-                    <app-patient-symtoms></app-patient-symtoms>
-                </ng-template>
-            </li>
-            <li [ngbNavItem]="4" [disabled]="patientForm.invalid">
                 <a ngbNavLink>Genome Sequences</a>
                 <ng-template ngbNavContent>
                     <app-submission-sequence></app-submission-sequence>
@@ -65,8 +59,8 @@
         <div class="ml-3 float-right  mt-2">
         <button class="btn btn-sm btn-secondary" (click)="cancel()">Cancel</button>
         <button class="btn btn-sm btn-green ml-1" [disabled]="active < 2" (click)="back()">Back</button>
-        <button class="btn btn-sm btn-green ml-1" [disabled]="active == 4 || (active == 1 && patientForm.invalid)" (click)="next()">Next</button>
-        <button class="btn btn-sm btn-green ml-1" [disabled]="active != 4" (click)="submit()">Save</button>
+        <button class="btn btn-sm btn-green ml-1" [disabled]="active == 3 || (active == 1 && patientForm.invalid)" (click)="next()">Next</button>
+        <button class="btn btn-sm btn-green ml-1" [disabled]="active != 3" (click)="submit()">Save</button>
         </div>
         </form>
     </div>

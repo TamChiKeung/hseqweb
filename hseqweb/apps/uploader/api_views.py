@@ -1,9 +1,10 @@
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView
 from rest_framework import status
 from rest_framework.permissions import AllowAny
+from uploader.models import Patient
 from hseqweb.apps.uploader.serializers import PatientSerializer, PatientShortSerializer, UploadCreateSerializer, UploadDetailSerializer
 from uploader.models import Upload
 from hseqweb.apps.uploader.utils import collection_content
@@ -11,7 +12,7 @@ from uploader.serializers import UploadSerializer
 from rdflib import Graph
 from django.db.models import Count
 
-from django.http import StreamingHttpResponse, Http404
+from django.http import StreamingHttpResponse
 
 from uploader.utils import api, parse_manifest_text
 import arvados.collection
@@ -117,12 +118,9 @@ class SubmissionView(APIView):
 class PatientView(APIView):
     
     serializer = PatientSerializer()
-
-    def post(self, request, format=None):
+    def post(self, request):
         try:
-            patient = None
             patient = self.serializer.add_or_update(request.data, request.user)
-
             return Response(PatientShortSerializer(patient).data, status=status.HTTP_200_OK)
         except Exception as e:
             logger.exception("message")
@@ -130,6 +128,18 @@ class PatientView(APIView):
     def get(self, request):
         result = self.serializer.find()
         return Response(PatientShortSerializer(result, many=True).data, status=status.HTTP_200_OK)
+
+class PatientPedigreeView(APIView):
+    
+    serializer = PatientSerializer()
+
+    def put(self, request, id):
+        try:
+            patient = self.serializer.update_pedigree(request.data, request.user)
+
+            return Response(PatientSerializer(patient).data, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.exception("message")
 
 class PatientStartsWithView(APIView):
     
@@ -140,3 +150,9 @@ class PatientStartsWithView(APIView):
         limit = int(request.GET.get('limit', 10))
         result = self.serializer.find_by_identifier_startsWith(term, limit)
         return Response(PatientShortSerializer(result, many=True).data, status=status.HTTP_200_OK)
+
+class PatientInstanceView(APIView):
+
+    def get(self, request, id):
+        result = Patient.objects.get(id=id)
+        return Response(PatientSerializer(result).data, status=status.HTTP_200_OK)
