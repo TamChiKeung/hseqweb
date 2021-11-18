@@ -156,3 +156,44 @@ class UploadDetailSerializer(serializers.ModelSerializer):
         fields = ('id', 'is_exome', 'is_paired', 'is_trio', 'patient_id', 'col_uuid', 'status', 'date', 
         'error_message', 'collection', 'name', 'token', 'files', 'output_files', 'output_status',
         'output_collection', 'out_col_uuid', 'metadata_filename', 'sequence_filename')
+
+class UploadRequestSerializer(serializers.ModelSerializer):
+    sequence_file1 = serializers.CharField(required=False)
+    sequence_file2 = serializers.CharField(required=False)
+    bed_file = serializers.CharField(required=False)
+    father_sequence_file1 = serializers.CharField(required=False)
+    father_sequence_file2 = serializers.CharField(required=False)
+    father_bed_file = serializers.CharField(required=False)
+    mother_sequence_file1 = serializers.CharField(required=False)
+    mother_sequence_file2 = serializers.CharField(required=False)
+    mother_bed_file = serializers.CharField(required=False)
+    sibling_sequence_file1 = serializers.CharField(required=False)
+    sibling_sequence_file2 = serializers.CharField(required=False)
+    sibling_bed_file = serializers.CharField(required=False)
+    patient = PatientShortSerializer()
+    class Meta:
+        model = Upload
+        fields = '__all__'
+    
+    def add_or_update(self, validated_data, user):
+        print(validated_data)
+        validated_data.pop('sequence_file1')
+        validated_data.pop('sequence_file2')
+        validated_data.pop('bed_file')
+        validated_data.pop('father_sequence_file1')
+        validated_data.pop('father_sequence_file2')
+        validated_data.pop('father_bed_file')
+        validated_data.pop('mother_sequence_file1')
+        validated_data.pop('mother_sequence_file2')
+        validated_data.pop('mother_bed_file')
+        validated_data.pop('sibling_sequence_file1')
+        validated_data.pop('sibling_sequence_file2')
+        validated_data.pop('sibling_bed_file')
+        patient = validated_data.pop('patient')
+        patient = Patient.objects.get(id=patient['id'])
+
+        upload = Upload(**validated_data)
+        upload.patient = patient
+        upload.user = user
+        upload.save()
+        return upload

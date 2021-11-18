@@ -52,6 +52,7 @@ class Patient(models.Model):
 
 class Upload(models.Model):
     SUBMITTED = "submitted"
+    DRAFT = "draft"
     VALIDATED = "validated"
     ERROR = "error"
     UPLOADED = "uploaded"
@@ -62,6 +63,14 @@ class Upload(models.Model):
         (ERROR, ERROR),
         (UPLOADED, UPLOADED)
     ]
+
+    GRCh38 = 'GRCh38'
+    GRCh37 = 'GRCh37'
+    ASSEMBLIES = [
+        (GRCh38, GRCh38),
+        (GRCh37, GRCh37)
+    ]
+
     is_trio = models.BooleanField(default=False)
     is_paired = models.BooleanField(default=False)
     is_exome = models.BooleanField(default=False)
@@ -77,6 +86,35 @@ class Upload(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='upload_patient', null=True)
     created_at = models.DateTimeField(auto_now=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    sequence_file_location1 = models.CharField(max_length=127, blank=True, null=True)
+    sequence_filename1 = models.CharField(max_length=127, blank=True, null=True)
+    sequence_file_location2 = models.CharField(max_length=127, blank=True, null=True)
+    sequence_filename2 = models.CharField(max_length=127, blank=True, null=True)
+    bed_file_location = models.CharField(max_length=127, blank=True, null=True)
+    bed_filename = models.CharField(max_length=127, blank=True, null=True)
+    assembly = models.CharField(max_length=15, default=GRCh38, choices=ASSEMBLIES)
+    father_sequence_file_location1 = models.CharField(max_length=127, blank=True, null=True)
+    father_sequence_filename1 = models.CharField(max_length=127, blank=True, null=True)
+    father_sequence_file_location2 = models.CharField(max_length=127, blank=True, null=True)
+    father_sequence_filename2 = models.CharField(max_length=127, blank=True, null=True)
+    father_bed_file_location = models.CharField(max_length=127, blank=True, null=True)
+    father_bed_filename = models.CharField(max_length=127, blank=True, null=True)
+    father_assembly = models.CharField(max_length=15, default=GRCh38, choices=ASSEMBLIES)
+    mother_sequence_file_location1 = models.CharField(max_length=127, blank=True, null=True)
+    mother_sequence_filename1 = models.CharField(max_length=127, blank=True, null=True)
+    mother_sequence_file_location2 = models.CharField(max_length=127, blank=True, null=True)
+    mother_sequence_filename2 = models.CharField(max_length=127, blank=True, null=True)
+    mother_bed_file_location = models.CharField(max_length=127, blank=True, null=True)
+    mother_bed_filename = models.CharField(max_length=127, blank=True, null=True)
+    mother_assembly = models.CharField(max_length=15, default=GRCh38, choices=ASSEMBLIES)
+    sibling_sequence_file_location1 = models.CharField(max_length=127, blank=True, null=True)
+    sibling_sequence_filename1 = models.CharField(max_length=127, blank=True, null=True)
+    sibling_sequence_file_location2 = models.CharField(max_length=127, blank=True, null=True)
+    sibling_sequence_filename2 = models.CharField(max_length=127, blank=True, null=True)
+    sibling_bed_file_location = models.CharField(max_length=127, blank=True, null=True)
+    sibling_bed_filename = models.CharField(max_length=127, blank=True, null=True)
+    sibling_assembly = models.CharField(max_length=15, default=GRCh38, choices=ASSEMBLIES)
 
     @property
     def collection(self):

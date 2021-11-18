@@ -5,7 +5,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from uploader.models import Patient
-from hseqweb.apps.uploader.serializers import PatientSerializer, PatientShortSerializer, UploadCreateSerializer, UploadDetailSerializer
+from hseqweb.apps.uploader.serializers import PatientSerializer, PatientShortSerializer, UploadCreateSerializer, UploadDetailSerializer, UploadRequestSerializer
 from uploader.models import Upload
 from hseqweb.apps.uploader.utils import collection_content
 from uploader.serializers import UploadSerializer
@@ -77,6 +77,15 @@ class DownloadView(APIView):
 
 class ListSubmissionView(APIView):
 
+    serializer = UploadRequestSerializer()
+    def post(self, request):
+        try:
+            patient = self.serializer.add_or_update(request.data, request.user)
+            return Response(UploadRequestSerializer(patient).data, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.exception("message")
+
+
     def get(self, request):
         offset = int(request.GET.get('offset', 0))
         limit = int(request.GET.get('limit', 10))
@@ -97,7 +106,7 @@ class ListSubmissionView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 class SubmissionView(APIView):
-
+    
     def get(self, request, id):
         object = self.get_object(id)
         if object.user_id != request.user.id:
