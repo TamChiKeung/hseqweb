@@ -30,7 +30,9 @@ export class PatientPedigreeComponent implements OnInit {
       this.patientService.get(this.indexPatient.id).subscribe(res => {
         this.patient = res;
         console.log(res, this.patient['pedigree'])
-        this.pedigreeForm.setValue(this.fromPedigreeModel(this.patient['pedigree']));
+        if (this.patient['pedigree']) {
+          this.pedigreeForm.setValue(this.fromPedigreeModel(this.patient['pedigree']));
+        }
       });
     }
   }
@@ -68,8 +70,6 @@ export class PatientPedigreeComponent implements OnInit {
 
   save(){
     var pedigree = Object.assign({}, this.f.value);
-    console.log(this.fatherForm.value, this.motherForm.value)
-
     let father =  this.toPatientModel(Object.assign({}, this.fatherForm.value));
     if (father['identifier'] != '') {
       pedigree['father'] = this.toPatientModel(father);
@@ -82,7 +82,6 @@ export class PatientPedigreeComponent implements OnInit {
     }
 
     let sibling =  this.toPatientModel(Object.assign({}, this.siblingForm.value));  
-    console.log('sibling:', sibling, this.siblingForm.value)
     if (sibling['identifier'] != '') {
       if (sibling['gender'] == 'male') {
         pedigree['brother'] = this.toPatientModel(sibling);
@@ -137,7 +136,6 @@ export class PatientPedigreeComponent implements OnInit {
     if (obj['date_of_birth']) {
       obj['date_of_birth'] = this.fromModel(obj['date_of_birth']);
     }
-    console.log(obj)
     return obj;
   }
 
