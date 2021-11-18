@@ -32,6 +32,7 @@ import { PatientSymtomsComponent } from './patient-symtoms/patient-symtoms.compo
 import { SubmissionSequenceComponent } from './submission-sequence/submission-sequence.component';
 import { PatientService } from 'src/patient.service';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { FileChooserComponent } from './file-chooser/file-chooser.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     PatientFormComponent,
     PatientPedigreeComponent,
     PatientSymtomsComponent,
-    SubmissionSequenceComponent
+    SubmissionSequenceComponent,
+    FileChooserComponent
   ],
   imports: [
     BrowserModule,

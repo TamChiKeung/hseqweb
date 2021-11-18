@@ -26,7 +26,10 @@ export class SubmissionsService {
   delete(id) {
     return this.http.delete(`${this.URL}/${id}`, this.options);
   }
-
+  
+  addOrUpdate(data) {
+    return this.http.post(this.URL, data);
+  }
   
 //   upload(formData){
 //     return this.http.post<any>(this.URL + '/_upload', formData, {  

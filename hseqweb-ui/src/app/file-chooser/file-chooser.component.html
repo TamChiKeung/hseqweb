@@ -1,0 +1,30 @@
+<div [formGroup]="form">
+    <div class="form-group" *ngIf="patient && !patient[fileControlNames[0]]">
+        <label for="id_sequence_file"> Sequence read<span class="required"></span></label>
+        <input type="file" [attr.name]="fileControlNames[0]" [formControlName]="fileControlNames[0]" class="form-control" (change)="onFileSelect($event, patient, fileControlNames)">
+        <small class="form-text text-muted">Sequence file in FASTQ format.</small>
+    </div>
+    <div class="row round-border p-2" *ngIf="patient && patient[fileControlNames[0]] && !patient[fileControlNames[0]]['isComplete'] && !patient[fileControlNames[0]]['isAlreadyExist']">
+        <div class="col-10">
+            <div class="progress mt-3">
+                <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="patient[fileControlNames[0]]['percentage']" 
+                    [ngStyle]= "{'width': patient[fileControlNames[0]].percentage + '%'}" aria-valuemin="0" aria-valuemax="100">{{patient[fileControlNames[0]].percentage}} %</div>
+            </div>
+        </div>
+        <div class="col-2">
+            <button class="btn btn-green mt-1" (click)="onPauseFile(patient[fileControlNames[0]])" *ngIf="!patient[fileControlNames[0]].isPaused">Pause</button>
+            <button class="btn btn-green mt-1" (click)="onResumeFile(patient[fileControlNames[0]])" *ngIf="patient[fileControlNames[0]].isPaused">Resume</button>
+        </div>
+    </div>
+    <div class="row">
+        <div id="upload-success" class="ml-3 round-border pt-2 pl-4 col-12" *ngIf="patient && patient[fileControlNames[0]] && patient[fileControlNames[0]]['isComplete']">
+            <p><strong>{{ patient[fileControlNames[0]].upload.file.name}} ( {{patient[fileControlNames[0]].upload.file.size}} bytes) </strong> is uploaded. <br /> <button class='btn btn-sm btn-secondary' (click)="onChangeFile(patient, fileControlNames)">Change file</button></p>
+        </div>
+        <div class="ml-3 round-border pt-2 pl-4 col-12" *ngIf="patient && patient[fileControlNames[0]] && patient[fileControlNames[0]]['isAlreadyExist']">
+            <p>
+                <strong>You already started uploading {{patient[fileControlNames[0]].upload.file.name}} file at {{patient[fileControlNames[0]].previousUploads[0].creationTime}}. Do you want to resume this upload?. </strong><br />
+                <button class='btn btn-sm  btn-green' (click)="onResumeOldFile(patient[fileControlNames[0]])">Yes, Resume</button> <button class='btn btn-sm btn-secondary ml-2' (click)="onStartFile(patient[fileControlNames[0]])" >No, Start over</button>
+            </p>
+        </div>
+    </div>
+</div>
