@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:12.16
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -19,5 +19,4 @@ COPY . .
 
 EXPOSE 8080
 EXPOSE 443
-EXPOSE 8890
 CMD ng build && ng serve --port 8080 --host 0.0.0.0 --proxy-config proxy.conf.json --disable-host-check
