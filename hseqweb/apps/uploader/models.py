@@ -59,6 +59,7 @@ class Upload(models.Model):
     
     STATUSES = [
         (SUBMITTED, SUBMITTED),
+        (DRAFT, DRAFT),
         (VALIDATED, VALIDATED),
         (ERROR, ERROR),
         (UPLOADED, UPLOADED)
@@ -84,7 +85,6 @@ class Upload(models.Model):
     error_message = models.TextField(blank=True, null=True)
 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='upload_patient', null=True)
-    created_at = models.DateTimeField(auto_now=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     sequence_file_location1 = models.CharField(max_length=127, blank=True, null=True)
@@ -94,6 +94,7 @@ class Upload(models.Model):
     bed_file_location = models.CharField(max_length=127, blank=True, null=True)
     bed_filename = models.CharField(max_length=127, blank=True, null=True)
     assembly = models.CharField(max_length=15, default=GRCh38, choices=ASSEMBLIES)
+
     father_sequence_file_location1 = models.CharField(max_length=127, blank=True, null=True)
     father_sequence_filename1 = models.CharField(max_length=127, blank=True, null=True)
     father_sequence_file_location2 = models.CharField(max_length=127, blank=True, null=True)
@@ -101,6 +102,10 @@ class Upload(models.Model):
     father_bed_file_location = models.CharField(max_length=127, blank=True, null=True)
     father_bed_filename = models.CharField(max_length=127, blank=True, null=True)
     father_assembly = models.CharField(max_length=15, default=GRCh38, choices=ASSEMBLIES)
+    is_paired_father = models.BooleanField(default=False)
+    is_exome_father = models.BooleanField(default=False)
+
+
     mother_sequence_file_location1 = models.CharField(max_length=127, blank=True, null=True)
     mother_sequence_filename1 = models.CharField(max_length=127, blank=True, null=True)
     mother_sequence_file_location2 = models.CharField(max_length=127, blank=True, null=True)
@@ -108,6 +113,9 @@ class Upload(models.Model):
     mother_bed_file_location = models.CharField(max_length=127, blank=True, null=True)
     mother_bed_filename = models.CharField(max_length=127, blank=True, null=True)
     mother_assembly = models.CharField(max_length=15, default=GRCh38, choices=ASSEMBLIES)
+    is_paired_mother = models.BooleanField(default=False)
+    is_exome_mother = models.BooleanField(default=False)
+
     sibling_sequence_file_location1 = models.CharField(max_length=127, blank=True, null=True)
     sibling_sequence_filename1 = models.CharField(max_length=127, blank=True, null=True)
     sibling_sequence_file_location2 = models.CharField(max_length=127, blank=True, null=True)
@@ -115,6 +123,8 @@ class Upload(models.Model):
     sibling_bed_file_location = models.CharField(max_length=127, blank=True, null=True)
     sibling_bed_filename = models.CharField(max_length=127, blank=True, null=True)
     sibling_assembly = models.CharField(max_length=15, default=GRCh38, choices=ASSEMBLIES)
+    is_paired_sibling = models.BooleanField(default=False)
+    is_exome_sibling = models.BooleanField(default=False)
 
     @property
     def collection(self):

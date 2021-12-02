@@ -1,10 +1,12 @@
 import pkg_resources
 import yaml
+import json
 import re
 import string
 import arvados
 import os
 import requests
+import gzip
 
 from cmmodule.utils import read_chain_file
 from cmmodule.mapbed    import crossmap_bed_file
@@ -316,3 +318,19 @@ def collection_content(col_uuid, filename):
         while content:
             yield content
             content = reader.read(128*1024)
+
+
+def is_gzip_file(filepath):
+    with gzip.open(filepath) as f:
+        try:
+            f.read(1)
+            return True
+        except Exception:
+            return False
+
+def remove_file(filepath):
+    if filepath and os.path.exists(filepath):
+        os.remove(filepath)
+
+def to_dict(input_ordered_dict):
+    return json.loads(json.dumps(input_ordered_dict))

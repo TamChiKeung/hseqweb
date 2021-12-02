@@ -5,7 +5,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from uploader.models import Patient
-from hseqweb.apps.uploader.serializers import PatientSerializer, PatientShortSerializer, UploadCreateSerializer, UploadDetailSerializer, UploadRequestSerializer
+from hseqweb.apps.uploader.serializers import PatientSerializer, PatientShortSerializer, UploadCreateSerializer, UploadDetailSerializer, UploadRequestSerializer, UploadResponseSerializer
 from uploader.models import Upload
 from hseqweb.apps.uploader.utils import collection_content
 from uploader.serializers import UploadSerializer
@@ -77,11 +77,15 @@ class DownloadView(APIView):
 
 class ListSubmissionView(APIView):
 
-    serializer = UploadRequestSerializer()
+    
     def post(self, request):
         try:
-            patient = self.serializer.add_or_update(request.data, request.user)
-            return Response(UploadRequestSerializer(patient).data, status=status.HTTP_200_OK)
+            serializer = UploadRequestSerializer(data=request.data)
+            if not serializer.is_valid():
+             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            submission = serializer.add_or_update(request.data, request.user)
+            return Response(UploadResponseSerializer(submission).data, status=status.HTTP_200_OK)
         except Exception as e:
             logger.exception("message")
 
@@ -111,7 +115,7 @@ class SubmissionView(APIView):
         object = self.get_object(id)
         if object.user_id != request.user.id:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        return Response(UploadDetailSerializer(object).data, status=status.HTTP_200_OK)
+        return Response(UploadResponseSerializer(object).data, status=status.HTTP_200_OK)
 
     def delete(self, request, id):
         upload = self.get_object(id)
@@ -123,6 +127,20 @@ class SubmissionView(APIView):
 
     def get_object(self, id):
         return Upload.objects.get(id=id)
+
+class SubmitSubmissionView(APIView):
+
+    serializer = UploadRequestSerializer()
+    def post(self, request):
+        try:
+            serializer = UploadRequestSerializer(data=request.data)
+            if not serializer.is_valid():
+             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            submission = self.serializer.submit(request.data, request.user)
+            return Response(UploadResponseSerializer(submission).data, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.exception("message")
 
 class PatientView(APIView):
     
@@ -157,7 +175,13 @@ class PatientStartsWithView(APIView):
     def get(self, request):
         term = request.GET.get('term', '')
         limit = int(request.GET.get('limit', 10))
-        result = self.serializer.find_by_identifier_startsWith(term, limit)
+        user = self.request.user
+        result = []
+        if user.is_authenticated and user.get_username() == 'admin':
+            result = self.serializer.find_by_identifier_startsWith(term, limit=limit)
+        elif user.is_authenticated:
+            result = self.serializer.find_by_identifier_startsWith(term, user, limit)
+        
         return Response(PatientShortSerializer(result, many=True).data, status=status.HTTP_200_OK)
 
 class PatientInstanceView(APIView):
@@ -165,3 +189,4 @@ class PatientInstanceView(APIView):
     def get(self, request, id):
         result = Patient.objects.get(id=id)
         return Response(PatientSerializer(result).data, status=status.HTTP_200_OK)
+
