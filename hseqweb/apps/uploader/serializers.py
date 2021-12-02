@@ -5,6 +5,7 @@ import csv
 import gzip
 import yaml
 import logging 
+import json
 
 from typing import Sequence
 from django.core.exceptions import ValidationError
@@ -255,19 +256,43 @@ class UploadRequestSerializer(serializers.ModelSerializer):
         upload.is_paired_sibling = True if upload_config['sibling_sequence_file2'] else False
         upload.is_exome_sibling = True if upload_config['sibling_bed_file'] else False
        
-
-        patient_short_obj = PatientShortSerializer(patient).data
-        upload_config['metadata_file'] = self.save_yaml_file(patient_short_obj)
-
-        patiend_obj = PatientSerializer(patient).data
-        upload_config['ped_file'] = self.create_ped_file(patiend_obj)
-
         upload.save()
+        upload_obj = SubmissionMetadataSerializer(upload).data
+        patient_obj = self.trim_patient(upload_obj['patient'])
+        
+        upload_config['metadata_file'] = self.save_yaml_file(upload_obj)
+        upload_config['ped_file'] = self.create_ped_file(upload_obj['patient'])
+
+        upload.phenotypes_snapshot = json.dumps(patient_obj['phenotypes'])
+        if 'pedigree' in patient_obj and patient_obj['pedigree']:
+            upload.pedigree_snapshot = json.dumps(patient_obj['pedigree'])
+        upload.save()
+
         project_uuid = UPLOADER_PROJECT_UUID
         if user.userprofile.project_uuid:
             project_uuid = user.userprofile.project_uuid
         upload_to_arvados.delay(project_uuid, upload.id, upload_config)
         return upload
+
+    def trim_patient(self, patient):
+        del patient['id']
+        for pheno in patient['phenotypes']:
+            del pheno['id']
+            del pheno['phenotype']['id']
+
+        if 'pedigree' in patient and patient['pedigree']:
+            del patient['pedigree']['id']
+            if 'father' in  patient['pedigree'] and patient['pedigree']['father']:
+                del  patient['pedigree']['father']['phenotypes']
+            if 'mother' in  patient['pedigree'] and patient['pedigree']['mother']:
+                del  patient['pedigree']['mother']['phenotypes']
+            if 'brother' in  patient['pedigree'] and patient['pedigree']['brother']:
+                del  patient['pedigree']['brother']['phenotypes']
+            if 'sister' in  patient['pedigree'] and patient['pedigree']['sister']:
+                del  patient['pedigree']['sister']['phenotypes']
+
+        return patient
+
 
     def validate_sequence_file_location1(self, value):
         if not value:
@@ -475,4 +500,16 @@ class UploadResponseSerializer(serializers.ModelSerializer):
     patient = PatientShortSerializer()
     class Meta:
         model = Upload
-        exclude = ('is_exome', 'is_paired', 'is_exome_father', 'is_paired_father', 'is_exome_mother', 'is_paired_mother', 'is_exome_sibling', 'is_paired_sibling')
+        exclude = ('is_exome', 'is_paired', 'is_exome_father', 'is_paired_father', 'is_exome_mother', 'is_paired_mother', 'is_exome_sibling', 'is_paired_sibling', 'phenotypes_snapshot', 'pedigree_snapshot')
+
+
+class SubmissionMetadataSerializer(serializers.ModelSerializer):      
+    patient = PatientSerializer()
+    class Meta:
+        model = Upload
+        exclude = ('is_exome', 'is_paired', 'is_exome_father', 'is_paired_father', 'is_exome_mother', 'is_paired_mother', 'is_exome_sibling', 'is_paired_sibling',
+        'sequence_file_location1', 'sequence_filename1', 'sequence_file_location2', 'sequence_filename2', 'bed_file_location', 'bed_filename', 'assembly',
+        'father_sequence_file_location1', 'father_sequence_filename1', 'father_sequence_file_location2', 'father_sequence_filename2', 'father_bed_file_location', 'father_bed_filename', 'father_assembly',
+        'mother_sequence_file_location1', 'mother_sequence_filename1', 'mother_sequence_file_location2', 'mother_sequence_filename2', 'mother_bed_file_location', 'mother_bed_filename', 'mother_assembly',
+        'sibling_sequence_file_location1', 'sibling_sequence_filename1', 'sibling_sequence_file_location2', 'sibling_sequence_filename2', 'sibling_bed_file_location', 'sibling_bed_filename', 'sibling_assembly'
+        )

@@ -126,6 +126,9 @@ class Upload(models.Model):
     is_paired_sibling = models.BooleanField(default=False)
     is_exome_sibling = models.BooleanField(default=False)
 
+    phenotypes_snapshot = models.CharField(max_length=1024, blank=True, null=True)
+    pedigree_snapshot = models.CharField(max_length=1024, blank=True, null=True)
+
     @property
     def collection(self):
         if not self.col_uuid:
@@ -141,7 +144,7 @@ class Upload(models.Model):
 
     @property
     def output_status(self):
-        if 'analysis_complete' in self.collection['properties']:
+        if self.collection and 'analysis_complete' in self.collection['properties']:
             return 'complete'
         return 'in progress'
 
@@ -161,7 +164,7 @@ class Upload(models.Model):
 
     @property
     def out_col_uuid(self):
-        if 'output_collection' in self.collection['properties']:
+        if self.collection and 'output_collection' in self.collection['properties']:
             return self.collection['properties']['output_collection']
         return None
         
