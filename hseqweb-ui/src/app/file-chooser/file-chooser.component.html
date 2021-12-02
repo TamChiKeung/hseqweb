@@ -1,10 +1,10 @@
 <div [formGroup]="form">
-    <div class="form-group" *ngIf="patient && !patient[fileControlNames[0]]">
-        <label for="id_sequence_file"> Sequence read<span class="required"></span></label>
+    <div class="form-group" *ngIf="patient && patient[fileControlNames[0]] && !patient[fileControlNames[0]]['isComplete'] && !patient[fileControlNames[0]]['isAlreadyExist']">
+        <label for="id_sequence_file"> {{label}} <span class="{'required': required}"></span></label>
         <input type="file" [attr.name]="fileControlNames[0]" [formControlName]="fileControlNames[0]" class="form-control" (change)="onFileSelect($event, patient, fileControlNames)">
-        <small class="form-text text-muted">Sequence file in FASTQ format.</small>
+        <small class="form-text text-muted">{{help}}</small>
     </div>
-    <div class="row round-border p-2" *ngIf="patient && patient[fileControlNames[0]] && !patient[fileControlNames[0]]['isComplete'] && !patient[fileControlNames[0]]['isAlreadyExist']">
+    <div class="row round-border p-2" *ngIf="patient && patient[fileControlNames[0]] && patient[fileControlNames[0]]['isUploadedStarted'] && !patient[fileControlNames[0]]['isComplete'] && !patient[fileControlNames[0]]['isAlreadyExist']">
         <div class="col-10">
             <div class="progress mt-3">
                 <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="patient[fileControlNames[0]]['percentage']" 
@@ -18,7 +18,12 @@
     </div>
     <div class="row">
         <div id="upload-success" class="ml-3 round-border pt-2 pl-4 col-12" *ngIf="patient && patient[fileControlNames[0]] && patient[fileControlNames[0]]['isComplete']">
-            <p><strong>{{ patient[fileControlNames[0]].upload.file.name}} ( {{patient[fileControlNames[0]].upload.file.size}} bytes) </strong> is uploaded. <br /> <button class='btn btn-sm btn-secondary' (click)="onChangeFile(patient, fileControlNames)">Change file</button></p>
+            <p><strong>{{ f[fileControlNames[2]].value}}  
+                <span>( {{patient[fileControlNames[0]].upload?.file.size}} bytes)</span>
+               </strong> is uploaded. 
+               <br /> 
+               <button class='btn btn-sm btn-secondary' (click)="onChangeFile(patient)">Change file</button>
+            </p>
         </div>
         <div class="ml-3 round-border pt-2 pl-4 col-12" *ngIf="patient && patient[fileControlNames[0]] && patient[fileControlNames[0]]['isAlreadyExist']">
             <p>

@@ -10,6 +10,7 @@
     <table class="table table-striped">
       <thead>
         <th>Job ID</th>
+        <th>Patient ID</th>
         <th>Patient</th>
         <th>Status</th>
         <th>Created on</th>
@@ -18,14 +19,16 @@
       <tbody>
       <tr *ngFor="let sub of submissions; let subIndex = index">
 	    <td>{{ sub.id }}</td>
-        <td>{{ sub?.patient_id }}</td>
+      <td>{{ sub?.patient?.identifier }}</td>
+      <td>{{ sub?.patient?.full_name }}</td>
 	    <td>
             <span *ngIf="sub.status == 'submitted'">processing</span>
             <span *ngIf="sub.status != 'submitted'">{{sub.status}}</span>
         </td>
         <td>{{ sub.date }}</td>
         <td>
-            <a *ngIf="sub.status != 'submitted'" [routerLink]="sub.id">View</a>
+            <a *ngIf="sub.status == 'draft'" [routerLink]="sub.id + '/edit'" ngbTooltip="Edit"><i class="fas fa-edit"></i></a>
+            <a *ngIf="sub.status != 'submitted'" [routerLink]="sub.id" [ngClass]="{'ml-3': sub.status == 'draft'}" ngbTooltip="View"><i class="fas fa-eye"></i></a> 
         </td>
 	   </tr>
       </tbody>

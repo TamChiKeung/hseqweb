@@ -30,6 +30,10 @@ export class SubmissionsService {
   addOrUpdate(data) {
     return this.http.post(this.URL, data);
   }
+
+  submit(data) {
+    return this.http.post(`${this.URL}/_submit`, data);
+  }
   
 //   upload(formData){
 //     return this.http.post<any>(this.URL + '/_upload', formData, {  

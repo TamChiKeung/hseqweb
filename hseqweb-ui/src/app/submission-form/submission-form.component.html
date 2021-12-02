@@ -51,16 +51,18 @@
             <li [ngbNavItem]="3" [disabled]="patientForm.invalid">
                 <a ngbNavLink>Genome Sequences</a>
                 <ng-template ngbNavContent>
-                    <app-submission-sequence></app-submission-sequence>
+                    <app-submission-sequence [indexPatient]="f.patient.value" [submissionForm]="submissionForm"></app-submission-sequence>
                 </ng-template>
             </li>
         </ul>
+        <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
         <div [ngbNavOutlet]="nav"></div>
-        <div class="ml-3 float-right  mt-2">
+        <div class="ml-3 float-right  mt-2 mb-2">
         <button class="btn btn-sm btn-secondary" (click)="cancel()">Cancel</button>
         <button class="btn btn-sm btn-green ml-1" [disabled]="active < 2" (click)="back()">Back</button>
         <button class="btn btn-sm btn-green ml-1" [disabled]="active == 3 || (active == 1 && patientForm.invalid)" (click)="next()">Next</button>
-        <button class="btn btn-sm btn-green ml-1" [disabled]="active != 3" (click)="submit()">Save</button>
+        <button class="btn btn-sm btn-green ml-1" [disabled]="active != 3" (click)="save()">Save</button>
+        <button class="btn btn-sm btn-green ml-1" [disabled]="active != 3" (click)="submit()">Submit</button>
         </div>
         </form>
     </div>

@@ -1,1 +1,99 @@
-<p>submission-sequence works!</p>
+<div class="container">
+<div [formGroup]="submissionForm">
+    <div class="row mt-2">
+        <div class="col-12">
+        <strong>Patient Sequence Files</strong>
+        <div class="row">
+            <div class="col-3 pl-3">Name:<strong class="ml-1">{{patient?.full_name}}</strong></div>
+            <div class="col-3 pl-3">Gender:<strong class="ml-1">{{patient?.gender}}</strong></div>
+        </div>
+        <app-file-chooser [form]="submissionForm" [patient]="patient" [fileControlNames]="['sequence_file1', 'sequence_file_location1', 'sequence_filename1']" 
+            [label]="'Sequence File'" [help]="'Sequence file in FASTQ format.'" required='true'> </app-file-chooser>
+        <app-file-chooser [form]="submissionForm" [patient]="patient" [fileControlNames]="['sequence_file2', 'sequence_file_location2', 'sequence_filename2']" 
+            [label]="'Sequence File 2'" [help]="'Optional FASTQ format file for paired reads.'" required='false'></app-file-chooser>
+        <app-file-chooser [form]="submissionForm" [patient]="patient" [fileControlNames]="['bed_file', 'bed_file_location', 'bed_filename']" 
+            [label]="'Bed File'" [help]="'Optional BED format file for exome uploads.'" required='false'></app-file-chooser>
+        <div class="form-group">
+            <label for="id_assembly"> Assembly: </label>
+            <div class="form-group form-check form-check-inline p-3" *ngFor="let assemblyKey of keys(assemblies)">
+                <input class="form-check-input" type="radio" formControlName="assembly" id="assembly" [value]="assemblyKey">
+                <label class="form-check-label" for="assembly">{{assemblies[assemblyKey]}}</label>
+            </div>
+            <small class="form-text text-muted">Assembly version of Bed format file</small>
+        </div>
+        </div>
+    </div>
+    <hr *ngIf="patient && patient['pedigree'] && patient['pedigree']['father']" />
+    <div class="row mt-2" *ngIf="patient && patient['pedigree'] && patient['pedigree']['father']">
+        <div class="col-12">
+        <strong>Father's Sequence Files</strong>
+        <div class="row">
+            <div class="col-3 pl-3">Name:<strong class="ml-1">{{patient.pedigree.father?.full_name}}</strong></div>
+            <div class="col-3 pl-3">Gender:<strong class="ml-1">{{patient.pedigree.father?.gender}}</strong></div>
+        </div>
+        <app-file-chooser [form]="submissionForm" [patient]="patient['pedigree']['father']" [fileControlNames]="['father_sequence_file1', 'father_sequence_file_location1', 'father_sequence_filename1']" 
+            [label]="'Sequence File'" [help]="'Sequence file in FASTQ format.'"  required='false'></app-file-chooser>
+        <app-file-chooser [form]="submissionForm" [patient]="patient['pedigree']['father']" [fileControlNames]="['father_sequence_file2', 'father_sequence_file_location2', 'father_sequence_filename2']"
+            [label]="'Sequence File 2'" [help]="'Optional FASTQ format file for paired reads.'"  required='false'></app-file-chooser>
+        <app-file-chooser [form]="submissionForm" [patient]="patient['pedigree']['father']" [fileControlNames]="['father_bed_file', 'father_bed_file_location', 'father_bed_filename']"
+            [label]="'Bed File'" [help]="'Optional BED format file for exome uploads.'"  required='false'></app-file-chooser>
+        <div class="form-group">
+            <label for="id_assembly"> Assembly: </label>
+            <div class="form-group form-check form-check-inline p-3" *ngFor="let assemblyKey of keys(assemblies)">
+                <input class="form-check-input" type="radio" formControlName="father_assembly" id="assembly" [value]="assemblyKey">
+                <label class="form-check-label" for="assembly">{{assemblies[assemblyKey]}}</label>
+            </div>
+            <small class="form-text text-muted">Assembly version of Bed format file</small>
+        </div>
+        </div>
+    </div>
+    <hr  *ngIf="patient && patient['pedigree'] && patient['pedigree']['mother']" />
+    <div class="row mt-2" *ngIf="patient && patient['pedigree'] && patient['pedigree']['mother']">
+        <div class="col-12">
+        <strong>Mother's Sequence Files</strong>
+        <div class="row">
+            <div class="col-3 pl-3">Name:<strong class="ml-1">{{patient.pedigree.mother?.full_name}}</strong></div>
+            <div class="col-3 pl-3">Gender:<strong class="ml-1">{{patient.pedigree.mother?.gender}}</strong></div>
+        </div>
+        <app-file-chooser [form]="submissionForm" [patient]="patient['pedigree']['mother']" [fileControlNames]="['mother_sequence_file1', 'mother_sequence_file_location1', 'mother_sequence_filename1']" 
+            [label]="'Sequence File'" [help]="'Sequence file in FASTQ format.'" required='false'></app-file-chooser>
+        <app-file-chooser [form]="submissionForm" [patient]="patient['pedigree']['mother']" [fileControlNames]="['mother_sequence_file2', 'mother_sequence_file_location2', 'mother_sequence_filename2']"
+            [label]="'Sequence File 2'" [help]="'Optional FASTQ format file for paired reads.'" required='false'></app-file-chooser>
+        <app-file-chooser [form]="submissionForm" [patient]="patient['pedigree']['mother']" [fileControlNames]="['mother_bed_file', 'mother_bed_file_location', 'mother_bed_filename']"
+            [label]="'Bed File'" [help]="'Optional BED format file for exome uploads.'" required='false'></app-file-chooser>
+        <div class="form-group">
+            <label for="id_assembly"> Assembly: </label>
+            <div class="form-group form-check form-check-inline p-3" *ngFor="let assemblyKey of keys(assemblies)">
+                <input class="form-check-input" type="radio" formControlName="mother_assembly" id="assembly" [value]="assemblyKey">
+                <label class="form-check-label" for="assembly">{{assemblies[assemblyKey]}}</label>
+            </div>
+            <small class="form-text text-muted">Assembly version of Bed format file</small>
+        </div>
+        </div>
+    </div>
+    <hr  class="row mt-2" *ngIf="patient && patient['pedigree'] && (patient['pedigree']['brother'] || patient['pedigree']['sister'])" />
+    <div class="row mt-2" *ngIf="patient && patient['pedigree'] && (patient['pedigree']['brother'] || patient['pedigree']['sister'])">
+        <div class="col-12">
+        <strong>Sibling's Sequence Files</strong>
+        <div class="row">
+            <div class="col-3 pl-3">Name:<strong class="ml-1">{{patient.pedigree.brother ?  patient.pedigree.brother.full_name : patient.pedigree.sister.full_name}}</strong></div>
+            <div class="col-3 pl-3">Gender:<strong class="ml-1">{{patient.pedigree.brother ?  patient.pedigree.brother.gender : patient.pedigree.sister.gender}}</strong></div>
+        </div>
+        <app-file-chooser [form]="submissionForm" [patient]="patient.pedigree.brother ?  patient.pedigree.brother : patient.pedigree.sister" [fileControlNames]="['sibling_sequence_file1', 'sibling_sequence_file_location1', 'sibling_sequence_filename1']"
+            [label]="'Sequence File'" [help]="'Sequence file in FASTQ format.'" required='false'></app-file-chooser>
+        <app-file-chooser [form]="submissionForm" [patient]="patient.pedigree.brother ?  patient.pedigree.brother : patient.pedigree.sister" [fileControlNames]="['sibling_sequence_file2', 'sibling_sequence_file_location2', 'sibling_sequence_filename2']"
+            [label]="'Sequence File 2'" [help]="'Optional FASTQ format file for paired reads.'" required='false'></app-file-chooser>
+        <app-file-chooser [form]="submissionForm" [patient]="patient.pedigree.brother ?  patient.pedigree.brother : patient.pedigree.sister" [fileControlNames]="['sibling_bed_file', 'sibling_bed_file_location', 'sibling_bed_filename']"
+            [label]="'Bed File'" [help]="'Optional BED format file for exome uploads.'" required='false'></app-file-chooser>
+        <div class="form-group">
+            <label for="id_assembly"> Assembly: </label>
+            <div class="form-group form-check form-check-inline p-3" *ngFor="let assemblyKey of keys(assemblies)">
+                <input class="form-check-input" type="radio" formControlName="sibling_assembly" id="assembly" [value]="assemblyKey">
+                <label class="form-check-label" for="assembly">{{assemblies[assemblyKey]}}</label>
+            </div>
+            <small class="form-text text-muted">Assembly version of Bed format file</small>
+        </div>
+        </div>
+    </div>
+</div>
+</div>

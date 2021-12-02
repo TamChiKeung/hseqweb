@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct, NgbNavChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateISOParserFormatter } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-parser-formatter';
 import { NgSelectConfig } from '@ng-select/ng-select';
@@ -10,6 +10,8 @@ import { catchError, distinctUntilChanged, map, switchMap, tap } from 'rxjs/oper
 import { LookupService } from 'src/lookup.service';
 import { PatientService } from 'src/patient.service';
 import { SubmissionsService } from 'src/submission.service';
+import { ToastService } from 'src/toast-service';
+
 
 @Component({
   selector: 'app-submission-form',
@@ -26,18 +28,22 @@ export class SubmissionFormComponent implements OnInit {
   phenotype$ : Observable<any>;
   phenotypeLoading = false;
   phenotypeInput$ = new Subject<string>();
+  submissionId = null;
   
   constructor(private fb: FormBuilder,
     public subService: SubmissionsService,
     private patientService: PatientService,
     private lookupService: LookupService,
     private router: Router,
-    private config: NgSelectConfig) {
+    private route: ActivatedRoute, 
+    private config: NgSelectConfig,
+    public toastService: ToastService) {
       this.config.appendTo = 'body';
     }
 
   ngOnInit(): void {
     this.submissionForm = this.fb.group({
+      id: [],
       patient: this.fb.group({
         id:[],
         mrn:[],
@@ -49,16 +55,83 @@ export class SubmissionFormComponent implements OnInit {
         date_of_birth: [null],
         phenotypes:[[], Validators.required],
         pedigree: []
-      })
+      }),
+      sequence_file1: [''],
+      sequence_file_location1: [],
+      sequence_filename1: [],
+      sequence_file2: [''],
+      sequence_file_location2: [],
+      sequence_filename2: [],
+      bed_file: [''],
+      bed_file_location: [],
+      bed_filename: [],
+      assembly: ['GRCh38'],
+      father_sequence_file1: [''],
+      father_sequence_file_location1: [],
+      father_sequence_filename1: [],
+      father_sequence_file2: [''],
+      father_sequence_file_location2: [],
+      father_sequence_filename2: [],
+      father_bed_file: [''],
+      father_bed_file_location: [],
+      father_bed_filename: [],
+      father_assembly: ['GRCh38'],
+      mother_sequence_file1: [''],
+      mother_sequence_file_location1: [],
+      mother_sequence_filename1: [],
+      mother_sequence_file2: [''],
+      mother_sequence_file_location2: [],
+      mother_sequence_filename2: [],
+      mother_bed_file: [''],
+      mother_bed_file_location: [],
+      mother_bed_filename: [],
+      mother_assembly: ['GRCh38'],
+      sibling_sequence_file1: [''],
+      sibling_sequence_file_location1: [],
+      sibling_sequence_filename1: [],
+      sibling_sequence_file2: [''],
+      sibling_sequence_file_location2: [],
+      sibling_sequence_filename2: [],
+      sibling_bed_file: [''],
+      sibling_bed_file_location: [],
+      sibling_bed_filename: [],
+      sibling_assembly: ['GRCh38'],
+      status: ['draft']
     });
     this.loadPhenotype();
+    this.route.params.subscribe(params => {
+      this.submissionId = params.id ? params.id != undefined: null;
+      if (this.submissionId){
+        this.subService.get(this.submissionId).subscribe(res => {
+          this.submissionForm.setValue(this.transformSubmission(res));
+        });
+      }
+    });
+    
   }
 
   cancel() {
     this.router.navigate(['/submission']);
   }
 
-  submit() {
+  save() { 
+    var submission = Object.assign({}, this.submissionForm.value);
+
+    console.log("submission", submission);
+    this.subService.addOrUpdate(submission).subscribe(res => {
+      this.toastService.show('Saved patient\'s submission', { classname: 'bg-success text-light', delay: 3000 });
+      this.submissionForm.setValue(this.transformSubmission(res));
+    });
+  }
+
+  submit() { 
+    var submission = Object.assign({}, this.submissionForm.value);
+
+    console.log("submitting submission", submission);
+    this.subService.submit(submission).subscribe(res => {
+      this.toastService.show('Submitted patient\'s submission successfully', { classname: 'bg-success text-light', delay: 3000 });
+      this.router.navigate(['/submission']);
+    });
   }
 
   back() {
@@ -79,6 +152,8 @@ export class SubmissionFormComponent implements OnInit {
     this.active += 1;
     if (changeEvent.nextId === 3) {
       changeEvent.preventDefault();
+    } else if (changeEvent.nextId === 2) {
+      console.log("submit sequence tab")
     }
   }
 
@@ -104,9 +179,6 @@ export class SubmissionFormComponent implements OnInit {
     this.patientService.addOrUpdate(patient).subscribe(res => {
       this.patientForm.setValue(this.transformPatient(res));
     });
-  }
-
-  savePedigree () {
   }
 
 
@@ -173,5 +245,33 @@ export class SubmissionFormComponent implements OnInit {
     obj['pedigree'] = {}
     delete obj['age']
     return obj;
+  }
+
+  transformSubmission(submission) {
+    submission['patient'] = this.transformPatient(submission['patient'])
+    submission['sequence_file1'] = ''
+    submission['sequence_file2'] = ''
+    submission['bed_file'] = ''
+    submission['father_sequence_file1'] = ''
+    submission['father_sequence_file2'] = ''
+    submission['father_bed_file'] = ''
+    submission['mother_sequence_file1'] = ''
+    submission['mother_sequence_file2'] = ''
+    submission['mother_bed_file'] = ''
+    submission['sibling_sequence_file1'] = ''
+    submission['sibling_sequence_file2'] = ''
+    submission['sibling_bed_file'] = ''
+
+
+    delete submission['is_exome'];
+    delete submission['is_paired'];
+    delete submission['is_trio'];
+    delete submission['date'];
+    delete submission['col_uuid'];
+    delete submission['error_message'];
+    delete submission['created_at'];
+    delete submission['updated_at'];
+    delete submission['user'];
+    return submission;
   }
 }

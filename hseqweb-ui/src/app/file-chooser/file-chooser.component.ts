@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChange } from '@angular/core';
 import { FormControlName, FormGroup } from '@angular/forms';
 import * as tus from "tus-js-client";
 
@@ -10,6 +10,10 @@ export class FileChooserComponent implements OnInit {
   @Input() patient = null;
   @Input() form: FormGroup;
   @Input() fileControlNames = [];
+  @Input() label = '';
+  @Input() help = '';
+  @Input() required = false;
+  initParam = null;
 
   endpoint = '/api/tus_upload/';
   chunkSize = 5242880;
@@ -22,11 +26,26 @@ export class FileChooserComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  ngOnChanges(change: SimpleChange) {
+    if (change && change['form'] && this.form) {
+      console.log("Location:", this.f[this.fileControlNames[1]].value)
+      if(this.f[this.fileControlNames[1]].value) {
+        this.initParam = { percentage: 100, isComplete: true, isAlreadyExist:false, isPaused:false, isUploadedStarted:false}
+      } else {
+        this.initParam = { percentage: 0, isComplete: false, isAlreadyExist:false, isPaused:false, isUploadedStarted:false}
+      }
+    }
+
+    if (this.patient) {
+      this.patient[this.fileControlNames[0]] = this.initParam;
+    }
+  }
+
   get f() { return this.form.controls }
   
   onFileSelect(event, parentObj, fileControlNames){
     var file = event.target.files[0];
-    parentObj[fileControlNames[0]] = { percentage: 0, isComplete: false, isAlreadyExist:false, isPaused:false}
     var that = this;
     var upload = new tus.Upload(file, {
       endpoint: this.endpoint,
@@ -54,8 +73,8 @@ export class FileChooserComponent implements OnInit {
       },
       // Callback for reporting upload progress
       onProgress: function(bytesUploaded, bytesTotal) {
-          parentObj[fileControlNames[0]]['percentage'] = (bytesUploaded / bytesTotal * 100).toFixed(2);
-          console.log(bytesUploaded, bytesTotal, parentObj[fileControlNames[0]]['percentage'] + "%")
+        parentObj[fileControlNames[0]]['percentage'] = (bytesUploaded / bytesTotal * 100).toFixed(2);
+        console.log(bytesUploaded, bytesTotal, parentObj[fileControlNames[0]]['percentage'] + "%")
       },
       // Callback for once the upload is completed
       onSuccess: function() {
@@ -77,9 +96,8 @@ export class FileChooserComponent implements OnInit {
     });
   }
 
-  onChangeFile(obj, fileControlNames){
-    this.reset(obj[fileControlNames[0]], fileControlNames);
-    obj[fileControlNames[0]] = null;
+  onChangeFile(obj){
+    this.reset(obj[this.fileControlNames[0]]);
   }
 
   onPauseFile(sequenceFileObj){
@@ -95,12 +113,17 @@ export class FileChooserComponent implements OnInit {
   }
 
 
-  reset(sequenceFileObj, fileControlNames) {
-    this.f[fileControlNames[0]].setValue(null);
-    this.f[fileControlNames[1]].setValue(null);
-    this.f[fileControlNames[2]].setValue(null);
+  reset(sequenceFileObj) {
+    this.f[this.fileControlNames[0]].setValue(null);
+    this.f[this.fileControlNames[1]].setValue(null);
+    this.f[this.fileControlNames[2]].setValue(null);
     sequenceFileObj.upload = null;
-    sequenceFileObj = null;
+    console.log("before:", sequenceFileObj)
+    sequenceFileObj.isComplete = false;
+    sequenceFileObj.isAlreadyExist = false;
+    sequenceFileObj.isUploadedStarted = false;
+    sequenceFileObj.percentage = 0;
+    console.log("after:", sequenceFileObj)
   }
 
   onResumeOldFile(sequenceFileObj){
@@ -113,11 +136,13 @@ export class FileChooserComponent implements OnInit {
     sequenceFileObj.upload.start();
     sequenceFileObj.isAlreadyExist = false;
     sequenceFileObj.isComplete = false;
+    sequenceFileObj.isUploadedStarted = true;
   }
 
   askToResumeUpload(previousUploads, upload, sequenceFileObj) {
     if (previousUploads.length === 0) {
         upload.start()
+        sequenceFileObj.isUploadedStarted = true;
         return
     }
 

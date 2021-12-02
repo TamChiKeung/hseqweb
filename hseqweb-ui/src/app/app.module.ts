@@ -33,6 +33,8 @@ import { SubmissionSequenceComponent } from './submission-sequence/submission-se
 import { PatientService } from 'src/patient.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FileChooserComponent } from './file-chooser/file-chooser.component';
+import { ToastService } from 'src/toast-service';
+import { ToastsComponent } from './toasts/toasts.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +55,8 @@ import { FileChooserComponent } from './file-chooser/file-chooser.component';
     PatientPedigreeComponent,
     PatientSymtomsComponent,
     SubmissionSequenceComponent,
-    FileChooserComponent
+    FileChooserComponent,
+    ToastsComponent
   ],
   imports: [
     BrowserModule,
@@ -76,6 +79,7 @@ import { FileChooserComponent } from './file-chooser/file-chooser.component';
     SubmissionsService,
     PatientService,
     LookupService,
+    ToastService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
