@@ -24,6 +24,7 @@ const routes: Routes = [
   {path: 'user/edit',component: EditUserComponent, canActivate: [AuthGuard]},
   {path: 'user/changepassword',component: ChangePasswordComponent, canActivate: [AuthGuard]},
   {path: 'submission',component: ListSubmissionComponent, canActivate: [AuthGuard]},
+  {path: '',component: ListSubmissionComponent, canActivate: [AuthGuard]},
   {path: 'submission/new',component: SubmissionFormComponent, canActivate: [AuthGuard]},
   {path: 'submission/:id/edit',component: SubmissionFormComponent, canActivate: [AuthGuard]},
   {path: 'submission/:id',component: ViewSubmissionComponent, canActivate: [AuthGuard]}];
