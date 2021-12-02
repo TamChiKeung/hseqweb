@@ -22,6 +22,10 @@ export class SubmissionsService {
   get(id) {
     return this.http.get(`${this.URL}/${id}`, this.options);
   }
+
+  getFullDetails(id) {
+    return this.http.get(`${this.URL}/${id}/full`, this.options);
+  }
   
   delete(id) {
     return this.http.delete(`${this.URL}/${id}`, this.options);

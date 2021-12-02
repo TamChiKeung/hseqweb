@@ -1,5 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { AuthService } from 'src/auth.service';
 
 @Component({
@@ -13,7 +16,15 @@ export class AppComponent {
   }
 
 logout(){
-  this.authService.logout().subscribe(data => {
+  this.authService.logout().pipe( 
+    catchError((error: HttpErrorResponse) => { 
+      if (error.status == 401) {
+        this.router.navigate(['login']);
+        this.authService.clearCache();
+      }
+      return of(error);
+    })
+  ).subscribe(data => {
     this.authService.clearCache();
     this.router.navigate(['login']);
   });

@@ -4,6 +4,8 @@ import os
 import csv
 import gzip
 import yaml
+import logging 
+
 from typing import Sequence
 from django.core.exceptions import ValidationError
 
@@ -17,6 +19,9 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from .tusfile import TusFile
 from .utils import is_gzip_file, to_dict
+
+
+logger = logging.getLogger(__name__)
 
 UPLOADER_PROJECT_UUID = getattr(settings, 'UPLOADER_PROJECT_UUID', 'cborg-j7d0g-nyah4ques5ww7pk')
 class UploadCreateSerializer(serializers.ModelSerializer):
@@ -92,8 +97,7 @@ class PatientSerializer(serializers.ModelSerializer):
     age = serializers.ReadOnlyField()
 
     def add_or_update(self, validated_data, user):
-        print(validated_data)
-        
+        logger.info("Saving patient: %s", str(validated_data))
         phenotypes = []
         if 'phenotypes' in validated_data:
             phenotypes = validated_data.pop('phenotypes')
@@ -123,6 +127,8 @@ class PatientSerializer(serializers.ModelSerializer):
             patient.mrn = 'P' + str(patient.pk).rjust(11, '0')
         
         patient.save()
+
+        logger.info("Saved patient: %s", str(patient.pk))
         return patient
 
     def update_pedigree(self, validated_data, user):
@@ -160,7 +166,7 @@ class UploadSerializer(serializers.ModelSerializer):
         model = Upload
         fields = '__all__'
 
-class UploadDetailSerializer(serializers.ModelSerializer):
+class SubmissionDetailSerializer(serializers.ModelSerializer):
     collection = serializers.ReadOnlyField()
     output_status = serializers.ReadOnlyField()
     output_collection = serializers.ReadOnlyField()
@@ -174,10 +180,7 @@ class UploadDetailSerializer(serializers.ModelSerializer):
     patient = PatientSerializer()
     class Meta:
         model = Upload
-        fields = ('id', 'is_exome', 'is_paired', 'is_trio', 'patient_id', 'col_uuid', 'status', 'date', 
-        'error_message', 'collection', 'name', 'token', 'files', 'output_files', 'output_status',
-        'output_collection', 'out_col_uuid', 'metadata_filename', 'sequence_filename')
-
+        fields = '__all__'
 class UploadRequestSerializer(serializers.ModelSerializer):
     sequence_file1 = serializers.CharField(allow_blank=True)
     sequence_file2 = serializers.CharField(allow_blank=True)
@@ -201,7 +204,7 @@ class UploadRequestSerializer(serializers.ModelSerializer):
 
 
     def add_or_update(self, validated_data, user):
-        print(validated_data)
+        logger.info("Saving submission: %s", str(validated_data))
         self.remove_file_fields(validated_data)
         patient = validated_data.pop('patient')
         patient = Patient.objects.get(id=patient['id'])
@@ -215,7 +218,7 @@ class UploadRequestSerializer(serializers.ModelSerializer):
         return upload
 
     def submit(self, validated_data, user):
-        print(validated_data)
+        logger.info("Submitting submission: %s", str(validated_data))
         self.tus_files_moved = {}
         self.remove_file_fields(validated_data)
         patient = validated_data.pop('patient')
@@ -226,8 +229,6 @@ class UploadRequestSerializer(serializers.ModelSerializer):
         upload.user = user
         upload.status = Upload.SUBMITTED
 
-
-        print("before moving", upload)
         upload_config = {}
         upload_config['sequence_file'] = self.create_sequence_filepath(validated_data, 'sequence_file_location1', 'sequence_filename1')
         upload_config['sequence_file2'] = self.create_sequence_filepath(validated_data, 'sequence_file_location2', 'sequence_filename2')
@@ -257,7 +258,6 @@ class UploadRequestSerializer(serializers.ModelSerializer):
 
         patient_short_obj = PatientShortSerializer(patient).data
         upload_config['metadata_file'] = self.save_yaml_file(patient_short_obj)
-        print("metadata:", patient_short_obj)
 
         patiend_obj = PatientSerializer(patient).data
         upload_config['ped_file'] = self.create_ped_file(patiend_obj)
@@ -328,7 +328,6 @@ class UploadRequestSerializer(serializers.ModelSerializer):
     def validate_bed_files_format(self, bed_file_location):
         if bed_file_location:
             filepath = os.path.join(settings.TUS_UPLOAD_DIR, bed_file_location)
-            print("bedfile:", filepath)
             if not os.path.exists(filepath):
                 raise serializers.ValidationError("Something went wrong. Unable to find uploaded file")
             # try:
@@ -371,11 +370,11 @@ class UploadRequestSerializer(serializers.ModelSerializer):
             bed_tus_file.clean()
 
             bed_file = os.path.join(settings.TUS_UPLOAD_DIR, bed_file_loc)
-            print("Bed file assembly:", bed_file_assembly)
+            logger.info("Bed file assembly: %s", bed_file_assembly)
             if bed_file and bed_file_assembly == 'GRCh37':
                 bed_hg38_out_file = tempfile.NamedTemporaryFile('wt', delete=False)
                 hg19_to_hg38(bed_file, bed_hg38_out_file.name)
-                print("bed file conversion from hg19 to hg38 completed:", bed_file, bed_hg38_out_file.name)
+                logger.info("bed file conversion from hg19 to hg38 completed: %s $s", bed_file, bed_hg38_out_file.name)
                 original_bed_file_grch37 = bed_file
                 bed_file = bed_hg38_out_file.name
             
@@ -430,7 +429,7 @@ class UploadRequestSerializer(serializers.ModelSerializer):
 
             if 'sister' in  patiend_obj['pedigree'] and patiend_obj['pedigree']['sister']:
                 sister = patiend_obj['pedigree']['sister']
-                sister_entry = [patiend_obj['identifier'], sister['identifier'], father_entry if father_entry else 0, mother_entry if mother_entry else 0, 2, 0]
+                sister_entry = [patiend_obj['identifier'], sister['identifier'], father_entry if father_entry['identifier'] else 0, mother_entry['identifier'] if mother_entry else 0, 2, 0]
         else:
             patient_entry += [0, 0]
 
@@ -452,7 +451,6 @@ class UploadRequestSerializer(serializers.ModelSerializer):
         if sister_entry:
             data.append(sister_entry)
 
-        print("ped data:", data)
         writer.writerows(data)
         tmp_file.close()
         return tmp_file.name 
@@ -473,7 +471,7 @@ class UploadRequestSerializer(serializers.ModelSerializer):
         validated_data.pop('sibling_bed_file')
 
 
-class UploadResponseSerializer(serializers.ModelSerializer):
+class UploadResponseSerializer(serializers.ModelSerializer):      
     patient = PatientShortSerializer()
     class Meta:
         model = Upload

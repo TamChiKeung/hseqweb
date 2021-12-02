@@ -18,7 +18,7 @@ export class ViewSubmissionComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.subService.get(params.id).subscribe(data =>{
+      this.subService.getFullDetails(params.id).subscribe(data =>{
         this.submission = data;
       });
     });

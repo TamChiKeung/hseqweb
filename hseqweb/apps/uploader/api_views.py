@@ -5,7 +5,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from uploader.models import Patient
-from hseqweb.apps.uploader.serializers import PatientSerializer, PatientShortSerializer, UploadCreateSerializer, UploadDetailSerializer, UploadRequestSerializer, UploadResponseSerializer
+from hseqweb.apps.uploader.serializers import PatientSerializer, PatientShortSerializer, SubmissionDetailSerializer, UploadCreateSerializer, UploadRequestSerializer, UploadResponseSerializer
 from uploader.models import Upload
 from hseqweb.apps.uploader.utils import collection_content
 from uploader.serializers import UploadSerializer
@@ -141,6 +141,16 @@ class SubmitSubmissionView(APIView):
             return Response(UploadResponseSerializer(submission).data, status=status.HTTP_200_OK)
         except Exception as e:
             logger.exception("message")
+
+
+class FullSubmissionView(APIView):
+    def get(self, request, id):
+        object = self.get_object(id)
+        if object.user_id != request.user.id:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(SubmissionDetailSerializer(object).data, status=status.HTTP_200_OK)
+    def get_object(self, id):
+        return Upload.objects.get(id=id)
 
 class PatientView(APIView):
     
