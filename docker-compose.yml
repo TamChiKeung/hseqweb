@@ -4,7 +4,6 @@ services:
     build: ./hseqweb-ui
     container_name: hseqweb-ui
     ports:
-      - 80:80
-      - 443:443
+      - 8080:8080
     restart: unless-stopped
   

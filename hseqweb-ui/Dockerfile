@@ -17,7 +17,7 @@ RUN npm ci --only=production
 # Bundle app source
 COPY . .
 
-EXPOSE 80
+EXPOSE 8080
 EXPOSE 443
 EXPOSE 8890
-CMD ng build && ng serve --port 80 --host 0.0.0.0 --proxy-config proxy.conf.json --disable-host-check
+CMD ng build && ng serve --port 8080 --host 0.0.0.0 --proxy-config proxy.conf.json --disable-host-check
