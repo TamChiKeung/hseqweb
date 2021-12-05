@@ -99,9 +99,7 @@ class PatientSerializer(serializers.ModelSerializer):
 
     def add_or_update(self, validated_data, user):
         logger.info("Saving patient: %s", str(validated_data))
-        phenotypes = []
-        if 'phenotypes' in validated_data:
-            phenotypes = validated_data.pop('phenotypes')
+        phenotypes = validated_data.pop('phenotypes') if 'phenotypes' in validated_data and validated_data['phenotypes'] else []
         
         patient = None
         if not ('id' in validated_data and validated_data['id']):
@@ -118,6 +116,7 @@ class PatientSerializer(serializers.ModelSerializer):
         patient.date_of_birth =  validated_data['date_of_birth'] if 'date_of_birth' in validated_data else None
         patient.full_name = validated_data['first_name'] + (' ' + validated_data['last_name'] if validated_data['last_name'] else '')
         patient.save()
+
         for phenotype in phenotypes:
             ontClass, c_created = OntologyClass.objects.get_or_create(**phenotype['phenotype'])
             phenotype['phenotype'] = ontClass

@@ -152,9 +152,7 @@ export class SubmissionFormComponent implements OnInit {
     this.active += 1;
     if (changeEvent.nextId === 3) {
       changeEvent.preventDefault();
-    } else if (changeEvent.nextId === 2) {
-      console.log("submit sequence tab")
-    }
+    } 
   }
 
   get f() { return this.submissionForm.controls }
@@ -169,13 +167,14 @@ export class SubmissionFormComponent implements OnInit {
       phenotypeObj.phenotype['id'] = phenotype['id'] ? phenotype['id'] : null;
       return phenotypeObj
     })
-    patient.identifier = !(patient.identifier instanceof String) ? patient.identifier.identifier: patient.identifier;
+    patient.identifier = patient.identifier['identifier'] ? patient.identifier.identifier: patient.identifier;
 
     delete patient['age']
     if (this.patient) {
       patient['id'] = this.patient.id
     }
 
+    console.log("patient object before updating: ", patient)
     this.patientService.addOrUpdate(patient).subscribe(res => {
       this.patientForm.setValue(this.transformPatient(res));
     });

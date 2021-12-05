@@ -141,8 +141,8 @@ export class PatientPedigreeComponent implements OnInit {
 
   fromPedigreeModel(pedigree) {
     pedigree = Object.assign({}, pedigree);
-    pedigree['father'] = pedigree['father'] ? this.transformPatient(pedigree['father']): null;
-    pedigree['mother'] = pedigree['mother'] ? this.transformPatient(pedigree['mother']): null;
+    pedigree['father'] = pedigree['father'] ? this.transformPatient(pedigree['father']): this.fatherForm.value;
+    pedigree['mother'] = pedigree['mother'] ? this.transformPatient(pedigree['mother']): this.motherForm.value;
 
     pedigree['sibling'] = this.siblingForm.value;
     let sibling= null;
