@@ -22,6 +22,7 @@ export class FileChooserComponent implements OnInit {
     GRCh38: 'GRCh38 (hg38)',
     GRCh37: 'GRCh37 (hg19)'
   }
+
   constructor() { }
 
   ngOnInit(): void {
@@ -31,9 +32,9 @@ export class FileChooserComponent implements OnInit {
     if (change && change['form'] && this.form) {
       console.log("Location:", this.f[this.fileControlNames[1]].value)
       if(this.f[this.fileControlNames[1]].value) {
-        this.initParam = { percentage: 100, isComplete: true, isAlreadyExist:false, isPaused:false, isUploadedStarted:false}
+        this.initParam = { percentage: 100, isComplete: true, isAlreadyExist:false, isPaused:false, isRunning:false}
       } else {
-        this.initParam = { percentage: 0, isComplete: false, isAlreadyExist:false, isPaused:false, isUploadedStarted:false}
+        this.initParam = { percentage: 0, isComplete: false, isAlreadyExist:false, isPaused:false, isRunning:false}
       }
     }
 
@@ -73,13 +74,15 @@ export class FileChooserComponent implements OnInit {
       },
       // Callback for reporting upload progress
       onProgress: function(bytesUploaded, bytesTotal) {
+        parentObj[fileControlNames[0]].isRunning = true;
         parentObj[fileControlNames[0]]['percentage'] = (bytesUploaded / bytesTotal * 100).toFixed(2);
-        console.log(bytesUploaded, bytesTotal, parentObj[fileControlNames[0]]['percentage'] + "%")
+        console.log(bytesUploaded, bytesTotal, parentObj[fileControlNames[0]]['percentage'] + "%", parentObj[fileControlNames[0]])
       },
       // Callback for once the upload is completed
       onSuccess: function() {
           console.log("Download %s from %s", file.name, upload.url)
           parentObj[fileControlNames[0]].isComplete = true;
+          parentObj[fileControlNames[0]].isRunning = false;
           parentObj[fileControlNames[0]]['fileLocation'] = upload.url.split('/').pop(); 
           parentObj[fileControlNames[0]]['filename'] = file.name;
           console.log(that.form.value, fileControlNames);
@@ -121,7 +124,7 @@ export class FileChooserComponent implements OnInit {
     console.log("before:", sequenceFileObj)
     sequenceFileObj.isComplete = false;
     sequenceFileObj.isAlreadyExist = false;
-    sequenceFileObj.isUploadedStarted = false;
+    sequenceFileObj.isRunning = false;
     sequenceFileObj.percentage = 0;
     console.log("after:", sequenceFileObj)
   }
@@ -136,13 +139,11 @@ export class FileChooserComponent implements OnInit {
     sequenceFileObj.upload.start();
     sequenceFileObj.isAlreadyExist = false;
     sequenceFileObj.isComplete = false;
-    sequenceFileObj.isUploadedStarted = true;
   }
 
   askToResumeUpload(previousUploads, upload, sequenceFileObj) {
     if (previousUploads.length === 0) {
         upload.start()
-        sequenceFileObj.isUploadedStarted = true;
         return
     }
 

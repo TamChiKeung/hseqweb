@@ -100,7 +100,7 @@ export class SubmissionFormComponent implements OnInit {
     });
     this.loadPhenotype();
     this.route.params.subscribe(params => {
-      this.submissionId = params.id ? params.id != undefined: null;
+      this.submissionId = params.id && params.id != undefined ? params.id : null;
       if (this.submissionId){
         this.subService.get(this.submissionId).subscribe(res => {
           this.submissionForm.setValue(this.transformSubmission(res));

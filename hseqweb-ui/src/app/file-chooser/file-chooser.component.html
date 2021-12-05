@@ -1,10 +1,10 @@
 <div [formGroup]="form">
-    <div class="form-group" *ngIf="patient && patient[fileControlNames[0]] && !patient[fileControlNames[0]]['isComplete'] && !patient[fileControlNames[0]]['isAlreadyExist']">
+    <div class="form-group" *ngIf="patient && patient[fileControlNames[0]] && !patient[fileControlNames[0]]['isRunning'] && !patient[fileControlNames[0]]['isComplete'] && !patient[fileControlNames[0]]['isAlreadyExist']">
         <label for="id_sequence_file"> {{label}} <span class="{'required': required}"></span></label>
         <input type="file" [attr.name]="fileControlNames[0]" [formControlName]="fileControlNames[0]" class="form-control" (change)="onFileSelect($event, patient, fileControlNames)">
         <small class="form-text text-muted">{{help}}</small>
     </div>
-    <div class="row round-border p-2" *ngIf="patient && patient[fileControlNames[0]] && patient[fileControlNames[0]]['isUploadedStarted'] && !patient[fileControlNames[0]]['isComplete'] && !patient[fileControlNames[0]]['isAlreadyExist']">
+    <div class="row round-border p-2" *ngIf="patient && patient[fileControlNames[0]] && patient[fileControlNames[0]]['isRunning']">
         <div class="col-10">
             <div class="progress mt-3">
                 <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="patient[fileControlNames[0]]['percentage']" 

@@ -30,7 +30,7 @@ export class PatientFormComponent implements OnInit {
   }
 
   formatter = (x) => { 
-    return x.identifier ? x.identifier : '';
+    return x.identifier ? x.identifier : x ;
   }
 
   search = (text$: Observable<string>) => {
