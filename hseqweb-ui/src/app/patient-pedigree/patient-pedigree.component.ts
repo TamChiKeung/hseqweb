@@ -99,6 +99,11 @@ export class PatientPedigreeComponent implements OnInit {
     }); 
   }
 
+  delete(relation) {
+    this.pedigreeForm.get(relation).setValue(this.patientShortFormGroup('').value)
+    this.save();
+  }
+
   toPatientModel(patient) {
     patient['date_of_birth'] = this.toModel(patient['date_of_birth']);
     patient.identifier = !(typeof patient.identifier === 'string') ? patient.identifier.identifier: patient.identifier;

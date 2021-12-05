@@ -32,7 +32,8 @@
         </div>
         <div  class="row" *ngIf="patient && patient.pedigree && patient.pedigree.father">
             <div class="col-2 pl-3">Name:</div>
-            <div class="col-10"><strong>{{patient.pedigree.father?.full_name}}</strong></div>
+            <div class="col-3"><strong>{{patient.pedigree.father?.full_name}}</strong></div>
+            <div class="col-7"><button class="btn btn-sm btn-warning" (click)="delete('father')" ngbTooltip="Delete"><i class="fas fa-trash"></i></button></div>
             <div class="col-2 pl-3">Gender:</div>
             <div class="col-10"><strong>{{patient.pedigree.father?.gender}}</strong></div>
             <div class="col-2 pl-3">Age:</div>
@@ -61,7 +62,8 @@
         </div>
         <div  class="row" *ngIf="patient && patient.pedigree && patient.pedigree.mother">
             <div class="col-2 pl-3">Name:</div>
-            <div class="col-10"><strong>{{patient.pedigree.mother?.full_name}}</strong></div>
+            <div class="col-3"><strong>{{patient.pedigree.mother?.full_name}}</strong></div>
+            <div class="col-7"><button class="btn btn-sm btn-warning" (click)="delete('mother')" ngbTooltip="Delete"><i class="fas fa-trash"></i></button></div>
             <div class="col-2 pl-3">Gender:</div>
             <div class="col-10"><strong>{{patient.pedigree.mother?.gender}}</strong></div>
             <div class="col-2 pl-3">Age:</div>
@@ -90,7 +92,8 @@
         </div>
         <div  class="row" *ngIf="patient && patient.pedigree && patient.pedigree.brother">
             <div class="col-2 pl-3">Name:</div>
-            <div class="col-10"><strong>{{patient.pedigree.brother?.full_name}}</strong></div>
+            <div class="col-3"><strong>{{patient.pedigree.brother?.full_name}}</strong></div>
+            <div class="col-7"><button class="btn btn-sm btn-warning" (click)="delete('sibling')" ngbTooltip="Delete"><i class="fas fa-trash"></i></button></div>
             <div class="col-2 pl-3">Gender:</div>
             <div class="col-10"><strong>{{patient.pedigree.brother?.gender}}</strong></div>
             <div class="col-2 pl-3">Age:</div>
@@ -98,7 +101,8 @@
         </div>
         <div  class="row" *ngIf="patient && patient.pedigree && patient.pedigree.sister">
             <div class="col-2 pl-3">Name:</div>
-            <div class="col-10"><strong>{{patient.pedigree.sister?.full_name}}</strong></div>
+            <div class="col-3"><strong>{{patient.pedigree.sister?.full_name}}</strong></div>
+            <div class="col-7"><button class="btn btn-sm btn-warning" (click)="delete('sibling')" ngbTooltip="Delete"><i class="fas fa-trash"></i></button></div>
             <div class="col-2 pl-3">Gender:</div>
             <div class="col-10"><strong>{{patient.pedigree.sister?.gender}}</strong></div>
             <div class="col-2 pl-3">Age:</div>

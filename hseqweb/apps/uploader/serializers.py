@@ -141,12 +141,20 @@ class PatientSerializer(serializers.ModelSerializer):
         
         if 'father' in validated_data['pedigree'] and validated_data['pedigree']['father']:
             patient.pedigree.father = self.add_or_update(validated_data['pedigree']['father'], user)
+        else:
+            patient.pedigree.father = None
         if 'mother' in validated_data['pedigree'] and validated_data['pedigree']['mother']:
             patient.pedigree.mother = self.add_or_update(validated_data['pedigree']['mother'], user)
+        else:
+            patient.pedigree.mother = None
         if 'sister' in validated_data['pedigree'] and validated_data['pedigree']['sister']:
             patient.pedigree.sister = self.add_or_update(validated_data['pedigree']['sister'], user)
+        else:
+            patient.pedigree.sister = None
         if 'brother' in validated_data['pedigree'] and validated_data['pedigree']['brother']:
             patient.pedigree.brother = self.add_or_update(validated_data['pedigree']['brother'], user)
+        else:
+            patient.pedigree.brother = None
 
         patient.pedigree.save()
         patient.save()
