@@ -187,10 +187,11 @@ class PatientStartsWithView(APIView):
         limit = int(request.GET.get('limit', 10))
         user = self.request.user
         result = []
-        if user.is_authenticated and user.get_username() == 'admin':
-            result = self.serializer.find_by_identifier_startsWith(term, limit=limit)
-        elif user.is_authenticated:
-            result = self.serializer.find_by_identifier_startsWith(term, user, limit)
+        result = self.serializer.find_by_identifier_startsWith(term, limit=limit)
+        # if user.is_authenticated and user.get_username() == 'admin':
+        #     result = self.serializer.find_by_identifier_startsWith(term, limit=limit)
+        # elif user.is_authenticated:
+        #     result = self.serializer.find_by_identifier_startsWith(term, user, limit)
         
         return Response(PatientShortSerializer(result, many=True).data, status=status.HTTP_200_OK)
 
