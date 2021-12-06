@@ -119,7 +119,7 @@ export class SubmissionFormComponent implements OnInit {
 
     console.log("submission", submission);
     this.subService.addOrUpdate(submission).subscribe(res => {
-      this.toastService.show('Saved patient\'s submission', { classname: 'bg-success text-light', delay: 3000 });
+      this.toastService.show('Saved patient\'s submission', { classname: 'bg-secondary text-white', delay: 3000 });
       this.submissionForm.setValue(this.transformSubmission(res));
     });
   }
@@ -129,7 +129,7 @@ export class SubmissionFormComponent implements OnInit {
 
     console.log("submitting submission", submission);
     this.subService.submit(submission).subscribe(res => {
-      this.toastService.show('Submitted patient\'s submission successfully', { classname: 'bg-success text-light', delay: 3000 });
+      this.toastService.show('Submitted patient\'s submission successfully', { classname: 'bg-secondary text-white', delay: 3000 });
       this.router.navigate(['/submission']);
     });
   }

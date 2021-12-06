@@ -1,4 +1,136 @@
-<div class="row" *ngIf="submission">
+<div *ngIf="submission">
+<div class="row view-header mt-2">
+    <div class="col-12 p-2">
+        <div class="row">
+            <div class="col-12">
+                <h4><strong>Upload ID:</strong> {{submission.id}}</h4>
+            </div>
+            <div class="col-4">
+                <label><strong>Status:</strong></label>
+                {{submission.status}}
+            </div>
+            <div class="col-4">
+                <label><strong>Last Modified:</strong></label>
+                {{submission.updated_at | date: 'H:mm dd-MM-yyyy'}}
+            </div>
+            <div class="col-4" *ngIf="submission.status == 'uploaded'">
+                <label><strong>Sample ID:</strong></label>
+                {{submission.name}}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-12">
+                 <h5><strong>Patient: </strong>{{submission.patient.identifier}}</h5>
+            </div>
+            <div class="col-4">
+                <label><strong>Name: </strong></label>
+                {{submission.patient.full_name}}
+            </div>
+            <div class="col-4">
+                <label><strong>Gender: </strong></label>
+                {{submission.patient.gender}}
+            </div>
+            <div class="col-4" *ngIf="submission.patient.age">
+                <label><strong>Age: </strong></label>
+                {{submission.patient?.age}}
+            </div>
+            <div class="col-12">
+                <label><strong>Phenotypes: </strong></label>
+                <span *ngFor="let pheno of submission.patient.phenotypes; let phIndex = index">
+                    {{pheno.phenotype.label}}
+                    <span *ngIf="submission.patient.phenotypes.length != (phIndex + 1)">,</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="row mt-2" *ngIf="submission.patient.pedigree">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-12">
+                 <h5><strong>Pedigree and Family Information </strong></h5>
+            </div>
+            <div class="col-4" *ngIf="submission.patient.pedigree.father">
+                <ul class="list-unstyled">
+                    <li>
+                    <label><strong>Father</strong></label>
+                    </li>
+                    <li>
+                    <label><strong>Name: </strong></label>
+                    {{submission.patient.pedigree.father.full_name}}
+                    </li>
+                    <li>
+                    <label><strong>Gender: </strong></label>
+                    {{submission.patient.pedigree.father.gender}}
+                    <li  *ngIf="submission.patient.pedigree.father.age">
+                    <label><strong>Age: </strong></label>
+                    {{submission.patient.pedigree.father?.age}}
+                    </li>
+                </ul>
+            </div>
+             <div class="col-4" *ngIf="submission.patient.pedigree.mother">
+                <ul class="list-unstyled">
+                    <li>
+                    <label><strong>Mother</strong></label>
+                    </li>
+                    <li>
+                    <label><strong>Name: </strong></label>
+                    {{submission.patient.pedigree.mother.full_name}}
+                    </li>
+                    <li>
+                    <label><strong>Gender: </strong></label>
+                    {{submission.patient.pedigree.mother.gender}}
+                    <li  *ngIf="submission.patient.pedigree.mother.age">
+                    <label><strong>Age: </strong></label>
+                    {{submission.patient.pedigree.mother?.age}}
+                    </li>
+                </ul>
+            </div> 
+            <div class="col-4" *ngIf="submission.patient.pedigree.brother">
+                <ul class="list-unstyled">
+                    <li>
+                    <label><strong>Sibling</strong></label>
+                    </li>
+                    <li>
+                    <label><strong>Name: </strong></label>
+                    {{submission.patient.pedigree.brother.full_name}}
+                    </li>
+                    <li>
+                    <label><strong>Gender: </strong></label>
+                    {{submission.patient.pedigree.brother.gender}}
+                    <li  *ngIf="submission.patient.pedigree.brother.age">
+                    <label><strong>Age: </strong></label>
+                    {{submission.patient.pedigree.brother?.age}}
+                    </li>
+                </ul>
+            </div>
+            <div class="col-4" *ngIf="submission.patient.pedigree.sister">
+                <ul class="list-unstyled">
+                    <li>
+                    <label><strong>Sibling</strong></label>
+                    </li>
+                    <li>
+                    <label><strong>Name: </strong></label>
+                    {{submission.patient.pedigree.sister.full_name}}
+                    </li>
+                    <li>
+                    <label><strong>Gender: </strong></label>
+                    {{submission.patient.pedigree.sister.gender}}
+                    <li  *ngIf="submission.patient.pedigree.sister.age">
+                    <label><strong>Age: </strong></label>
+                    {{submission.patient.pedigree.sister?.age}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
     <p  *ngIf="submission.status == 'submitted'">
         Your sequence have been successfully submitted.
     </p>
@@ -10,7 +142,7 @@
         {{ submission.error_message }}
     </p>
     <div class="col-4 mr-3" *ngIf="submission.status == 'uploaded'">
-        <h3>Sample ID: {{ submission.name }}</h3>
+        <h3>Input Data</h3>
         <table class="table table-striped">
         <thead>
             <th> Filename </th>
@@ -66,4 +198,5 @@
         </tbody>
         </table>
     </div>
+</div>
 </div>

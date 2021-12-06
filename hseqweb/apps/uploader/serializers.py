@@ -99,7 +99,10 @@ class PatientSerializer(serializers.ModelSerializer):
 
     def add_or_update(self, validated_data, user):
         logger.info("Saving patient: %s", str(validated_data))
-        phenotypes = validated_data.pop('phenotypes') if 'phenotypes' in validated_data and validated_data['phenotypes'] else []
+        phenotypes = validated_data.pop('phenotypes') if 'phenotypes' in validated_data else []
+        if not phenotypes:
+            phenotypes = []
+
         
         patient = None
         if not ('id' in validated_data and validated_data['id']):
