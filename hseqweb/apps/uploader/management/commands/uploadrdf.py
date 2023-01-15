@@ -7,7 +7,7 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-HTTP_PROT = 'http://'
+HTTP_PROT = 'https://'
 VIRTUOSO_HOST = getattr(settings, 'VIRTUOSO_HOST')
 VIRTUOSO_SPARQL_PORT = getattr(settings, 'VIRTUOSO_SPARQL_PORT')
 VIRTUOSO_USER = getattr(settings, 'VIRTUOSO_USER')
