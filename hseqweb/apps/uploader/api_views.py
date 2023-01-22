@@ -17,6 +17,7 @@ from django.http import StreamingHttpResponse
 from uploader.utils import api, parse_manifest_text
 import arvados.collection
 import logging
+from uploader.aberowl import class_startswith
 
 
 logger = logging.getLogger(__name__)
@@ -64,6 +65,18 @@ class GetValidationRunsView(APIView):
         col = api.collections().get(uuid=tr_col_uuid).execute()
         tr_files = parse_manifest_text(col['manifest_text'])
         data['tr_files'] = tr_files
+        return Response(data, status=status.HTTP_200_OK)
+
+
+class HPOClassStartsWithView(APIView):
+    """ 
+    Used for autocomplete of HPO class names 
+    """
+
+    permission_classes = [AllowAny]
+    def get(self, request, format='json'):
+        query_token = request.GET.get('query')
+        data = class_startswith(query_token)
         return Response(data, status=status.HTTP_200_OK)
 
 class DownloadView(APIView):

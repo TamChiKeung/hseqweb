@@ -19,3 +19,10 @@ def find_by_iri(iri_dict):
         if len(result['result']) > 0:
             resolved_dict[result['result'][0]['class']] = result['result'][0]
     return resolved_dict
+
+
+def class_startswith(token):
+    query_url = f"{ABEROWL_API_URL}/class/_startwith?ontology=hp&query={token}"
+    response = requests.get(query_url)
+    result = response.json()
+    return result

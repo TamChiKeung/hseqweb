@@ -5,7 +5,7 @@ import { _ } from 'underscore';
 
 @Injectable()
 export class LookupService {
-  ABEROWL_API = "http://aber-owl.net/api"
+
   options = {
     headers:  new HttpHeaders({
       'Accept': 'application/json'
@@ -16,7 +16,7 @@ export class LookupService {
 
   findEntityByLabelStartsWith(term: string) {
     var queryStr = `query=${term}&ontology=hp`;
-    return this.http.get(`${this.ABEROWL_API}/class/_startwith?${queryStr}`, this.options);
+    return this.http.get(`/api/class/_startwith?${queryStr}`, this.options);
   }
 
   findEntityByIris(iris:any[], valueset:string) {
@@ -26,7 +26,7 @@ export class LookupService {
     } else {
       req = {'iri': iris, valueset: valueset}
     }
-    return this.http.post(`${this.ABEROWL_API}/class/_findbyiri`, req, this.options);
+    return this.http.post(`/api/class/_findbyiri`, req, this.options);
   }
 
 }
