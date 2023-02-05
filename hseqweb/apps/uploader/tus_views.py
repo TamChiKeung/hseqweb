@@ -76,9 +76,12 @@ class TusUpload(View):
 
         tus_file = TusFile.create_initial_file(metadata, file_size)
 
+        upload_path = request.build_absolute_uri()
+        upload_path.replace("http:","https:")
+        
         return TusResponse(
             status=201,
-            extra_headers={'Location': '{}{}'.format(request.build_absolute_uri(), tus_file.resource_id)})
+            extra_headers={'Location': '{}{}'.format(upload_path, tus_file.resource_id)})
 
     def head(self, request, resource_id):
 
